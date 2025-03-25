@@ -1,0 +1,6 @@
+rootProject.name = 'aggregator-app'
+
+include 'gateway-service'
+include 'passenger-service'
+include 'driver-service'
+include 'rides-service'
