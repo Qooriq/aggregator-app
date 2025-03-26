@@ -13,6 +13,10 @@ public class GateWayConfiguration {
         return builder.routes()
                 .route("driver-service", r -> r.path("/api/v1/driver-service/**")
                         .uri("http://localhost:8081/"))
+                .route("passenger-service", r -> r.path("/api/v1/passenger-service/**")
+                        .uri("http://localhost:8082/"))
+                .route("rides-service", r -> r.path("/api/v1/rides-service/**")
+                        .uri("http://localhost:8083/"))
                 .build();
     }
 }
