@@ -7,6 +7,7 @@ import lombok.*;
 import java.util.UUID;
 
 @Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "passengers")
