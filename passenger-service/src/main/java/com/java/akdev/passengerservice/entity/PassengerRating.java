@@ -26,6 +26,6 @@ public class PassengerRating {
     @Column(name = "driver_id")
     private UUID driverId;
 
-    @Column(nullable = false)
+    @Column(name = "review", nullable = false)
     private Long review;
 }
