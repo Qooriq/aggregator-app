@@ -7,7 +7,6 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "passenger_rating")
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -27,6 +26,6 @@ public class PassengerRating {
     @Column(name = "driver_id")
     private UUID driverId;
 
-    @Column(nullable = false)
+    @Column(name = "review", nullable = false)
     private Long review;
 }
