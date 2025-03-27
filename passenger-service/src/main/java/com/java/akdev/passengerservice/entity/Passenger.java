@@ -1,9 +1,6 @@
 package com.java.akdev.passengerservice.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.UUID;
@@ -18,6 +15,7 @@ import java.util.UUID;
 public class Passenger {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @EqualsAndHashCode.Include
     private UUID id;
 

@@ -9,3 +9,9 @@ CREATE TABLE passengers(
                       password VARCHAR(64) NOT NULL,
                       phone_number VARCHAR(16) UNIQUE
 );
+
+CREATE TABLE passenger_rating(
+    id BIGSERIAL PRIMARY KEY,
+    passenger_id UUID NOT NULL REFERENCES passengers(id),
+    review BIGINT
+)
