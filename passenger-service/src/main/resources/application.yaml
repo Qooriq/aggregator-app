@@ -1,5 +1,11 @@
 spring:
   application:
     name: passenger-service
+  datasource:
+    url: jdbc:postgresql://localhost:5433/passenger-service
+    username: postgres
+    password: root
+  liquibase:
+    enabled: false
 server:
   port: 8082

@@ -37,5 +37,5 @@ public class Passenger {
 
     @Column(name = "passenger_status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private PassengerStatus status;
+    private PassengerStatus status = PassengerStatus.ACTIVE;
 }
