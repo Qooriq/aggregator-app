@@ -1,5 +1,6 @@
 package com.java.akdev.passengerservice.entity;
 
+import com.java.akdev.passengerservice.enumeration.PassengerStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,4 +34,8 @@ public class Passenger {
 
     @Column(name = "phone_number", nullable = false, unique = true)
     private String phoneNumber;
+
+    @Column(name = "passenger_status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private PassengerStatus status;
 }
