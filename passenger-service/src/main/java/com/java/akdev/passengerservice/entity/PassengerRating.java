@@ -8,6 +8,8 @@ import java.util.UUID;
 @Entity
 @Table(name = "passenger_rating")
 @Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)

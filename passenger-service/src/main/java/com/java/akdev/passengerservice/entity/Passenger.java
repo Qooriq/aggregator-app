@@ -12,6 +12,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @Table(name = "passengers")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Getter
+@Setter
 @ToString
 public class Passenger {
 
@@ -37,5 +39,6 @@ public class Passenger {
 
     @Column(name = "passenger_status", nullable = false)
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private PassengerStatus status = PassengerStatus.ACTIVE;
 }
