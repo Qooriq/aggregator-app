@@ -31,24 +31,28 @@ public class PassengerService {
     @Transactional(readOnly = true)
     public PassengerReadDto findPassengerById(UUID id) {
         var passenger = passengerRepository.findById(id);
-        return passenger.map(passengerMapper::toReadDto).orElseThrow(PassengerNotFoundException::new);
+        return passenger.map(passengerMapper::toReadDto)
+                .orElseThrow(PassengerNotFoundException::new);
     }
 
     @Transactional
     public PassengerReadDto updatePassenger(UUID id, PassengerCreateDto dto) {
-        var passenger = passengerRepository.findById(id).orElseThrow(PassengerNotFoundException::new);
+        var passenger = passengerRepository.findById(id)
+                .orElseThrow(PassengerNotFoundException::new);
         passengerMapper.map(passenger, dto);
         return passengerMapper.toReadDto(passenger);
     }
 
     @Transactional
     public PassengerReadDto createPassenger(PassengerCreateDto dto) {
-        return passengerMapper.toReadDto(passengerRepository.save(passengerMapper.toPassenger(dto)));
+        return passengerMapper.toReadDto(passengerRepository
+                .save(passengerMapper.toPassenger(dto)));
     }
 
     @Transactional
     public void deletePassenger(UUID id) {
-        var passenger = passengerRepository.findById(id).orElseThrow(PassengerNotFoundException::new);
+        var passenger = passengerRepository.findById(id)
+                .orElseThrow(PassengerNotFoundException::new);
         passenger.setStatus(PassengerStatus.DELETED);
         passengerRepository.save(passenger);
     }

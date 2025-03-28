@@ -44,8 +44,10 @@ public class PassengerRatingService {
 
     @Transactional
     public PassengerRatingDto createPassenger(PassengerRatingDto dto) {
-        return passengerToDto(passengerRatingRepository.save(PassengerRating.builder()
-                .passenger(passengerRepository.findById(dto.passengerId()).orElseThrow(PassengerNotFoundException::new))
+        return passengerToDto(passengerRatingRepository.save(PassengerRating
+                .builder()
+                .passenger(passengerRepository.findById(dto.passengerId())
+                        .orElseThrow(PassengerNotFoundException::new))
                 .driverId(dto.driverId())
                 .review(dto.review())
                 .build()));
@@ -53,14 +55,16 @@ public class PassengerRatingService {
 
     @Transactional
     public Boolean deletePassenger(Long id) {
-        var rating = passengerRatingRepository.findById(id).orElseThrow(PassengerRatingNotFoundException::new);
+        var rating = passengerRatingRepository
+                .findById(id)
+                .orElseThrow(PassengerRatingNotFoundException::new);
         passengerRatingRepository.delete(rating);
         return true;
     }
 
     @Transactional(readOnly = true)
     public Double getAvgRating(UUID passengerId) {
-        return passengerRatingRepository.avgByReview(passengerId);
+        return passengerRatingRepository.findAverageOfLastElements(passengerId);
     }
 
     private static PassengerRatingDto passengerToDto(PassengerRating passenger) {

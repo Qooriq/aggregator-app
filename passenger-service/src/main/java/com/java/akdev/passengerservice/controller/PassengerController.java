@@ -22,23 +22,27 @@ public class PassengerController {
     @GetMapping
     public ResponseEntity<Page<PassengerReadDto>> findAll(@RequestParam Integer page,
                                                           @RequestParam Integer size) {
-        return ResponseEntity.status(200).body(passengerService.findAll(page, size));
+        return ResponseEntity.status(200)
+                .body(passengerService.findAll(page, size));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PassengerReadDto> findById(@PathVariable UUID id) {
-        return ResponseEntity.status(200).body(passengerService.findPassengerById(id));
+        return ResponseEntity.status(200)
+                .body(passengerService.findPassengerById(id));
     }
 
     @PostMapping
     public ResponseEntity<PassengerReadDto> create(@RequestBody PassengerCreateDto dto) {
-        return ResponseEntity.status(201).body(passengerService.createPassenger(dto));
+        return ResponseEntity.status(201)
+                .body(passengerService.createPassenger(dto));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<PassengerReadDto> update(@PathVariable UUID id,
                                                    @RequestBody PassengerCreateDto dto) {
-        return ResponseEntity.status(200).body(passengerService.updatePassenger(id, dto));
+        return ResponseEntity.status(201)
+                .body(passengerService.updatePassenger(id, dto));
     }
 
     @DeleteMapping("/{id}")
@@ -49,6 +53,7 @@ public class PassengerController {
 
     @GetMapping("/passenger-rating/{id}")
     public ResponseEntity<Double> getPassengerRating(@PathVariable UUID id) {
-        return ResponseEntity.status(200).body(passengerRatingService.getAvgRating(id));
+        return ResponseEntity.status(200)
+                .body(passengerRatingService.getAvgRating(id));
     }
 }
