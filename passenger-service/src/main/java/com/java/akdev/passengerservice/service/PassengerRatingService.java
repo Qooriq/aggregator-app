@@ -8,6 +8,8 @@ import com.java.akdev.passengerservice.exception.PassengerRatingNotFoundExceptio
 import com.java.akdev.passengerservice.repository.PassengerRatingRepository;
 import com.java.akdev.passengerservice.repository.PassengerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,11 @@ public class PassengerRatingService {
 
     private final PassengerRatingRepository passengerRatingRepository;
     private final PassengerRepository passengerRepository;
+
+    @Value("${passenger-rating.limit}")
+    private Integer ratingLimit;
+    @Value("${passenger-rating.page-number}")
+    private Integer pageNumber;
 
     @Transactional(readOnly = true)
     public Page<PassengerRatingDto> getAllPassengers(Integer page, Integer size) {
@@ -44,9 +51,9 @@ public class PassengerRatingService {
 
     @Transactional
     public PassengerRatingDto createPassenger(PassengerRatingDto dto) {
-        return passengerToDto(passengerRatingRepository.save(PassengerRating
-                .builder()
-                .passenger(passengerRepository.findById(dto.passengerId())
+        return passengerToDto(passengerRatingRepository.save(PassengerRating.builder()
+                .passenger(passengerRepository
+                        .findById(dto.passengerId())
                         .orElseThrow(PassengerNotFoundException::new))
                 .driverId(dto.driverId())
                 .review(dto.review())
@@ -64,7 +71,12 @@ public class PassengerRatingService {
 
     @Transactional(readOnly = true)
     public Double getAvgRating(UUID passengerId) {
-        return passengerRatingRepository.findAverageOfLastElements(passengerId);
+        return passengerRatingRepository
+                .findAllByPassenger(passengerId, PageRequest.of(pageNumber, ratingLimit))
+                .stream()
+                .mapToDouble(Double::doubleValue)
+                .average()
+                .orElse(0.0);
     }
 
     private static PassengerRatingDto passengerToDto(PassengerRating passenger) {
