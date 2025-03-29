@@ -30,7 +30,7 @@ public class PassengerRatingService {
     private Integer pageNumber;
 
     @Transactional(readOnly = true)
-    public Page<PassengerRatingDto> getAllPassengers(Integer page, Integer size) {
+    public Page<PassengerRatingDto> getAllPassengerRatings(Integer page, Integer size) {
         return passengerRatingRepository.findAll(PageRequest.of(page - 1, size))
                 .map(PassengerRatingService::passengerToDto);
     }
@@ -43,14 +43,24 @@ public class PassengerRatingService {
     }
 
     @Transactional
-    public PassengerRatingDto updatePassengerRating(Long id, PassengerCreateDto dto) {
+    public PassengerRatingDto updatePassengerRating(Long id, PassengerRatingDto dto) {
         return passengerRatingRepository.findById(id)
-                .map(PassengerRatingService::passengerToDto)
+                .map(rating -> {
+                    PassengerRating.builder()
+                        .id(rating.getId())
+                        .review(dto.review())
+                        .passenger(passengerRepository.findById(dto.passengerId())
+                                .orElseThrow(PassengerNotFoundException::new))
+                        .driverId(dto.driverId())
+                        .build();
+                    passengerRatingRepository.save(rating);
+                    return passengerToDto(rating);
+                })
                 .orElseThrow(PassengerRatingNotFoundException::new);
     }
 
     @Transactional
-    public PassengerRatingDto createPassenger(PassengerRatingDto dto) {
+    public PassengerRatingDto createPassengerRating(PassengerRatingDto dto) {
         return passengerToDto(passengerRatingRepository.save(PassengerRating.builder()
                 .passenger(passengerRepository
                         .findById(dto.passengerId())
@@ -61,12 +71,11 @@ public class PassengerRatingService {
     }
 
     @Transactional
-    public Boolean deletePassenger(Long id) {
+    public void deletePassengerRating(Long id) {
         var rating = passengerRatingRepository
                 .findById(id)
                 .orElseThrow(PassengerRatingNotFoundException::new);
         passengerRatingRepository.delete(rating);
-        return true;
     }
 
     @Transactional(readOnly = true)

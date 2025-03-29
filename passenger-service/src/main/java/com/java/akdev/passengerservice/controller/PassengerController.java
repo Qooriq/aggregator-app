@@ -4,6 +4,7 @@ import com.java.akdev.passengerservice.dto.PassengerCreateDto;
 import com.java.akdev.passengerservice.dto.PassengerReadDto;
 import com.java.akdev.passengerservice.service.PassengerRatingService;
 import com.java.akdev.passengerservice.service.PassengerService;
+import com.java.akdev.passengerservice.util.SortType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +22,10 @@ public class PassengerController {
 
     @GetMapping
     public ResponseEntity<Page<PassengerReadDto>> findAll(@RequestParam Integer page,
-                                                          @RequestParam Integer size) {
+                                                          @RequestParam Integer size,
+                                                          @RequestBody SortType sortType) {
         return ResponseEntity.status(200)
-                .body(passengerService.findAll(page, size));
+                .body(passengerService.findAll(page, size, sortType));
     }
 
     @GetMapping("/{id}")

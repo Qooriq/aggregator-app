@@ -7,9 +7,11 @@ import com.java.akdev.passengerservice.enumeration.PassengerStatus;
 import com.java.akdev.passengerservice.exception.PassengerNotFoundException;
 import com.java.akdev.passengerservice.mapper.PassengerMapper;
 import com.java.akdev.passengerservice.repository.PassengerRepository;
+import com.java.akdev.passengerservice.util.SortType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,8 +25,10 @@ public class PassengerService {
     private final PassengerMapper passengerMapper;
 
     @Transactional(readOnly = true)
-    public Page<PassengerReadDto> findAll(Integer page, Integer size) {
-        return passengerRepository.findAll(PageRequest.of(page - 1, size))
+    public Page<PassengerReadDto> findAll(Integer page, Integer size, SortType sortType) {
+        Sort by = Sort.by(sortType.getOrder(), sortType.getSortField().getName());
+        return passengerRepository
+                .findAll(PageRequest.of(page - 1, size, by))
                 .map(passengerMapper::toReadDto);
     }
 
@@ -37,10 +41,13 @@ public class PassengerService {
 
     @Transactional
     public PassengerReadDto updatePassenger(UUID id, PassengerCreateDto dto) {
-        var passenger = passengerRepository.findById(id)
+        return passengerRepository.findById(id)
+                .map(passenger -> {
+                    passengerMapper.map(passenger, dto);
+                    passengerRepository.save(passenger);
+                    return passengerMapper.toReadDto(passenger);
+                })
                 .orElseThrow(PassengerNotFoundException::new);
-        passengerMapper.map(passenger, dto);
-        return passengerMapper.toReadDto(passenger);
     }
 
     @Transactional
