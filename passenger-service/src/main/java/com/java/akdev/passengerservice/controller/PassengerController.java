@@ -43,7 +43,7 @@ public class PassengerController {
     @PutMapping("/{id}")
     public ResponseEntity<PassengerReadDto> update(@PathVariable UUID id,
                                                    @RequestBody PassengerCreateDto dto) {
-        return ResponseEntity.status(201)
+        return ResponseEntity.status(200)
                 .body(passengerService.updatePassenger(id, dto));
     }
 

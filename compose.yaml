@@ -1,67 +1,49 @@
 services:
-  passenger-service:
-    postgresql-passenger:
-      image: postgres:16
-      environment:
-        POSTGRES_DB: passenger-service
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: root
-      ports:
-        - "5433:5432"
-    liquibase-migrations-passenger:
-      image: liquibase/liquibase:4.25
-      depends_on:
-        - postgresql-passenger
-      command:
-        - --changelog-file=master.xml
-        - --driver=org.postgresql.Driver
-        - --url=jdbc:postgresql://postgresql:5432/passenger-service
-        - --username=postgres
-        - --password=root
-        - update
-      volumes:
-        - ./passenger-service/migrations:/liquibase/changelog
-  driver-service:
-    postgresql-driver:
-      image: postgres:16
-      environment:
-        POSTGRES_DB: driver-service
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: root
-      ports:
-        - "5434:5432"
-    liquibase-migrations-driver:
-      image: liquibase/liquibase:4.25
-      depends_on:
-        - postgresql-driver
-      command:
-        - --changelog-file=master.xml
-        - --driver=org.postgresql.Driver
-        - --url=jdbc:postgresql://postgresql:5432/driver-service
-        - --username=postgres
-        - --password=root
-        - update
-      volumes:
-        - ./driver-service/migrations:/liquibase/changelog
-  rides-service:
-    postgresql-rides:
-      image: postgres:16
-      environment:
-        POSTGRES_DB: rides-service
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: root
-      ports:
-        - "5435:5432"
-    liquibase-migrations-rides:
-      image: liquibase/liquibase:4.25
-      depends_on:
-        - postgresql-rides
-      command:
-        - --changelog-file=master.xml
-        - --driver=org.postgresql.Driver
-        - --url=jdbc:postgresql://postgresql:5432/rides-service
-        - --username=postgres
-        - --password=root
-        - update
-      volumes:
-        - ./rides-service/migrations:/liquibase/changelog
+  postgresql:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5433:5432"
+    volumes:
+    - ./db-init:/docker-entrypoint-initdb.d
+  liquibase-migrations-passenger:
+    image: liquibase/liquibase:4.25
+    depends_on:
+      - postgresql
+    command:
+      - --changelog-file=master.xml
+      - --driver=org.postgresql.Driver
+      - --url=jdbc:postgresql://postgresql:5432/passenger_service
+      - --username=postgres
+      - --password=root
+      - update
+    volumes:
+      - ./passenger-service/migrations:/liquibase/changelog
+  liquibase-migrations-driver:
+    image: liquibase/liquibase:4.25
+    depends_on:
+      - postgresql
+    command:
+      - --changelog-file=master.xml
+      - --driver=org.postgresql.Driver
+      - --url=jdbc:postgresql://postgresql:5432/driver_service
+      - --username=postgres
+      - --password=root
+      - update
+    volumes:
+      - ./driver-service/migrations:/liquibase/changelog
+  liquibase-migrations-rides:
+    image: liquibase/liquibase:4.25
+    depends_on:
+      - postgresql
+    command:
+      - --changelog-file=master.xml
+      - --driver=org.postgresql.Driver
+      - --url=jdbc:postgresql://postgresql:5432/rides_service
+      - --username=postgres
+      - --password=root
+      - update
+    volumes:
+      - ./rides-service/migrations:/liquibase/changelog
