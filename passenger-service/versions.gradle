@@ -1,0 +1,6 @@
+ext {
+    versions = [
+            'mapstruct': '1.6.3',
+            'springdoc': '1.7.0'
+    ]
+}

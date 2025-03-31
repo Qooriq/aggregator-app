@@ -4,6 +4,8 @@ import com.java.akdev.passengerservice.enumeration.PassengerStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -12,6 +14,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @Table(name = "passengers")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Getter
+@Setter
 @ToString
 public class Passenger {
 
@@ -35,7 +39,14 @@ public class Passenger {
     @Column(name = "phone_number", nullable = false, unique = true)
     private String phoneNumber;
 
+    @OneToMany
+    @JoinColumn(name = "passenger_id")
+    @ToString.Exclude
+    @Builder.Default
+    private List<PassengerRating> passengerRatings = new ArrayList<>();
+
     @Column(name = "passenger_status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private PassengerStatus status;
+    @Builder.Default
+    private PassengerStatus status = PassengerStatus.ACTIVE;
 }
