@@ -11,6 +11,7 @@ CREATE TABLE passengers(
                       passenger_status VARCHAR(16) NOT NULL
 );
 
+--changeset Anton Kazlouski:2
 CREATE TABLE passenger_rating(
     id BIGSERIAL PRIMARY KEY,
     passenger_id UUID NOT NULL REFERENCES passengers(id),

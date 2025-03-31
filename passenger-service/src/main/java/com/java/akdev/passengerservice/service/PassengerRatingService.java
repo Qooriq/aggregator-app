@@ -8,6 +8,8 @@ import com.java.akdev.passengerservice.exception.PassengerRatingNotFoundExceptio
 import com.java.akdev.passengerservice.repository.PassengerRatingRepository;
 import com.java.akdev.passengerservice.repository.PassengerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -22,8 +24,13 @@ public class PassengerRatingService {
     private final PassengerRatingRepository passengerRatingRepository;
     private final PassengerRepository passengerRepository;
 
+    @Value("${passenger-rating.limit}")
+    private Integer ratingLimit;
+    @Value("${passenger-rating.page-number}")
+    private Integer pageNumber;
+
     @Transactional(readOnly = true)
-    public Page<PassengerRatingDto> getAllPassengers(Integer page, Integer size) {
+    public Page<PassengerRatingDto> getAllPassengerRatings(Integer page, Integer size) {
         return passengerRatingRepository.findAll(PageRequest.of(page - 1, size))
                 .map(PassengerRatingService::passengerToDto);
     }
@@ -36,31 +43,49 @@ public class PassengerRatingService {
     }
 
     @Transactional
-    public PassengerRatingDto updatePassengerRating(Long id, PassengerCreateDto dto) {
+    public PassengerRatingDto updatePassengerRating(Long id, PassengerRatingDto dto) {
         return passengerRatingRepository.findById(id)
-                .map(PassengerRatingService::passengerToDto)
+                .map(rating -> {
+                    PassengerRating.builder()
+                        .id(rating.getId())
+                        .review(dto.review())
+                        .passenger(passengerRepository.findById(dto.passengerId())
+                                .orElseThrow(PassengerNotFoundException::new))
+                        .driverId(dto.driverId())
+                        .build();
+                    passengerRatingRepository.save(rating);
+                    return passengerToDto(rating);
+                })
                 .orElseThrow(PassengerRatingNotFoundException::new);
     }
 
     @Transactional
-    public PassengerRatingDto createPassenger(PassengerRatingDto dto) {
+    public PassengerRatingDto createPassengerRating(PassengerRatingDto dto) {
         return passengerToDto(passengerRatingRepository.save(PassengerRating.builder()
-                .passenger(passengerRepository.findById(dto.passengerId()).orElseThrow(PassengerNotFoundException::new))
+                .passenger(passengerRepository
+                        .findById(dto.passengerId())
+                        .orElseThrow(PassengerNotFoundException::new))
                 .driverId(dto.driverId())
                 .review(dto.review())
                 .build()));
     }
 
     @Transactional
-    public Boolean deletePassenger(Long id) {
-        var rating = passengerRatingRepository.findById(id).orElseThrow(PassengerRatingNotFoundException::new);
+    public void deletePassengerRating(Long id) {
+        var rating = passengerRatingRepository
+                .findById(id)
+                .orElseThrow(PassengerRatingNotFoundException::new);
         passengerRatingRepository.delete(rating);
-        return true;
     }
 
     @Transactional(readOnly = true)
     public Double getAvgRating(UUID passengerId) {
-        return passengerRatingRepository.avgByReview(passengerId);
+        return passengerRatingRepository
+                .findAllByPassenger(passengerId, PageRequest.of(pageNumber, ratingLimit))
+                .stream()
+                .mapToDouble(Double::doubleValue)
+                .average()
+                .orElse(0.0);
     }
 
     private static PassengerRatingDto passengerToDto(PassengerRating passenger) {
