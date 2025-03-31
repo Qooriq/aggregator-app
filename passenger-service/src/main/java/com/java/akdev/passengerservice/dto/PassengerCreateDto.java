@@ -7,14 +7,14 @@ import lombok.Builder;
 
 @Builder
 public record PassengerCreateDto(
-        @NotBlank
+        @NotBlank(message = "PassengerController.firstName.notBlank")
         String firstName,
-        @NotBlank
+        @NotBlank(message = "PassengerController.lastName.notBlank")
         String lastName,
-        @Email
-        @NotBlank
+        @Email(message = "PassengerController.email")
+        @NotBlank(message = "PassengerController.username.notBlank")
         String username,
-        @NotBlank
+        @NotBlank(message = "PassengerController.password.notBlank")
         String password,
         String phoneNumber
 ) {

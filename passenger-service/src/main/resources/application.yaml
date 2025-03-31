@@ -2,7 +2,7 @@ spring:
   application:
     name: passenger-service
   datasource:
-    url: jdbc:postgresql://localhost:5433/passenger-service
+    url: jdbc:postgresql://localhost:5433/passenger_service
     username: postgres
     password: root
   liquibase:
