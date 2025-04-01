@@ -8,6 +8,7 @@ import com.java.akdev.passengerservice.util.SortType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -35,14 +36,15 @@ public class PassengerController {
     }
 
     @PostMapping
-    public ResponseEntity<PassengerReadDto> create(@RequestBody PassengerCreateDto dto) {
+    public ResponseEntity<PassengerReadDto> create(@Validated
+            @RequestBody PassengerCreateDto dto) {
         return ResponseEntity.status(201)
                 .body(passengerService.createPassenger(dto));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<PassengerReadDto> update(@PathVariable UUID id,
-                                                   @RequestBody PassengerCreateDto dto) {
+                                                   @Validated @RequestBody PassengerCreateDto dto) {
         return ResponseEntity.status(200)
                 .body(passengerService.updatePassenger(id, dto));
     }
