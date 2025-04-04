@@ -37,7 +37,7 @@ public class PassengerController {
 
     @PostMapping
     public ResponseEntity<PassengerReadDto> create(@Validated
-            @RequestBody PassengerCreateDto dto) {
+                                                   @RequestBody PassengerCreateDto dto) {
         return ResponseEntity.status(201)
                 .body(passengerService.createPassenger(dto));
     }
