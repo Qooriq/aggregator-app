@@ -47,3 +47,16 @@ services:
       - update
     volumes:
       - ./rides-service/migrations:/liquibase/changelog
+  liquibase-migrations-reviews:
+    image: liquibase/liquibase:4.25
+    depends_on:
+      - postgresql
+    command:
+      - --changelog-file=master.xml
+      - --driver=org.postgresql.Driver
+      - --url=jdbc:postgresql://postgresql:5432/review_service
+      - --username=postgres
+      - --password=root
+      - update
+    volumes:
+      - ./review-service/migrations:/liquibase/changelog
