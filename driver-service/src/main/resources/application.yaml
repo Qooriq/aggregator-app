@@ -1,5 +1,14 @@
 spring:
   application:
     name: driver-service
+  datasource:
+    url: jdbc:postgresql://localhost:5433/driver_service
+    password: root
+    username: postgres
+  liquibase:
+    enabled: false
+  passenger-rating:
+    limit: 50
+    page-number: 0
 server:
-  port: 8081
+  port: 8083
