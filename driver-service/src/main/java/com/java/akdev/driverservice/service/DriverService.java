@@ -2,6 +2,7 @@ package com.java.akdev.driverservice.service;
 
 import com.java.akdev.driverservice.dto.DriverCreateDto;
 import com.java.akdev.driverservice.dto.DriverReadDto;
+import com.java.akdev.driverservice.entity.Driver;
 import com.java.akdev.driverservice.enumeration.DriverStatus;
 import com.java.akdev.driverservice.exception.DriverNotFoundException;
 import com.java.akdev.driverservice.mapper.DriverMapper;
@@ -36,9 +37,7 @@ public class DriverService {
 
     @Transactional(readOnly = true)
     public DriverReadDto findDriverById(UUID id) {
-        return driverRepository.findById(id)
-                .map(driverMapper::toDriverReadDto)
-                .orElseThrow(DriverNotFoundException::new);
+        return driverMapper.toDriverReadDto(findById(id));
     }
 
     @Transactional
@@ -50,22 +49,19 @@ public class DriverService {
 
     @Transactional
     public DriverReadDto update(UUID id, DriverCreateDto dto) {
-        return driverRepository.findById(id)
-                .map(driver -> {
-                    driverMapper.map(driver, dto);
-                    return driver;
-                })
-                .map(driverRepository::save)
-                .map(driverMapper::toDriverReadDto)
-                .orElseThrow(DriverNotFoundException::new);
+        return driverMapper.toDriverReadDto(findById(id));
     }
 
     @Transactional
     public void deleteDriver(UUID id) {
-        var driver = driverRepository.findById(id)
-                .orElseThrow(DriverNotFoundException::new);
+        var driver = findById(id);
         driver.setStatus(DriverStatus.DELETED);
         driverRepository.save(driver);
+    }
+
+    private Driver findById(UUID id) {
+        return driverRepository.findById(id)
+                .orElseThrow(DriverNotFoundException::new);
     }
 
 }
