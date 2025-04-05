@@ -60,3 +60,16 @@ services:
       - update
     volumes:
       - ./review-service/migrations:/liquibase/changelog
+  liquibase-migrations-wallets:
+    image: liquibase/liquibase:4.25
+    depends_on:
+      - postgresql
+    command:
+      - --changelog-file=master.xml
+      - --driver=org.postgresql.Driver
+      - --url=jdbc:postgresql://postgresql:5432/wallet_service
+      - --username=postgres
+      - --password=root
+      - update
+    volumes:
+      - ./wallet-service/migrations:/liquibase/changelog

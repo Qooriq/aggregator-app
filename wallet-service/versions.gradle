@@ -1,0 +1,5 @@
+ext {
+    versions = [
+            'spring': '3.4.4'
+    ]
+}
