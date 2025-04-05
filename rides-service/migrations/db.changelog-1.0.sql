@@ -12,5 +12,5 @@ CREATE TABLE rides(
     start_time TIMESTAMP NOT NULL,
     end_time TIMESTAMP,
     ride_price DECIMAL,
-    ride_status VARCHAR(8)
+    ride_status VARCHAR(16)
 )
