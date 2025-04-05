@@ -22,9 +22,9 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ReviewMapper reviewMapper;
 
-    @Value("passenger-rating.page-number")
+    @Value("${passenger-rating.page-number}")
     private Integer page;
-    @Value("passenger-rating.limit")
+    @Value("${passenger-rating.limit}")
     private Integer size;
 
     public Page<ReviewReadDto> findAll(Integer page, Integer size, SortType sortType) {
