@@ -7,6 +7,8 @@ plugins {
 group = 'com.java.AKdev'
 version = '0.0.1-SNAPSHOT'
 
+apply from: 'versions.gradle'
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
@@ -26,14 +28,19 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+//    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.liquibase:liquibase-core'
     implementation 'org.springframework.kafka:spring-kafka'
+    implementation "org.mapstruct:mapstruct:${versions.mapstruct}"
+
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'
+
+    annotationProcessor "org.mapstruct:mapstruct-processor:${versions.mapstruct}"
     annotationProcessor 'org.projectlombok:lombok'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'
     testImplementation 'org.springframework.kafka:spring-kafka-test'
