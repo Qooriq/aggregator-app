@@ -7,11 +7,11 @@ import java.util.UUID;
 
 @Builder
 public record WalletCreateDto(
-        @NotBlank
+        @NotBlank(message = "WalletController.cardNumber.notBlank")
         String cardNumber,
-        @NotBlank
+        @NotBlank(message = "WalletController.amount.notBlank")
         Double amount,
-        @NotBlank
+        @NotBlank(message = "WalletController.userId.notBlank")
         UUID userId
 ) {
 }
