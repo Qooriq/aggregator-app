@@ -7,8 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum SortField {
     ID("id"),
-    PASSENGER_ID("passengerId"),
-    DRIVER_ID("driverId"),
+    RECEIVER_ID("receiverId"),
+    REVIEWER_ID("reviewerId"),
     COMMENT("comment"),
     REVIEW("review"),
     RIDE_ID("rideId");

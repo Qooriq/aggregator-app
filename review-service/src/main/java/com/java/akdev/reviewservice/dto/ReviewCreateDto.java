@@ -2,22 +2,23 @@ package com.java.akdev.reviewservice.dto;
 
 import com.java.akdev.reviewservice.enumeration.Receiver;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 import java.util.UUID;
 
 @Builder
 public record ReviewCreateDto(
-        @NotBlank(message = "ReviewController.passengerId.notBlank")
-        UUID passengerId,
-        @NotBlank(message = "ReviewController.driverId.notBlank")
-        UUID driverId,
+        @NotNull(message = "ReviewController.receiverId.notBlank")
+        UUID receiverId,
+        @NotNull(message = "ReviewController.reviewerId.notBlank")
+        UUID reviewerId,
         String comment,
-        @NotBlank(message = "ReviewController.review.notBlank")
+        @NotNull(message = "ReviewController.review.notBlank")
         Short review,
-        @NotBlank(message = "ReviewController.receiver.notBlank")
+        @NotNull(message = "ReviewController.receiver.notBlank")
         Receiver receiver,
-        @NotBlank(message = "ReviewController.rideId.notBlank")
+        @NotNull(message = "ReviewController.rideId.notBlank")
         Long rideId
 ) {
 }
