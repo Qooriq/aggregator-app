@@ -1,5 +1,7 @@
 package com.java.akdev.ridesservice.handler;
 
+import com.java.akdev.ridesservice.dto.ErrorResponse;
+import com.java.akdev.ridesservice.exception.RideNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
@@ -8,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -33,5 +36,10 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
                     messageSource.getMessage(errorMessage, null, request.getLocale()));
         });
         return ResponseEntity.status(400).body(errors);
+    }
+
+    @ExceptionHandler(RideNotFoundException.class)
+    public ResponseEntity<?> handleRideNotFound(RideNotFoundException e) {
+        return ResponseEntity.status(404).body(new ErrorResponse("rideNotFound.error"));
     }
 }
