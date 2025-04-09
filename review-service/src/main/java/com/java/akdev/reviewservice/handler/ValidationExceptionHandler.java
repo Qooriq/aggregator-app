@@ -1,13 +1,13 @@
 package com.java.akdev.reviewservice.handler;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.method.MethodValidationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -17,7 +17,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.util.HashMap;
 import java.util.Map;
 
-@RestControllerAdvice(basePackages = "com.java.akdev.passengerservice.controller")
+@RestControllerAdvice(basePackages = "com.java.akdev.reviewservice.controller")
 @RequiredArgsConstructor
 public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -43,13 +43,26 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        Map<String, String> errors = new HashMap<>();
+        var cause = ex.getCause();
+        if (cause instanceof InvalidFormatException invalidFormatException) {
+            String fieldName = invalidFormatException.getPath().getFirst().getFieldName();
+
+            errors.put(messageSource.getMessage(PREFIX + fieldName, null, request.getLocale()),
+                    messageSource.getMessage(fieldName + ".error", null, request.getLocale()));
+        }
+        return ResponseEntity.status(400).body(errors);
+    }
+
+    @Override
     protected ResponseEntity<Object> handleHandlerMethodValidationException(HandlerMethodValidationException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         Map<String, String> errors = new HashMap<>();
-        ex.getAllErrors().forEach(error -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
+        ex.getParameterValidationResults().forEach(error -> {
+            Object fieldName = error.getMethodParameter().getParameterName();
             errors.put(messageSource.getMessage(PREFIX + fieldName, null, request.getLocale()),
-                    messageSource.getMessage(errorMessage, null, request.getLocale()));
+                    messageSource.getMessage(PREFIX + fieldName + ".mustBePositive", null, request.getLocale()
+                    ));
         });
         return ResponseEntity.status(400).body(errors);
     }
