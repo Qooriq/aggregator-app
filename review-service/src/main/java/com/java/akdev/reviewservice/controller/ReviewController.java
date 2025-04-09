@@ -5,6 +5,7 @@ import com.java.akdev.reviewservice.dto.ReviewReadDto;
 import com.java.akdev.reviewservice.enumeration.Receiver;
 import com.java.akdev.reviewservice.service.ReviewService;
 import com.java.akdev.reviewservice.util.SortType;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -21,15 +22,15 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @GetMapping
-    public ResponseEntity<Page<ReviewReadDto>> findAll(@RequestParam Integer page,
-                                                       @RequestParam Integer size,
+    public ResponseEntity<Page<ReviewReadDto>> findAll(@RequestParam @Min(1) Integer page,
+                                                       @RequestParam @Min(1) Integer size,
                                                        @RequestBody SortType sortType) {
         return ResponseEntity.status(200)
                 .body(reviewService.findAll(page, size, sortType));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ReviewReadDto> findById(@PathVariable Long id) {
+    public ResponseEntity<ReviewReadDto> findById(@PathVariable @Min(1) Long id) {
         return ResponseEntity.status(200)
                 .body(reviewService.findById(id));
     }
@@ -41,7 +42,8 @@ public class ReviewController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ReviewReadDto> update(@PathVariable Long id, @RequestBody @Validated ReviewCreateDto dto) {
+    public ResponseEntity<ReviewReadDto> update(@PathVariable @Min(1) Long id,
+                                                @RequestBody @Validated ReviewCreateDto dto) {
         return ResponseEntity.status(200)
                 .body(reviewService.update(id, dto));
     }
@@ -52,11 +54,10 @@ public class ReviewController {
         return ResponseEntity.noContent().build();
     }
 
-    //TODO: change receiver in the future
     @GetMapping("/user-review/{id}")
-    public ResponseEntity<Double> getUserReview(@PathVariable UUID id) {
+    public ResponseEntity<Double> getUserReview(@PathVariable UUID id, Receiver receiver) {
         return ResponseEntity.status(200)
-                .body(reviewService.findAverageRating(id, Receiver.PASSENGER));
+                .body(reviewService.findAverageRating(id, receiver));
     }
 
 

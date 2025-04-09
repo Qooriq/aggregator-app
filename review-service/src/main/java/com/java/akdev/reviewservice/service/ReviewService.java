@@ -26,6 +26,7 @@ public class ReviewService {
     private Integer page;
     @Value("${passenger-rating.limit}")
     private Integer size;
+    private final static String ERROR_MESSAGE =  "ReviewController.reviewNotFound.error";
 
     public Page<ReviewReadDto> findAll(Integer page, Integer size, SortType sortType) {
         return reviewRepository
@@ -39,7 +40,7 @@ public class ReviewService {
     public ReviewReadDto findById(Long id) {
         return reviewRepository.findById(id)
                 .map(reviewMapper::toDto)
-                .orElseThrow(ReviewNotFoundException::new);
+                .orElseThrow(() -> new ReviewNotFoundException(ERROR_MESSAGE));
     }
 
     public ReviewReadDto createReview(ReviewCreateDto dto) {
@@ -56,7 +57,7 @@ public class ReviewService {
                 })
                 .map(reviewRepository::save)
                 .map(reviewMapper::toDto)
-                .orElseThrow(ReviewNotFoundException::new);
+                .orElseThrow(() -> new ReviewNotFoundException(ERROR_MESSAGE));
     }
 
     public void delete(Long id) {
