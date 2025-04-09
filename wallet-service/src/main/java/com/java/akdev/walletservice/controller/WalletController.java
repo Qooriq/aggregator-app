@@ -4,6 +4,7 @@ import com.java.akdev.walletservice.dto.WalletCreateDto;
 import com.java.akdev.walletservice.dto.WalletReadDto;
 import com.java.akdev.walletservice.service.WalletService;
 import com.java.akdev.walletservice.util.SortType;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -17,15 +18,15 @@ public class WalletController {
     private final WalletService walletService;
 
     @GetMapping
-    public ResponseEntity<Page<WalletReadDto>> findAll(@RequestParam Integer page,
-                                                       @RequestParam Integer size,
+    public ResponseEntity<Page<WalletReadDto>> findAll(@RequestParam @Min(1) Integer page,
+                                                       @RequestParam @Min(1) Integer size,
                                                        @RequestBody SortType sortType) {
         return ResponseEntity.status(200)
-                .body(walletService.findAll(page, size, sortType));
+                .body(walletService.findAll(page - 1, size, sortType));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<WalletReadDto> findById(@PathVariable Long id) {
+    public ResponseEntity<WalletReadDto> findById(@PathVariable @Min(1) Long id) {
         return ResponseEntity.status(200)
                 .body(walletService.findById(id));
     }
@@ -37,14 +38,14 @@ public class WalletController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<WalletReadDto> update(@PathVariable Long id,
+    public ResponseEntity<WalletReadDto> update(@PathVariable @Min(1) Long id,
                                                 @RequestBody WalletCreateDto walletCreateDto) {
         return ResponseEntity.status(200)
                 .body(walletService.update(id, walletCreateDto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable @Min(1) Long id) {
         walletService.deleteWallet(id);
         return ResponseEntity.noContent().build();
     }
