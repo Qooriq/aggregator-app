@@ -3,14 +3,15 @@ package com.java.akdev.reviewservice.service;
 import com.java.akdev.reviewservice.dto.ReviewCreateDto;
 import com.java.akdev.reviewservice.dto.ReviewReadDto;
 import com.java.akdev.reviewservice.enumeration.Receiver;
+import com.java.akdev.reviewservice.enumeration.SortField;
 import com.java.akdev.reviewservice.exception.ReviewNotFoundException;
 import com.java.akdev.reviewservice.mapper.ReviewMapper;
 import com.java.akdev.reviewservice.repository.ReviewRepository;
-import com.java.akdev.reviewservice.util.SortType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -26,14 +27,14 @@ public class ReviewService {
     private Integer page;
     @Value("${passenger-rating.limit}")
     private Integer size;
-    private final static String ERROR_MESSAGE =  "ReviewController.reviewNotFound.error";
+    private final static String ERROR_MESSAGE = "ReviewController.reviewNotFound.error";
 
-    public Page<ReviewReadDto> findAll(Integer page, Integer size, SortType sortType) {
+    public Page<ReviewReadDto> findAll(Integer page, Integer size, SortField field, Sort.Direction direction) {
         return reviewRepository
                 .findAll(PageRequest.of(page,
                         size,
-                        sortType.getOrder(),
-                        sortType.getSortField().getName())
+                        direction,
+                        field.getName())
                 ).map(reviewMapper::toDto);
     }
 
