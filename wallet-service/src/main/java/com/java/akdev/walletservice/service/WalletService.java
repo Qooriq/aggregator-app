@@ -30,12 +30,9 @@ public class WalletService {
         } else {
             direction = Sort.Direction.ASC;
         }
-        return walletRepository.findAll(
-                PageRequest.of(page - 1,
-                        size,
-                        direction,
-                        sortField.getName())
-        ).map(walletMapper::toWalletReadDto);
+        PageRequest pageRequest = PageRequest.of(page, size, direction, sortField.getName());
+        return walletRepository.findAll(pageRequest)
+                .map(walletMapper::toWalletReadDto);
     }
 
     @Transactional(readOnly = true)
