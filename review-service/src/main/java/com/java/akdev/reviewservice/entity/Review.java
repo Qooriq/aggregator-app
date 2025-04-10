@@ -22,11 +22,11 @@ public class Review {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @Column(name = "passenger_id", nullable = false)
-    private UUID passengerId;
+    @Column(name = "receiver_id", nullable = false)
+    private UUID receiverId;
 
-    @Column(name = "driver_id", nullable = false)
-    private UUID driverId;
+    @Column(name = "reviewer_id", nullable = false)
+    private UUID reviewerId;
 
     @Column(name = "comment")
     private String comment;

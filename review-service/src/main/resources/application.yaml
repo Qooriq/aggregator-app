@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: review-service
+  datasource:
+    url: jdbc:postgresql://localhost:5433/review_service
+    username: postgres
+    password: root
+  liquibase:
+    enabled: false
+passenger-rating:
+  limit: 50
+  page-number: 0
+server:
+  port: 8083
