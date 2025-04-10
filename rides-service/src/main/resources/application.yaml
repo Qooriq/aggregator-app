@@ -1,5 +1,7 @@
 spring:
   application:
     name: rides-service
+  liquibase:
+    enabled: false
 server:
   port: 8083
