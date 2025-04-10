@@ -2,13 +2,14 @@ package com.java.akdev.walletservice.service;
 
 import com.java.akdev.walletservice.dto.WalletCreateDto;
 import com.java.akdev.walletservice.dto.WalletReadDto;
+import com.java.akdev.walletservice.enumeration.SortField;
 import com.java.akdev.walletservice.exception.WalletNotFoundException;
 import com.java.akdev.walletservice.mapper.WalletMapper;
 import com.java.akdev.walletservice.repository.WalletRepository;
-import com.java.akdev.walletservice.util.SortType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,13 +18,14 @@ public class WalletService {
 
     private final WalletRepository walletRepository;
     private final WalletMapper walletMapper;
+    private final static String ERROR_MESSAGE = "WalletController.walletNotFound.error";
 
-    public Page<WalletReadDto> findAll(Integer page, Integer size, SortType sortType) {
+    public Page<WalletReadDto> findAll(Integer page, Integer size, SortField sortField, Sort.Direction order) {
         return walletRepository.findAll(
                 PageRequest.of(page,
                         size,
-                        sortType.getOrder(),
-                        sortType.getSortField().getName())
+                        order,
+                        sortField.getName())
         ).map(walletMapper::toWalletReadDto);
     }
 
@@ -31,7 +33,7 @@ public class WalletService {
         return walletRepository
                 .findById(id)
                 .map(walletMapper::toWalletReadDto)
-                .orElseThrow(WalletNotFoundException::new);
+                .orElseThrow(() -> new WalletNotFoundException(ERROR_MESSAGE));
     }
 
     public WalletReadDto update(Long id, WalletCreateDto dto) {
@@ -41,7 +43,7 @@ public class WalletService {
                     walletRepository.save(wallet);
                     return walletMapper.toWalletReadDto(wallet);
                 })
-                .orElseThrow(WalletNotFoundException::new);
+                .orElseThrow(() -> new WalletNotFoundException(ERROR_MESSAGE));
     }
 
     public WalletReadDto createWallet(WalletCreateDto dto) {

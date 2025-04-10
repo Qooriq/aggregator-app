@@ -1,6 +1,7 @@
 package com.java.akdev.walletservice.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 import java.util.UUID;
@@ -9,9 +10,9 @@ import java.util.UUID;
 public record WalletCreateDto(
         @NotBlank(message = "WalletController.cardNumber.notBlank")
         String cardNumber,
-        @NotBlank(message = "WalletController.amount.notBlank")
+        @NotNull(message = "WalletController.amount.notNull")
         Double amount,
-        @NotBlank(message = "WalletController.userId.notBlank")
+        @NotNull(message = "WalletController.userId.notNull")
         UUID userId
 ) {
 }

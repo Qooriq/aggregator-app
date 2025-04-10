@@ -2,11 +2,12 @@ package com.java.akdev.walletservice.controller;
 
 import com.java.akdev.walletservice.dto.WalletCreateDto;
 import com.java.akdev.walletservice.dto.WalletReadDto;
+import com.java.akdev.walletservice.enumeration.SortField;
 import com.java.akdev.walletservice.service.WalletService;
-import com.java.akdev.walletservice.util.SortType;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,9 +21,10 @@ public class WalletController {
     @GetMapping
     public ResponseEntity<Page<WalletReadDto>> findAll(@RequestParam @Min(1) Integer page,
                                                        @RequestParam @Min(1) Integer size,
-                                                       @RequestBody SortType sortType) {
+                                                       @RequestParam SortField sortField,
+                                                       @RequestParam Sort.Direction order) {
         return ResponseEntity.status(200)
-                .body(walletService.findAll(page - 1, size, sortType));
+                .body(walletService.findAll(page - 1, size, sortField, order));
     }
 
     @GetMapping("/{id}")
