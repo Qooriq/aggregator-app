@@ -15,7 +15,7 @@ public interface RideMapper {
 
     Ride toRide(RideCreateDto dto);
 
-    void map(@MappingTarget Ride ride, RideCreateDto dto);
+    void updateRide(@MappingTarget Ride ride, RideCreateDto dto);
 
-    Ride map(@MappingTarget Ride ride, RideUpdateDto dto);
+    Ride updateRide(@MappingTarget Ride ride, RideUpdateDto dto);
 }

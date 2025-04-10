@@ -49,7 +49,7 @@ public class RideService {
     @Transactional
     public RideReadDto update(Long id, RideUpdateDto dto) {
         return rideRepository.findById(id)
-                .map(ride -> rideMapper.map(ride, dto))
+                .map(ride -> rideMapper.updateRide(ride, dto))
                 .map(rideMapper::toRideReadDto)
                 .orElseThrow(() -> new RideNotFoundException("message.rideNotFound.error"));
     }
