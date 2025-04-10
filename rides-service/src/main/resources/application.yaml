@@ -1,6 +1,10 @@
 spring:
   application:
     name: rides-service
+  datasource:
+    url: jdbc:postgresql://localhost:5433/rides_service
+    username: postgres
+    password: root
   liquibase:
     enabled: false
 server:

@@ -7,11 +7,11 @@ import java.util.UUID;
 
 @Builder
 public record RideCreateDto(
-        @NotBlank
+        @NotBlank(message = "argumentNotValid.passengerId.notBlank")
         UUID passengerId,
-        @NotBlank
+        @NotBlank(message = "argumentNotValid.startLocation.notBlank")
         String startLocation,
-        @NotBlank
+        @NotBlank(message = "argumentNotValid.endLocation.notBlank")
         String endLocation
 ) {
 }
