@@ -26,7 +26,7 @@ public class DriverServiceImpl implements DriverService {
     private final DriverRepository driverRepository;
     private final DriverMapper driverMapper;
 
-    private static final String MESSAGE = "Driver";
+    private static final String MESSAGE = "DriverController.driver.notFound";
 
     @Transactional(readOnly = true)
     public Page<DriverReadDto> findAll(Integer page,
