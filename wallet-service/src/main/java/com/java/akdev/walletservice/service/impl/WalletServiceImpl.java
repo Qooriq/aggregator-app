@@ -25,18 +25,12 @@ public class WalletServiceImpl implements WalletService {
 
     @Transactional(readOnly = true)
     public Page<WalletReadDto> findAll(Integer page, Integer size, SortField sortField, Order order) {
-        Sort.Direction direction;
-        if (order == Order.DESC) {
-            direction = Sort.Direction.DESC;
-        } else {
-            direction = Sort.Direction.ASC;
-        }
+        Sort.Direction direction = getDirection(order);
         PageRequest pageRequest = PageRequest.of(page, size, direction, sortField.getName());
         return walletRepository.findAll(pageRequest)
                 .map(walletMapper::toWalletReadDto);
     }
 
-    @Transactional(readOnly = true)
     public WalletReadDto findById(Long id) {
         return walletRepository
                 .findById(id)
@@ -55,12 +49,10 @@ public class WalletServiceImpl implements WalletService {
                 .orElseThrow(() -> new WalletNotFoundException(ERROR_MESSAGE));
     }
 
-    @Transactional
     public WalletReadDto createWallet(WalletCreateDto dto) {
-        return walletMapper.toWalletReadDto(
-                walletRepository
-                        .save(walletMapper.toWallet(dto))
-        );
+        var wallet = walletMapper.toWallet(dto);
+        var res = walletRepository.save(wallet);
+        return walletMapper.toWalletReadDto(res);
     }
 
     @Transactional
@@ -68,5 +60,9 @@ public class WalletServiceImpl implements WalletService {
         walletRepository.deleteById(id);
     }
 
+
+    private Sort.Direction getDirection(Order order) {
+        return order == Order.DESC ? Sort.Direction.DESC : Sort.Direction.ASC;
+    }
 
 }
