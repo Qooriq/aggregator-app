@@ -5,6 +5,7 @@ import com.java.akdev.passengerservice.dto.PassengerReadDto;
 import com.java.akdev.passengerservice.enumeration.Order;
 import com.java.akdev.passengerservice.enumeration.SortField;
 import com.java.akdev.passengerservice.service.PassengerRatingService;
+import com.java.akdev.passengerservice.service.PassengerService;
 import com.java.akdev.passengerservice.service.impl.PassengerServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,7 +20,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PassengerController {
 
-    private final PassengerServiceImpl passengerService;
+    private final PassengerService passengerService;
     private final PassengerRatingService passengerRatingService;
 
     @GetMapping
