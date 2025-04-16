@@ -5,6 +5,7 @@ import com.java.akdev.driverservice.exception.DriverNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -62,7 +63,7 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
                     messageSource.getMessage(PREFIX + fieldName + ".mustBePositive", null, request.getLocale()
                     ));
         });
-        return ResponseEntity.status(400).body(errors);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
     @Override
@@ -71,7 +72,7 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
         var paramName = ex.getParameterName();
         errors.put(messageSource.getMessage(PREFIX + paramName, null, request.getLocale()),
                 messageSource.getMessage(paramName + ".error", null, request.getLocale()));
-        return ResponseEntity.status(400).body(errors);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
@@ -81,7 +82,7 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
         var propertyName = ex.getPropertyName();
         errors.put(messageSource.getMessage(PREFIX + propertyName, null, request.getLocale()),
                 messageSource.getMessage(PREFIX + propertyName + ".conversionNotSupported", null, request.getLocale()));
-        return ResponseEntity.status(400).body(errors);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
     @ExceptionHandler(DriverNotFoundException.class)
@@ -89,6 +90,6 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
         Map<String, String> errors = new HashMap<>();
         errors.put(messageSource.getMessage(PREFIX + "id", null, request.getLocale()),
                 messageSource.getMessage(ex.getMessage(), null, request.getLocale()));
-        return ResponseEntity.status(400).body(errors);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 }
