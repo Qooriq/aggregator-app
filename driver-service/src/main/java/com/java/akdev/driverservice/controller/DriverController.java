@@ -5,11 +5,11 @@ import com.java.akdev.driverservice.dto.DriverReadDto;
 import com.java.akdev.driverservice.enumeration.Order;
 import com.java.akdev.driverservice.enumeration.SortField;
 import com.java.akdev.driverservice.service.DriverService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -37,15 +37,14 @@ public class DriverController {
     }
 
     @PostMapping
-    public ResponseEntity<DriverReadDto> create(@Validated
-                                                @RequestBody DriverCreateDto dto) {
+    public ResponseEntity<DriverReadDto> create(@Valid @RequestBody DriverCreateDto dto) {
         return ResponseEntity.status(201)
                 .body(driverService.createDriver(dto));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<DriverReadDto> update(@PathVariable UUID id,
-                                                @Validated @RequestBody DriverCreateDto dto) {
+                                                @Valid @RequestBody DriverCreateDto dto) {
         return ResponseEntity.status(200)
                 .body(driverService.update(id, dto));
     }
