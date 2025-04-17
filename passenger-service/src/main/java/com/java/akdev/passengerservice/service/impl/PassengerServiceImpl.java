@@ -27,7 +27,7 @@ public class PassengerServiceImpl implements PassengerService {
     private final PassengerRepository passengerRepository;
     private final PassengerMapper passengerMapper;
 
-    private static final String MESSAGE = "PassengerController.passengerNotFound.error";
+    private static final String MESSAGE = "PassengerController.passenger.notFound";
 
     @Transactional(readOnly = true)
     public Page<PassengerReadDto> findAll(Integer page, Integer size, SortField sortField, Order order) {

@@ -1,13 +1,13 @@
 package com.java.akdev.passengerservice.handler;
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.java.akdev.passengerservice.enumeration.ExceptionMessages;
 import com.java.akdev.passengerservice.exception.PassengerNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.lang.NonNull;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -21,61 +21,62 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.util.HashMap;
 import java.util.Map;
 
-@RestControllerAdvice(basePackages = "com.java.akdev.passengerservice.controller")
 @RequiredArgsConstructor
+@RestControllerAdvice(basePackages = "com.java.akdev.passengerservice.controller")
 public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private static final String PREFIX = "PassengerController.field.";
-
     private final MessageSource messageSource;
+
+    @ExceptionHandler(PassengerNotFoundException.class)
+    public ResponseEntity<Object> handlePassengerNotFoundException(PassengerNotFoundException ex,
+                                                                   WebRequest request) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("id",
+                messageSource.getMessage(ex.getMessage(), null, request.getLocale()));
+        return ResponseEntity.status(400).body(errors);
+    }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,
-            HttpHeaders headers,
-            HttpStatusCode status,
-            WebRequest request
+            @NonNull HttpHeaders headers,
+            @NonNull HttpStatusCode status,
+            @NonNull WebRequest request
     ) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach(error -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
-            errors.put(messageSource.getMessage(PREFIX + fieldName, null, request.getLocale()),
-                    messageSource.getMessage(errorMessage, null, request.getLocale()));
+            errors.put(fieldName,
+                    messageSource.getMessage(errorMessage, new Object[]{fieldName}, request.getLocale()));
         });
         return ResponseEntity.status(400).body(errors);
     }
 
     @Override
-    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        Map<String, String> errors = new HashMap<>();
-        var cause = (InvalidFormatException) ex.getCause();
-        String fieldName = cause.getPath().getFirst().getFieldName();
-
-        errors.put(messageSource.getMessage(PREFIX + fieldName, null, request.getLocale()),
-                messageSource.getMessage(fieldName + ".error", null, request.getLocale()));
-
-        return ResponseEntity.status(400).body(errors);
-    }
-
-    @Override
-    protected ResponseEntity<Object> handleHandlerMethodValidationException(HandlerMethodValidationException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+    protected ResponseEntity<Object> handleHandlerMethodValidationException(HandlerMethodValidationException ex,
+                                                                            @NonNull HttpHeaders headers,
+                                                                            @NonNull HttpStatusCode status,
+                                                                            @NonNull WebRequest request) {
         Map<String, String> errors = new HashMap<>();
         ex.getParameterValidationResults().forEach(error -> {
             Object fieldName = error.getMethodParameter().getParameterName();
-            errors.put(messageSource.getMessage(PREFIX + fieldName, null, request.getLocale()),
-                    messageSource.getMessage(PREFIX + fieldName + ".mustBePositive", null, request.getLocale()
+            errors.put(fieldName.toString(),
+                    messageSource.getMessage(ExceptionMessages.MUST_BE_POSITIVE.getName(), new Object[]{fieldName}, request.getLocale()
                     ));
         });
         return ResponseEntity.status(400).body(errors);
     }
 
     @Override
-    protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+    protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex,
+                                                                          @NonNull HttpHeaders headers,
+                                                                          @NonNull HttpStatusCode status,
+                                                                          @NonNull WebRequest request) {
         Map<String, String> errors = new HashMap<>();
         var paramName = ex.getParameterName();
-        errors.put(messageSource.getMessage(PREFIX + paramName, null, request.getLocale()),
-                messageSource.getMessage(paramName + ".error", null, request.getLocale()));
+        errors.put(paramName,
+                messageSource.getMessage(ExceptionMessages.FIELD_MUST_PRESENT.getName(), new Object[]{paramName}, request.getLocale()));
         return ResponseEntity.status(400).body(errors);
     }
 
@@ -84,16 +85,8 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
                                                      WebRequest request) {
         Map<String, String> errors = new HashMap<>();
         var propertyName = ex.getPropertyName();
-        errors.put(messageSource.getMessage(PREFIX + propertyName, null, request.getLocale()),
-                messageSource.getMessage(PREFIX + propertyName + ".conversionNotSupported", null, request.getLocale()));
-        return ResponseEntity.status(400).body(errors);
-    }
-
-    @ExceptionHandler(PassengerNotFoundException.class)
-    public ResponseEntity<Object> handlePassengerNotFoundException(PassengerNotFoundException ex, WebRequest request) {
-        Map<String, String> errors = new HashMap<>();
-        errors.put(messageSource.getMessage(PREFIX + "id", null, request.getLocale()),
-                messageSource.getMessage(ex.getMessage(), null, request.getLocale()));
+        errors.put(propertyName,
+                messageSource.getMessage(ExceptionMessages.WRONG_TYPE.getName(), new Object[]{propertyName}, request.getLocale()));
         return ResponseEntity.status(400).body(errors);
     }
 }
