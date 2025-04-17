@@ -90,7 +90,7 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(PassengerNotFoundException.class)
-    public ResponseEntity<Object> handleWalletNotFound(PassengerNotFoundException ex, WebRequest request) {
+    public ResponseEntity<Object> handlePassengerNotFoundException(PassengerNotFoundException ex, WebRequest request) {
         Map<String, String> errors = new HashMap<>();
         errors.put(messageSource.getMessage(PREFIX + "id", null, request.getLocale()),
                 messageSource.getMessage(ex.getMessage(), null, request.getLocale()));
