@@ -2,9 +2,11 @@ package com.java.akdev.passengerservice.controller;
 
 import com.java.akdev.passengerservice.dto.PassengerCreateDto;
 import com.java.akdev.passengerservice.dto.PassengerReadDto;
+import com.java.akdev.passengerservice.enumeration.Order;
+import com.java.akdev.passengerservice.enumeration.SortField;
 import com.java.akdev.passengerservice.service.PassengerRatingService;
 import com.java.akdev.passengerservice.service.PassengerService;
-import com.java.akdev.passengerservice.util.SortType;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +24,12 @@ public class PassengerController {
     private final PassengerRatingService passengerRatingService;
 
     @GetMapping
-    public ResponseEntity<Page<PassengerReadDto>> findAll(@RequestParam Integer page,
-                                                          @RequestParam Integer size,
-                                                          @RequestBody SortType sortType) {
+    public ResponseEntity<Page<PassengerReadDto>> findAll(@RequestParam @Min(1) Integer page,
+                                                          @RequestParam @Min(1) Integer size,
+                                                          @RequestParam SortField sortField,
+                                                          @RequestParam Order order) {
         return ResponseEntity.status(200)
-                .body(passengerService.findAll(page, size, sortType));
+                .body(passengerService.findAll(page, size, sortField, order));
     }
 
     @GetMapping("/{id}")
