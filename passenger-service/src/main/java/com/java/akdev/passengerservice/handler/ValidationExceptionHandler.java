@@ -33,7 +33,7 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
         Map<String, String> errors = new HashMap<>();
         errors.put("id",
                 messageSource.getMessage(ex.getMessage(), null, request.getLocale()));
-        return ResponseEntity.status(400).body(errors);
+        return ResponseEntity.status(404).body(errors);
     }
 
     @Override
