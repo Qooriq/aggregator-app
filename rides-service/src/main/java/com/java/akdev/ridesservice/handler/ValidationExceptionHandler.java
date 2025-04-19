@@ -2,7 +2,9 @@ package com.java.akdev.ridesservice.handler;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.java.akdev.ridesservice.dto.ErrorResponse;
+import com.java.akdev.ridesservice.enumeration.ExceptionMessages;
 import com.java.akdev.ridesservice.exception.RideNotFoundException;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
@@ -25,40 +27,45 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private static final String PREFIX = "argumentNotValid.field.";
-
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-                                                                  HttpHeaders headers,
-                                                                  HttpStatusCode status, WebRequest request) {
+                                                                  @NonNull HttpHeaders headers,
+                                                                  @NonNull HttpStatusCode status,
+                                                                  @NonNull WebRequest request) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach(error -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
-            errors.put(PREFIX + fieldName,
+            errors.put(fieldName,
                     errorMessage);
         });
         return ResponseEntity.status(400).body(errors);
     }
 
     @Override
-    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
+                                                                  @NonNull HttpHeaders headers,
+                                                                  @NonNull HttpStatusCode status,
+                                                                  @NonNull WebRequest request) {
         Map<String, String> errors = new HashMap<>();
         var cause = (InvalidFormatException) ex.getCause();
         String fieldName = cause.getPath().getFirst().getFieldName();
 
-        errors.put(PREFIX + fieldName, fieldName + ".error");
+        errors.put(fieldName, ExceptionMessages.WRONG_TYPE.getName());
 
         return ResponseEntity.status(400).body(errors);
     }
 
     @Override
-    protected ResponseEntity<Object> handleHandlerMethodValidationException(HandlerMethodValidationException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+    protected ResponseEntity<Object> handleHandlerMethodValidationException(HandlerMethodValidationException ex,
+                                                                            @NonNull HttpHeaders headers,
+                                                                            @NonNull HttpStatusCode status,
+                                                                            @NonNull WebRequest request) {
         Map<String, String> errors = new HashMap<>();
         ex.getParameterValidationResults().forEach(error -> {
-            Object fieldName = error.getMethodParameter().getParameterName();
-            errors.put(PREFIX + fieldName,
-                    PREFIX + fieldName + ".mustBePositive");
+            String fieldName = error.getMethodParameter().getParameterName();
+            errors.put(fieldName,
+                    ExceptionMessages.MUST_BE_POSITIVE.getName());
         });
         return ResponseEntity.status(400).body(errors);
     }
@@ -69,21 +76,23 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+    protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex,
+                                                                          @NonNull HttpHeaders headers,
+                                                                          @NonNull HttpStatusCode status,
+                                                                          @NonNull WebRequest request) {
         Map<String, String> errors = new HashMap<>();
         var paramName = ex.getParameterName();
-        errors.put(PREFIX + paramName,
-                paramName + ".error");
+        errors.put(paramName,
+                ExceptionMessages.FIELD_MUST_PRESENT.getName());
         return ResponseEntity.status(400).body(errors);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<Object> handleTypeMismatch(MethodArgumentTypeMismatchException ex,
-                                                     WebRequest request) {
+    public ResponseEntity<Object> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
         Map<String, String> errors = new HashMap<>();
         var propertyName = ex.getPropertyName();
-        errors.put(PREFIX + propertyName,
-                PREFIX + propertyName + ".conversionNotSupported");
+        errors.put(propertyName,
+                ExceptionMessages.WRONG_TYPE.getName());
         return ResponseEntity.status(400).body(errors);
     }
 }
