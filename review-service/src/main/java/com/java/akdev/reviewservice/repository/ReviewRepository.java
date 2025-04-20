@@ -18,4 +18,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
            "rev.receiver = :receiver " +
            "ORDER BY rev.id DESC")
     List<Double> findAllByUser(UUID userId, Receiver receiver, Pageable pageable);
+
+    List<Review> findAllByReceiver(Receiver receiver);
+
+    List<Review> findAllByReceiverId(UUID receiverId);
 }

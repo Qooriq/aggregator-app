@@ -3,11 +3,12 @@ package com.java.akdev.passengerservice.service;
 
 import com.java.akdev.passengerservice.dto.PassengerCreateDto;
 import com.java.akdev.passengerservice.dto.PassengerReadDto;
+import com.java.akdev.passengerservice.enumeration.Order;
 import com.java.akdev.passengerservice.enumeration.PassengerStatus;
+import com.java.akdev.passengerservice.enumeration.SortField;
 import com.java.akdev.passengerservice.exception.PassengerNotFoundException;
 import com.java.akdev.passengerservice.mapper.PassengerMapper;
 import com.java.akdev.passengerservice.repository.PassengerRepository;
-import com.java.akdev.passengerservice.util.SortType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,10 +26,12 @@ public class PassengerService {
     private final PassengerMapper passengerMapper;
 
     @Transactional(readOnly = true)
-    public Page<PassengerReadDto> findAll(Integer page, Integer size, SortType sortType) {
-        Sort by = Sort.by(sortType.getOrder(), sortType.getSortField().getName());
+    public Page<PassengerReadDto> findAll(Integer page, Integer size, SortField sortField, Order order) {
+        Sort.Direction orderDirection = getDirection(order);
+        var req = PageRequest.of(page - 1, size,
+                orderDirection, sortField.getName());
         return passengerRepository
-                .findAll(PageRequest.of(page - 1, size, by))
+                .findAll(req)
                 .map(passengerMapper::toReadDto);
     }
 
@@ -62,5 +65,9 @@ public class PassengerService {
                 .orElseThrow(PassengerNotFoundException::new);
         passenger.setStatus(PassengerStatus.DELETED);
         passengerRepository.save(passenger);
+    }
+
+    private Sort.Direction getDirection(Order order) {
+        return order == Order.ASC ? Sort.Direction.ASC : Sort.Direction.DESC;
     }
 }

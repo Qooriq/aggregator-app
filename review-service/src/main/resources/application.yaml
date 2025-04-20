@@ -7,8 +7,18 @@ spring:
     password: root
   liquibase:
     enabled: false
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      client-id: 1
 passenger-rating:
   limit: 50
   page-number: 0
+review-service:
+  kafka:
+    topic-name-passenger: passenger-review-update
+    topic-name-driver: driver-review-update
+    replicas: 1
+    partitions: 3
 server:
   port: 8083
