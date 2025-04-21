@@ -27,7 +27,7 @@ public class ReviewService {
     private Integer page;
     @Value("${passenger-rating.limit}")
     private Integer size;
-    private final static String ERROR_MESSAGE = "ReviewController.reviewNotFound.error";
+    private final static String ERROR_MESSAGE = "ReviewController.review.notFound";
 
     public Page<ReviewReadDto> findAll(Integer page, Integer size, SortField field, Sort.Direction direction) {
         return reviewRepository
