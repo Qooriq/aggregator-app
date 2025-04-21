@@ -4,7 +4,6 @@ import com.java.akdev.passengerservice.dto.PassengerCreateDto;
 import com.java.akdev.passengerservice.dto.PassengerReadDto;
 import com.java.akdev.passengerservice.enumeration.Order;
 import com.java.akdev.passengerservice.enumeration.SortField;
-import com.java.akdev.passengerservice.service.PassengerRatingService;
 import com.java.akdev.passengerservice.service.PassengerService;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;

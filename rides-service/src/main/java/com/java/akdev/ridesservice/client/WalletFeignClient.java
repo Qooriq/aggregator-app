@@ -5,6 +5,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.UUID;
 
@@ -12,5 +13,6 @@ import java.util.UUID;
 public interface WalletFeignClient {
 
     @PutMapping("/payment/{id}")
-    ResponseEntity<WalletResponse> updateWallet(@PathVariable("id") Long id, Double price, UUID passengerId);
+    ResponseEntity<WalletResponse> updateWallet(@PathVariable("id") UUID passengerId,
+                                                @RequestParam Double price);
 }

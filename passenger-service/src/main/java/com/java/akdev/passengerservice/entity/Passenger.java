@@ -38,7 +38,8 @@ public class Passenger {
     private String phoneNumber;
 
     @Column(name = "rating", nullable = false)
-    private Double rating;
+    @Builder.Default
+    private Double rating = 5.0;
 
     @Column(name = "passenger_status", nullable = false)
     @Enumerated(EnumType.STRING)

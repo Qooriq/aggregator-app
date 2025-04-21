@@ -16,7 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
+import java.time.Instant;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +35,6 @@ public class RideService {
     }
 
 
-
     @Transactional(readOnly = true)
     public RideReadDto findById(Long id) {
         return rideRepository.findById(id)
@@ -45,17 +44,31 @@ public class RideService {
 
     @Transactional
     public RideReadDto create(RideCreateDto dto) {
+        var ride = rideMapper.toRide(dto);
+        ride.setStatus(RideStatus.PENDING);
+        ride.setStartTime(Instant.now());
+        ride.setRidePrice(10.0);
         return rideMapper.toRideReadDto(
-                rideRepository.save(rideMapper.toRide(dto))
+                rideRepository.save(ride)
         );
     }
 
-    public RideReadDto endRide(Long id, UUID passengerId) {
+    //TODO: add driver using security context
+    public RideReadDto startRide(Long id) {
         var ride = rideRepository.findById(id)
                 .orElseThrow(() -> new RideNotFoundException("message.rideNotFound.error"));
+        ride.setStatus(RideStatus.IN_PROGRESS);
+        rideRepository.save(ride);
+        return rideMapper.toRideReadDto(ride);
+    }
+
+    public RideReadDto endRide(Long id) {
+        var ride = rideRepository.findById(id)
+                .orElseThrow(() -> new RideNotFoundException("message.rideNotFound.error"));
+        var passengerId = ride.getPassengerId();
         if (ride.getPaymentMethod() == PaymentMethod.CARD) {
-            var response = client.updateWallet(id, ride.getRidePrice(), passengerId);
-            if (response.getBody().message().equals(OperationResult.DECLINED)){
+            var response = client.updateWallet(passengerId, ride.getRidePrice());
+            if (response.getBody().message().equals(OperationResult.DECLINED)) {
                 ride.setPaymentMethod(PaymentMethod.CASH);
                 rideRepository.save(ride);
                 throw new NotEnoughMoneyException("message.notEnoughMoney.error");
@@ -63,6 +76,13 @@ public class RideService {
         }
         ride.setStatus(RideStatus.COMPLETED);
         return rideMapper.toRideReadDto(rideRepository.save(ride));
+    }
+
+    public RideReadDto findFirstAvailableRide() {
+        var req = PageRequest.of(0, 10);
+        var rides = rideRepository.findAllByStatus(RideStatus.PENDING, req);
+        return rideMapper.toRideReadDto(rides.stream().findFirst()
+                .orElseThrow(() -> new RideNotFoundException("message.rideNotFound.error")));
     }
 
     @Transactional

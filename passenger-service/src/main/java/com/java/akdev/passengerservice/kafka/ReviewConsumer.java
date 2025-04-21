@@ -24,7 +24,10 @@ public class ReviewConsumer {
     public void listen(@Payload ReviewResponse review) {
         try {
             var passenger = passengerRepository.findById(UUID.fromString(review.userId()))
-                    .orElseThrow(PassengerNotFoundException::new);
+                    .orElseThrow(() ->
+                            new PassengerNotFoundException(
+                            "PassengerController.passenger.notFound")
+                    );
 
             passenger.setRating(review.review());
 

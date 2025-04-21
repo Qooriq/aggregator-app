@@ -50,7 +50,8 @@ public class WalletController {
     }
 
     @PutMapping("/payment/{id}")
-    ResponseEntity<WalletResponse> updateWallet(@PathVariable("id") UUID userId, Double price){
+    ResponseEntity<WalletResponse> updateWallet(@PathVariable("id") UUID userId,
+                                                @RequestParam Double price){
         return ResponseEntity.status(200)
                 .body(walletService.payment(userId, price));
     }
