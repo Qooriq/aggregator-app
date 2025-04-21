@@ -21,4 +21,4 @@ review-service:
     replicas: 1
     partitions: 3
 server:
-  port: 8083
+  port: 8084
