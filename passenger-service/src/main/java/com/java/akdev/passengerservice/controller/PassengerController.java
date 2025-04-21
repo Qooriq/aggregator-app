@@ -21,7 +21,6 @@ import java.util.UUID;
 public class PassengerController {
 
     private final PassengerService passengerService;
-    private final PassengerRatingService passengerRatingService;
 
     @GetMapping
     public ResponseEntity<Page<PassengerReadDto>> findAll(@RequestParam @Min(1) Integer page,
@@ -56,11 +55,5 @@ public class PassengerController {
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         passengerService.deletePassenger(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/passenger-rating/{id}")
-    public ResponseEntity<Double> getPassengerRating(@PathVariable UUID id) {
-        return ResponseEntity.status(200)
-                .body(passengerRatingService.getAvgRating(id));
     }
 }

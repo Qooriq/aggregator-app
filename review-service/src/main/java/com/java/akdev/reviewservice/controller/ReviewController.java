@@ -2,6 +2,7 @@ package com.java.akdev.reviewservice.controller;
 
 import com.java.akdev.reviewservice.dto.ReviewCreateDto;
 import com.java.akdev.reviewservice.dto.ReviewReadDto;
+import com.java.akdev.reviewservice.dto.ReviewResponse;
 import com.java.akdev.reviewservice.enumeration.Receiver;
 import com.java.akdev.reviewservice.enumeration.SortField;
 import com.java.akdev.reviewservice.service.ReviewService;
@@ -57,7 +58,7 @@ public class ReviewController {
     }
 
     @GetMapping("/user-review/{id}")
-    public ResponseEntity<Double> getUserReview(@PathVariable UUID id, Receiver receiver) {
+    public ResponseEntity<ReviewResponse> getUserReview(@PathVariable UUID id, Receiver receiver) {
         return ResponseEntity.status(200)
                 .body(reviewService.findAverageRating(id, receiver));
     }
