@@ -8,9 +8,10 @@ CREATE TABLE drivers(
                            username VARCHAR(64) NOT NULL UNIQUE,
                            password VARCHAR(64) NOT NULL,
                            phone_number VARCHAR(16) UNIQUE,
-                           driver_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE'
+                           passenger_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE'
 );
 
+--changeset Anton Kazlouski:2
 CREATE TABLE driver_rating(
                                  id BIGSERIAL PRIMARY KEY,
                                  passenger_id UUID NOT NULL,

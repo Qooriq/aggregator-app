@@ -8,22 +8,16 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ReviewProducer implements ReviewSender {
+public class ReviewKafkaProducer implements ReviewKafkaSender {
 
     @Value("${review-service.kafka.topic-name-passenger}")
     private String topicPassengerName;
-    @Value("${review-service.kafka.topic-name-driver}")
-    private String topicDriverName;
     private final KafkaTemplate<Long, Object> kafkaTemplate;
 
 
     @Override
-    public void sendPassengerReview(ReviewMessage review) {
+    public void sendReview(ReviewMessage review) {
         kafkaTemplate.send(topicPassengerName, review);
     }
 
-    @Override
-    public void sendDriverReview(ReviewMessage review) {
-        kafkaTemplate.send(topicDriverName, review);
-    }
 }

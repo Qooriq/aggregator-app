@@ -1,5 +1,6 @@
 package com.java.akdev.reviewservice.service;
 
+import com.java.akdev.reviewservice.artemis.ReviewArtemisProducer;
 import com.java.akdev.reviewservice.dto.ReviewCreateDto;
 import com.java.akdev.reviewservice.dto.ReviewMessage;
 import com.java.akdev.reviewservice.dto.ReviewReadDto;
@@ -8,7 +9,7 @@ import com.java.akdev.reviewservice.entity.Review;
 import com.java.akdev.reviewservice.enumeration.Receiver;
 import com.java.akdev.reviewservice.enumeration.SortField;
 import com.java.akdev.reviewservice.exception.ReviewNotFoundException;
-import com.java.akdev.reviewservice.kafka.ReviewSender;
+import com.java.akdev.reviewservice.kafka.ReviewKafkaSender;
 import com.java.akdev.reviewservice.mapper.ReviewMapper;
 import com.java.akdev.reviewservice.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,8 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final ReviewMapper reviewMapper;
-    private final ReviewSender producer;
+    private final ReviewKafkaSender kafkaProducer;
+    private final ReviewArtemisProducer artemisProducer;
 
     @Value("${passenger-rating.page-number}")
     private Integer page;
@@ -93,19 +95,19 @@ public class ReviewService {
                 .toList();
 
         passengers.forEach(
-                passenger -> {
-                    var review = findAverageRating(passenger);
-                    producer.sendPassengerReview(
-                            new ReviewMessage(passenger.toString(), review.review())
+                passengerId -> {
+                    var review = findAverageRating(passengerId);
+                    kafkaProducer.sendReview(
+                            new ReviewMessage(passengerId, review.review())
                     );
                 }
         );
 
         drivers.forEach(
-                driver -> {
-                    var review = findAverageRating(driver);
-                    producer.sendPassengerReview(
-                            new ReviewMessage(driver.toString(), review.review())
+                driverId -> {
+                    var review = findAverageRating(driverId);
+                    artemisProducer.sendReview(
+                            new ReviewMessage(driverId, review.review())
                     );
                 }
         );
