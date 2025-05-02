@@ -6,14 +6,14 @@ import lombok.Builder;
 
 @Builder
 public record DriverCreateDto(
-        @NotBlank(message = "DriverController.firstName.notBlank")
+        @NotBlank(message = "DriverController.field.notBlank")
         String firstName,
-        @NotBlank(message = "DriverController.lastName.notBlank")
+        @NotBlank(message = "DriverController.field.notBlank")
         String lastName,
         @Email(message = "DriverController.email")
-        @NotBlank(message = "DriverController.username.notBlank")
+        @NotBlank(message = "DriverController.field.notBlank")
         String username,
-        @NotBlank(message = "DriverController.password.notBlank")
+        @NotBlank(message = "DriverController.field.notBlank")
         String password,
         String phoneNumber
 ) {
