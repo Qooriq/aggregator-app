@@ -1,6 +1,6 @@
 --liquibase formatted sql
 
---changeset Anton Kazoluski:1
+--changeset Anton Kazoluski:1 context: dev, prod, test
 INSERT INTO drivers(id, first_name, last_name, username, password)
 VALUES ('4ebba608-6315-447e-9bf5-4e20da6fb0b0', 'Anton', 'Kazlouski', 'pochta@gmail.com', '1234'),
        ('82582967-375f-4188-b3fc-e0390b9f22b4', 'Zhenya', 'Mihas', 'zhenya@gmail.com', '1234'),
