@@ -1,17 +1,23 @@
 package com.java.akdev.reviewservice.service;
 
+import com.java.akdev.reviewservice.artemis.ReviewArtemisProducer;
+import com.java.akdev.reviewservice.config.AppConfiguration;
 import com.java.akdev.reviewservice.dto.ReviewCreateDto;
+import com.java.akdev.reviewservice.dto.ReviewMessage;
 import com.java.akdev.reviewservice.dto.ReviewReadDto;
+import com.java.akdev.reviewservice.dto.ReviewResponse;
+import com.java.akdev.reviewservice.entity.Review;
 import com.java.akdev.reviewservice.enumeration.Receiver;
 import com.java.akdev.reviewservice.enumeration.SortField;
 import com.java.akdev.reviewservice.exception.ReviewNotFoundException;
+import com.java.akdev.reviewservice.kafka.ReviewKafkaSender;
 import com.java.akdev.reviewservice.mapper.ReviewMapper;
 import com.java.akdev.reviewservice.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -22,12 +28,11 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final ReviewMapper reviewMapper;
+    private final ReviewKafkaSender kafkaProducer;
+    private final ReviewArtemisProducer artemisProducer;
+    private final AppConfiguration appConfiguration;
 
-    @Value("${passenger-rating.page-number}")
-    private Integer page;
-    @Value("${passenger-rating.limit}")
-    private Integer size;
-    private final static String ERROR_MESSAGE = "ReviewController.review.notFound";
+    private final static String ERROR_MESSAGE = "ReviewController.reviewNotFound.error";
 
     public Page<ReviewReadDto> findAll(Integer page, Integer size, SortField field, Sort.Direction direction) {
         return reviewRepository
@@ -65,12 +70,55 @@ public class ReviewService {
         reviewRepository.deleteById(id);
     }
 
-    public Double findAverageRating(UUID user, Receiver receiver) {
-        return reviewRepository.findAllByUser(
-                        user, receiver, PageRequest.of(page, size)
+    public ReviewResponse findAverageRating(UUID user, Receiver receiver) {
+        return new ReviewResponse(reviewRepository.findAllByUser(
+                        user, receiver, PageRequest.of(
+                                appConfiguration.page(),
+                                appConfiguration.size()
+                        )
                 ).stream()
                 .mapToDouble(Double::doubleValue)
                 .average()
-                .orElse(0.0);
+                .orElse(0.0));
+    }
+
+    @Scheduled(cron = "${app.chrono-update}")
+    public void sendReviewsToUsers() {
+        var passengers = reviewRepository.findAllByReceiver(Receiver.PASSENGER)
+                .stream().map(Review::getReceiverId)
+                .distinct()
+                .toList();
+
+        var drivers = reviewRepository.findAllByReceiver(Receiver.DRIVER)
+                .stream().map(Review::getReceiverId)
+                .distinct()
+                .toList();
+
+        passengers.forEach(
+                passengerId -> {
+                    var review = findAverageRating(passengerId);
+                    kafkaProducer.sendReview(
+                            new ReviewMessage(passengerId, review.review())
+                    );
+                }
+        );
+
+        drivers.forEach(
+                driverId -> {
+                    var review = findAverageRating(driverId);
+                    artemisProducer.sendReview(
+                            new ReviewMessage(driverId, review.review())
+                    );
+                }
+        );
+    }
+
+    private ReviewResponse findAverageRating(UUID user) {
+        return new ReviewResponse(reviewRepository.findAllByReceiverId(user)
+                .stream()
+                .map(Review::getReview)
+                .mapToDouble(Short::shortValue)
+                .average()
+                .orElse(5.0));
     }
 }

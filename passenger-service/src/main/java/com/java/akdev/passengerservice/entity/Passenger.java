@@ -2,10 +2,14 @@ package com.java.akdev.passengerservice.entity;
 
 import com.java.akdev.passengerservice.enumeration.PassengerStatus;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.Builder;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -39,11 +43,8 @@ public class Passenger {
     @Column(name = "phone_number", nullable = false, unique = true)
     private String phoneNumber;
 
-    @OneToMany
-    @JoinColumn(name = "passenger_id")
-    @ToString.Exclude
-    @Builder.Default
-    private List<PassengerRating> passengerRatings = new ArrayList<>();
+    @Column(name = "rating", nullable = false)
+    private Double rating;
 
     @Column(name = "passenger_status", nullable = false)
     @Enumerated(EnumType.STRING)
