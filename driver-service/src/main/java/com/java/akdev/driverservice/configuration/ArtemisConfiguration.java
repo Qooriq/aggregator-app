@@ -14,7 +14,6 @@ import org.springframework.jms.support.converter.MessageType;
 
 import java.util.Map;
 
-
 @Configuration
 public class ArtemisConfiguration {
 
@@ -55,6 +54,4 @@ public class ArtemisConfiguration {
         converter.setTypeIdPropertyName("_type");
         return converter;
     }
-
-
 }

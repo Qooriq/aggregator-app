@@ -2,7 +2,13 @@ package com.java.akdev.passengerservice.entity;
 
 import com.java.akdev.passengerservice.enumeration.PassengerStatus;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.Builder;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.util.UUID;
 

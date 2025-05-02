@@ -19,11 +19,13 @@ spring:
 passenger-rating:
   limit: 50
   page-number: 0
-review-service:
-  kafka:
+app:
+  kafka-config-info:
     topic-name-passenger: passenger-review-update
-    topic-name-driver: driver-review-update
     replicas: 1
     partitions: 3
+  chrono-update: 0 * * * * ?
+  page: 1
+  size: 10
 server:
   port: 8083

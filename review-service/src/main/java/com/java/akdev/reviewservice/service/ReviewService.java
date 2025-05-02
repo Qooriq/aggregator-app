@@ -1,6 +1,7 @@
 package com.java.akdev.reviewservice.service;
 
 import com.java.akdev.reviewservice.artemis.ReviewArtemisProducer;
+import com.java.akdev.reviewservice.config.AppConfiguration;
 import com.java.akdev.reviewservice.dto.ReviewCreateDto;
 import com.java.akdev.reviewservice.dto.ReviewMessage;
 import com.java.akdev.reviewservice.dto.ReviewReadDto;
@@ -13,7 +14,6 @@ import com.java.akdev.reviewservice.kafka.ReviewKafkaSender;
 import com.java.akdev.reviewservice.mapper.ReviewMapper;
 import com.java.akdev.reviewservice.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -30,11 +30,8 @@ public class ReviewService {
     private final ReviewMapper reviewMapper;
     private final ReviewKafkaSender kafkaProducer;
     private final ReviewArtemisProducer artemisProducer;
+    private final AppConfiguration appConfiguration;
 
-    @Value("${passenger-rating.page-number}")
-    private Integer page;
-    @Value("${passenger-rating.limit}")
-    private Integer size;
     private final static String ERROR_MESSAGE = "ReviewController.reviewNotFound.error";
 
     public Page<ReviewReadDto> findAll(Integer page, Integer size, SortField field, Sort.Direction direction) {
@@ -75,14 +72,17 @@ public class ReviewService {
 
     public ReviewResponse findAverageRating(UUID user, Receiver receiver) {
         return new ReviewResponse(reviewRepository.findAllByUser(
-                        user, receiver, PageRequest.of(page, size)
+                        user, receiver, PageRequest.of(
+                                appConfiguration.page(),
+                                appConfiguration.size()
+                        )
                 ).stream()
                 .mapToDouble(Double::doubleValue)
                 .average()
-                .orElse(5.0));
+                .orElse(0.0));
     }
 
-    @Scheduled(cron = "0 * * * * ?")
+    @Scheduled(cron = "${app.chrono-update}")
     public void sendReviewsToUsers() {
         var passengers = reviewRepository.findAllByReceiver(Receiver.PASSENGER)
                 .stream().map(Review::getReceiverId)

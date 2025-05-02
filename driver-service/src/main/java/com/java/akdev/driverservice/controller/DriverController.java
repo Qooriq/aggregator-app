@@ -26,13 +26,13 @@ public class DriverController {
                                                        @RequestParam @Min(1) Integer size,
                                                        @RequestParam SortField sortField,
                                                        @RequestParam Order order) {
-        return ResponseEntity.status(200)
+        return ResponseEntity.ok()
                 .body(driverService.findAll(page, size, sortField, order));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<DriverReadDto> findById(@PathVariable UUID id) {
-        return ResponseEntity.status(200)
+        return ResponseEntity.ok()
                 .body(driverService.findDriverById(id));
     }
 
@@ -45,7 +45,7 @@ public class DriverController {
     @PutMapping("/{id}")
     public ResponseEntity<DriverReadDto> update(@PathVariable UUID id,
                                                 @Valid @RequestBody DriverCreateDto dto) {
-        return ResponseEntity.status(200)
+        return ResponseEntity.ok()
                 .body(driverService.update(id, dto));
     }
 
