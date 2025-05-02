@@ -8,16 +8,16 @@ import java.util.UUID;
 
 @Builder
 public record ReviewCreateDto(
-        @NotNull(message = "ReviewController.receiverId.notNull")
+        @NotNull(message = "ReviewController.field.notNull")
         UUID receiverId,
-        @NotNull(message = "ReviewController.reviewerId.notNull")
+        @NotNull(message = "ReviewController.field.notNull")
         UUID reviewerId,
         String comment,
-        @NotNull(message = "ReviewController.review.notNull")
+        @NotNull(message = "ReviewController.field.notNull")
         Short review,
-        @NotNull(message = "ReviewController.receiver.notNull")
+        @NotNull(message = "ReviewController.field.notNull")
         Receiver receiver,
-        @NotNull(message = "ReviewController.rideId.notNull")
+        @NotNull(message = "ReviewController.field.notNull")
         Long rideId
 ) {
 }
