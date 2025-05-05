@@ -3,9 +3,11 @@ package com.java.akdev.driverservice.util;
 import com.java.akdev.driverservice.dto.DriverCreateDto;
 import com.java.akdev.driverservice.dto.DriverReadDto;
 import com.java.akdev.driverservice.entity.Driver;
+import lombok.experimental.UtilityClass;
 
 import java.util.UUID;
 
+@UtilityClass
 public class TestSetUps {
 
     public static UUID id = UUID.randomUUID();
