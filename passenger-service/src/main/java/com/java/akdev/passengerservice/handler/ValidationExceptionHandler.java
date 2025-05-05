@@ -2,9 +2,12 @@ package com.java.akdev.passengerservice.handler;
 
 import com.java.akdev.passengerservice.enumeration.ExceptionMessages;
 import com.java.akdev.passengerservice.exception.PassengerNotFoundException;
+import com.java.akdev.passengerservice.exception.PhoneNumberAlreadyExistsException;
+import com.java.akdev.passengerservice.exception.UsernameAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
@@ -27,15 +30,6 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
 
     private final MessageSource messageSource;
 
-    @ExceptionHandler(PassengerNotFoundException.class)
-    public ResponseEntity<Object> handlePassengerNotFoundException(PassengerNotFoundException ex,
-                                                                   WebRequest request) {
-        Map<String, String> errors = new HashMap<>();
-        errors.put("id",
-                messageSource.getMessage(ex.getMessage(), null, request.getLocale()));
-        return ResponseEntity.status(404).body(errors);
-    }
-
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,
@@ -50,7 +44,7 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
             errors.put(fieldName,
                     messageSource.getMessage(errorMessage, new Object[]{fieldName}, request.getLocale()));
         });
-        return ResponseEntity.status(400).body(errors);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
     @Override
@@ -65,7 +59,7 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
                     messageSource.getMessage(ExceptionMessages.MUST_BE_POSITIVE.getName(), new Object[]{fieldName}, request.getLocale()
                     ));
         });
-        return ResponseEntity.status(400).body(errors);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
     @Override
@@ -77,7 +71,7 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
         var paramName = ex.getParameterName();
         errors.put(paramName,
                 messageSource.getMessage(ExceptionMessages.FIELD_MUST_PRESENT.getName(), new Object[]{paramName}, request.getLocale()));
-        return ResponseEntity.status(400).body(errors);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
@@ -87,6 +81,33 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
         var propertyName = ex.getPropertyName();
         errors.put(propertyName,
                 messageSource.getMessage(ExceptionMessages.WRONG_TYPE.getName(), new Object[]{propertyName}, request.getLocale()));
-        return ResponseEntity.status(400).body(errors);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    @ExceptionHandler(PassengerNotFoundException.class)
+    public ResponseEntity<Object> handlePassengerNotFoundException(PassengerNotFoundException ex,
+                                                                   WebRequest request) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("id",
+                messageSource.getMessage(ex.getMessage(), null, request.getLocale()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    @ExceptionHandler(UsernameAlreadyExistsException.class)
+    public ResponseEntity<Object> handleUsernameAlreadyExistsException(UsernameAlreadyExistsException ex,
+                                                                       WebRequest request) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("username",
+                messageSource.getMessage(ex.getMessage(), new Object[]{"username"}, request.getLocale()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    @ExceptionHandler(PhoneNumberAlreadyExistsException.class)
+    public ResponseEntity<Object> handleUsernameAlreadyExistsException(PhoneNumberAlreadyExistsException ex,
+                                                                       WebRequest request) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("phoneNumber",
+                messageSource.getMessage(ex.getMessage(), new Object[]{"phoneNumber"}, request.getLocale()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 }
