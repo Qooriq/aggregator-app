@@ -20,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -50,7 +51,7 @@ public class PassengerServiceImpl implements PassengerService {
         if (passengerRepository.existsByUsername(dto.username())) {
             throw new UsernameAlreadyExistsException(ALREADY_EXIST);
         }
-        if (dto.phoneNumber() != null &&
+        if (Objects.nonNull(dto.phoneNumber()) &&
             passengerRepository.existsByPhoneNumber(dto.phoneNumber())) {
             throw new PhoneNumberAlreadyExistsException(ALREADY_EXIST);
         }
@@ -67,7 +68,7 @@ public class PassengerServiceImpl implements PassengerService {
         if (passengerRepository.existsByUsername(dto.username())) {
             throw new UsernameAlreadyExistsException(ALREADY_EXIST);
         }
-        if (dto.phoneNumber() != null &&
+        if (Objects.nonNull(dto.phoneNumber()) &&
             passengerRepository.existsByPhoneNumber(dto.phoneNumber())) {
             throw new PhoneNumberAlreadyExistsException(ALREADY_EXIST);
         }

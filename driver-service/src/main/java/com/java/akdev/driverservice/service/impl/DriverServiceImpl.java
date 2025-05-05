@@ -19,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -50,7 +51,7 @@ public class DriverServiceImpl implements DriverService {
         if (driverRepository.existsByUsername(dto.username())) {
             throw new UsernameAlreadyExistsException(ALREADY_EXISTS);
         }
-        if (dto.phoneNumber() != null &&
+        if (Objects.nonNull(dto.phoneNumber()) &&
             driverRepository.existsByPhoneNumber(dto.phoneNumber())) {
             throw new PhoneAlreadyExistsException(ALREADY_EXISTS);
         }
@@ -64,8 +65,8 @@ public class DriverServiceImpl implements DriverService {
         if (driverRepository.existsByUsername(dto.username())) {
             throw new UsernameAlreadyExistsException(ALREADY_EXISTS);
         }
-        if (dto.phoneNumber() != null &&
-            driverRepository.existsByPhoneNumber(dto.phoneNumber())) {
+        if (Objects.nonNull(dto.phoneNumber()) &&
+                     driverRepository.existsByPhoneNumber(dto.phoneNumber())) {
             throw new PhoneAlreadyExistsException(ALREADY_EXISTS);
         }
         var driver = findById(id);
