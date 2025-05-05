@@ -8,9 +8,7 @@ import com.java.akdev.reviewservice.enumeration.Receiver;
 import com.java.akdev.reviewservice.enumeration.SortField;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
 
-@Service
 public interface ReviewService {
 
     Page<ReviewReadDto> findAll(Integer page, Integer size, SortField field, Order direction);

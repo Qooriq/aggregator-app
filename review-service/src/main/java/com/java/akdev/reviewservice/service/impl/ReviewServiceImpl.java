@@ -14,6 +14,7 @@ import com.java.akdev.reviewservice.exception.ReviewNotFoundException;
 import com.java.akdev.reviewservice.kafka.ReviewKafkaSender;
 import com.java.akdev.reviewservice.mapper.ReviewMapper;
 import com.java.akdev.reviewservice.repository.ReviewRepository;
+import com.java.akdev.reviewservice.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,7 +26,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class ReviewServiceImpl {
+public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final ReviewMapper reviewMapper;
