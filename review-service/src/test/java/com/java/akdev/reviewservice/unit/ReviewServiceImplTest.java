@@ -51,8 +51,8 @@ class ReviewServiceImplTest {
     }
 
     @Test
-    @DisplayName("find driver by id")
-    void findDriverById() {
+    @DisplayName("find review by id")
+    void findReviewById() {
 
         when(reviewRepository.findById(id))
                 .thenReturn(Optional.of(review));
@@ -69,8 +69,8 @@ class ReviewServiceImplTest {
     }
 
     @Test
-    @DisplayName("driver not found exception")
-    void findDriverNotFoundById() {
+    @DisplayName("review not found exception")
+    void findReviewNotFoundById() {
 
         when(reviewRepository.findById(id))
                 .thenReturn(Optional.empty());
@@ -84,7 +84,7 @@ class ReviewServiceImplTest {
 
     @Test
     @DisplayName("create review")
-    void createDriver() {
+    void createReview() {
         when(reviewRepository.save(review))
                 .thenReturn(review);
         when(reviewMapper.toEntity(reviewCreateDto))
@@ -92,9 +92,9 @@ class ReviewServiceImplTest {
         when(reviewMapper.toDto(review))
                 .thenReturn(reviewReadDto);
 
-        var driv = reviewService.createReview(reviewCreateDto);
+        var rev = reviewService.createReview(reviewCreateDto);
 
-        assertThat(driv)
+        assertThat(rev)
                 .isEqualTo(reviewReadDto);
 
         verify(reviewRepository).save(review);
@@ -103,7 +103,7 @@ class ReviewServiceImplTest {
     }
 
     @Test
-    @DisplayName("update driver by id")
+    @DisplayName("update review by id")
     void update() {
         when(reviewRepository.findById(id))
                 .thenReturn(Optional.of(review));
@@ -112,9 +112,9 @@ class ReviewServiceImplTest {
         when(reviewMapper.toDto(updateReview))
                 .thenReturn(reviewUpdateDto);
 
-        var drivDto = reviewService.update(id, reviewCreateDto);
+        var revDto = reviewService.update(id, reviewCreateDto);
 
-        assertThat(drivDto)
+        assertThat(revDto)
                 .isEqualTo(reviewUpdateDto);
 
         verify(reviewRepository).findById(id);
@@ -123,8 +123,8 @@ class ReviewServiceImplTest {
     }
 
     @Test
-    @DisplayName("delete driver by id")
-    void deleteDriver() {
+    @DisplayName("delete review by id")
+    void deleteReview() {
         when(reviewRepository.findById(id))
                 .thenReturn(Optional.of(review));
 
