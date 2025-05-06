@@ -54,7 +54,7 @@ class RideServiceImplTest {
 
     @Test
     @DisplayName("find ride by id")
-    void findDriverById() {
+    void findRideById() {
 
         when(rideRepository.findById(id))
                 .thenReturn(Optional.of(ride));
@@ -71,8 +71,8 @@ class RideServiceImplTest {
     }
 
     @Test
-    @DisplayName("driver not found exception")
-    void findDriverNotFoundById() {
+    @DisplayName("ride not found exception")
+    void findRideNotFoundById() {
 
         when(rideRepository.findById(id))
                 .thenReturn(Optional.empty());
@@ -85,8 +85,8 @@ class RideServiceImplTest {
     }
 
     @Test
-    @DisplayName("create review")
-    void createDriver() {
+    @DisplayName("create ride")
+    void createRide() {
         when(rideRepository.save(ride))
                 .thenReturn(ride);
         when(rideMapper.toRide(rideCreateDto))
@@ -105,7 +105,7 @@ class RideServiceImplTest {
     }
 
     @Test
-    @DisplayName("update driver by id")
+    @DisplayName("update ride by id")
     void update() {
         when(rideRepository.findById(id))
                 .thenReturn(Optional.of(ride));
@@ -128,8 +128,8 @@ class RideServiceImplTest {
     }
 
     @Test
-    @DisplayName("delete driver by id")
-    void deleteDriver() {
+    @DisplayName("delete ride by id")
+    void deleteRide() {
         doNothing().when(rideRepository).deleteById(id);
 
         reviewService.delete(id);
