@@ -11,6 +11,7 @@ import java.util.UUID;
 @Table(name = "rides")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)

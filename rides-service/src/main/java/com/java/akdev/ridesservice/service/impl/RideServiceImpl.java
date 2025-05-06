@@ -52,6 +52,7 @@ public class RideServiceImpl implements RideService {
     public RideReadDto update(Long id, RideUpdateDto dto) {
         return rideRepository.findById(id)
                 .map(ride -> rideMapper.updateRide(ride, dto))
+                .map(rideRepository::save)
                 .map(rideMapper::toRideReadDto)
                 .orElseThrow(() -> new RideNotFoundException("message.rideNotFound.error"));
     }
