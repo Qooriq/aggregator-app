@@ -15,7 +15,7 @@ public class TestSetUps {
     public  final static String DEFAULT_SIZE = "10";
     private final static Double AMOUNT  = 120.0;
     private final static Double NEW_AMOUNT  = 121.0;
-    private final static UUID PASSENGER_ID = UUID.randomUUID();
+    private final static UUID PASSENGER_ID = UUID.fromString("5a72d403-ccc3-4ea0-a569-68dd321dfb4b");
     private final static String CARD_NUMBER = "12345678";
 
     public static Wallet getWallet() {
