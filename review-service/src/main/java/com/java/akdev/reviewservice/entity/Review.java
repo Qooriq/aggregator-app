@@ -10,6 +10,7 @@ import java.util.UUID;
 @Table(name = "reviews")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter
 @Setter
 @ToString
