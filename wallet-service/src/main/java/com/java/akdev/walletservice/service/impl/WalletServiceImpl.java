@@ -42,7 +42,7 @@ public class WalletServiceImpl implements WalletService {
     public WalletReadDto update(Long id, WalletCreateDto dto) {
         return walletRepository.findById(id)
                 .map(wallet -> {
-                    walletMapper.map(wallet, dto);
+                    wallet = walletMapper.map(wallet, dto);
                     walletRepository.save(wallet);
                     return walletMapper.toWalletReadDto(wallet);
                 })
