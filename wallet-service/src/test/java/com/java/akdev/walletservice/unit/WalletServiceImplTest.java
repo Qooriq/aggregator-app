@@ -52,7 +52,7 @@ class WalletServiceImplTest {
     }
 
     @Test
-    @DisplayName("find review by id")
+    @DisplayName("find wallet by id")
     void findReviewById() {
 
         when(walletRepository.findById(id))
@@ -70,7 +70,7 @@ class WalletServiceImplTest {
     }
 
     @Test
-    @DisplayName("review not found exception")
+    @DisplayName("wallet not found exception")
     void findReviewNotFoundById() {
 
         when(walletRepository.findById(id))
@@ -84,7 +84,7 @@ class WalletServiceImplTest {
     }
 
     @Test
-    @DisplayName("create review")
+    @DisplayName("create wallet")
     void createReview() {
         when(walletRepository.save(wallet))
                 .thenReturn(wallet);
@@ -104,7 +104,7 @@ class WalletServiceImplTest {
     }
 
     @Test
-    @DisplayName("update review by id")
+    @DisplayName("update wallet by id")
     void update() {
         when(walletRepository.findById(id))
                 .thenReturn(Optional.of(wallet));
@@ -127,7 +127,7 @@ class WalletServiceImplTest {
     }
 
     @Test
-    @DisplayName("delete review by id")
+    @DisplayName("delete wallet by id")
     void deleteReview() {
         doNothing().when(walletRepository).deleteById(id);
 
