@@ -43,7 +43,7 @@ class WalletServiceImplTest {
     @BeforeEach
     void setUp() {
         wallet = TestSetUps.getWallet();
-        id = TestSetUps.id;
+        id = TestSetUps.ID;
         walletCreateDto = TestSetUps.getCreateDto();
         walletReadDto = TestSetUps.getReadDto();
         walletUpdateDto = TestSetUps.getUpdateDto();
@@ -52,7 +52,7 @@ class WalletServiceImplTest {
     }
 
     @Test
-    @DisplayName("find wallet by id")
+    @DisplayName("find wallet by ID")
     void findReviewById() {
 
         when(walletRepository.findById(id))
@@ -104,7 +104,7 @@ class WalletServiceImplTest {
     }
 
     @Test
-    @DisplayName("update wallet by id")
+    @DisplayName("update wallet by ID")
     void update() {
         when(walletRepository.findById(id))
                 .thenReturn(Optional.of(wallet));
@@ -127,7 +127,7 @@ class WalletServiceImplTest {
     }
 
     @Test
-    @DisplayName("delete wallet by id")
+    @DisplayName("delete wallet by ID")
     void deleteReview() {
         doNothing().when(walletRepository).deleteById(id);
 

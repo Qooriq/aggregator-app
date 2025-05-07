@@ -10,7 +10,9 @@ import java.util.UUID;
 @UtilityClass
 public class TestSetUps {
 
-    public static Long id = 1L;
+    public  final static Long ID = 1L;
+    public  final static String DEFAULT_PAGE = "1";
+    public  final static String DEFAULT_SIZE = "10";
     private final static Double AMOUNT  = 120.0;
     private final static Double NEW_AMOUNT  = 121.0;
     private final static UUID PASSENGER_ID = UUID.randomUUID();
@@ -18,7 +20,7 @@ public class TestSetUps {
 
     public static Wallet getWallet() {
         return Wallet.builder()
-                .id(id)
+                .id(ID)
                 .amount(AMOUNT)
                 .cardNumber(CARD_NUMBER)
                 .userId(PASSENGER_ID)
@@ -33,7 +35,7 @@ public class TestSetUps {
 
     public static Wallet getUpdateWallet() {
         return Wallet.builder()
-                .id(id)
+                .id(ID)
                 .amount(NEW_AMOUNT)
                 .cardNumber(CARD_NUMBER)
                 .userId(PASSENGER_ID)
