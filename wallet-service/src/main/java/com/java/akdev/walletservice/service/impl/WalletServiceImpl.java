@@ -1,7 +1,9 @@
 package com.java.akdev.walletservice.service.impl;
 
+import com.java.akdev.walletservice.dto.WalletResponse;
 import com.java.akdev.walletservice.dto.WalletCreateDto;
 import com.java.akdev.walletservice.dto.WalletReadDto;
+import com.java.akdev.walletservice.enumeration.OperationResult;
 import com.java.akdev.walletservice.enumeration.Order;
 import com.java.akdev.walletservice.enumeration.SortField;
 import com.java.akdev.walletservice.exception.WalletNotFoundException;
@@ -14,6 +16,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -58,6 +62,18 @@ public class WalletServiceImpl implements WalletService {
     @Transactional
     public void deleteWallet(Long id) {
         walletRepository.deleteById(id);
+    }
+
+    @Override
+    public WalletResponse payment(UUID userId, Double amount) {
+        var wallet = walletRepository.findByUserId(userId);
+        var curAmount = wallet.getAmount();
+        if (curAmount < amount) {
+            return new WalletResponse(OperationResult.DECLINED);
+        }
+        wallet.setAmount(curAmount - amount);
+        walletRepository.save(wallet);
+        return new WalletResponse(OperationResult.SUCCESSFUL);
     }
 
 

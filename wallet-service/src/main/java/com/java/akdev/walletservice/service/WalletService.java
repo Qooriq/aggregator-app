@@ -1,10 +1,13 @@
 package com.java.akdev.walletservice.service;
 
+import com.java.akdev.walletservice.dto.WalletResponse;
 import com.java.akdev.walletservice.dto.WalletCreateDto;
 import com.java.akdev.walletservice.dto.WalletReadDto;
 import com.java.akdev.walletservice.enumeration.Order;
 import com.java.akdev.walletservice.enumeration.SortField;
 import org.springframework.data.domain.Page;
+
+import java.util.UUID;
 
 public interface WalletService {
 
@@ -17,4 +20,6 @@ public interface WalletService {
     WalletReadDto createWallet(WalletCreateDto dto);
 
     void deleteWallet(Long id);
+
+    WalletResponse payment(UUID userId, Double amount);
 }

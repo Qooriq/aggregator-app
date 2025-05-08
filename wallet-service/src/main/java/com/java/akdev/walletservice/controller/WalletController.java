@@ -2,6 +2,7 @@ package com.java.akdev.walletservice.controller;
 
 import com.java.akdev.walletservice.dto.WalletCreateDto;
 import com.java.akdev.walletservice.dto.WalletReadDto;
+import com.java.akdev.walletservice.dto.WalletResponse;
 import com.java.akdev.walletservice.enumeration.Order;
 import com.java.akdev.walletservice.enumeration.SortField;
 import com.java.akdev.walletservice.service.WalletService;
@@ -10,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("api/v1/wallets")
@@ -44,6 +47,12 @@ public class WalletController {
                                                 @RequestBody WalletCreateDto walletCreateDto) {
         return ResponseEntity.status(200)
                 .body(walletService.update(id, walletCreateDto));
+    }
+
+    @PutMapping("/payment/{id}")
+    ResponseEntity<WalletResponse> updateWallet(@PathVariable("id") UUID userId, Double price){
+        return ResponseEntity.status(200)
+                .body(walletService.payment(userId, price));
     }
 
     @DeleteMapping("/{id}")
