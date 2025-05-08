@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: wallet-service
+  liquibase:
+    enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+server:
+  port: 8084
