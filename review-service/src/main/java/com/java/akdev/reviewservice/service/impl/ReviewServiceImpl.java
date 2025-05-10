@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -34,7 +35,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewArtemisProducer artemisProducer;
     private final AppConfiguration appConfiguration;
 
-    private final static String ERROR_MESSAGE = "ReviewController.reviewNotFound.error";
+    private final static String ERROR_MESSAGE = "ReviewController.review.notFound";
 
     public Page<ReviewReadDto> findAll(Integer page, Integer size, SortField field, Order order) {
         Sort.Direction dir = getDirection(order);
@@ -53,22 +54,21 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     public ReviewReadDto createReview(ReviewCreateDto dto) {
-        return reviewMapper
-                .toDto(reviewRepository
-                        .save(reviewMapper.toEntity(dto)));
+        var entity = reviewMapper.toEntity(dto);
+        var res = reviewRepository.save(entity);
+        return reviewMapper.toDto(res);
     }
 
+    @Transactional
     public ReviewReadDto update(Long id, ReviewCreateDto dto) {
-        return reviewRepository.findById(id)
-                .map(review -> {
-                    reviewMapper.map(review, dto);
-                    return review;
-                })
-                .map(reviewRepository::save)
-                .map(reviewMapper::toDto)
+        var review = reviewRepository.findById(id)
                 .orElseThrow(() -> new ReviewNotFoundException(ERROR_MESSAGE));
+        review = reviewMapper.map(review, dto);
+        var res = reviewRepository.save(review);
+        return reviewMapper.toDto(res);
     }
 
+    @Transactional
     public void delete(Long id) {
         reviewRepository.deleteById(id);
     }
