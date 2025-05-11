@@ -14,6 +14,7 @@ public class ReviewConsumer {
 
     private final PassengerRepository passengerRepository;
 
+    //TODO: MESSAGE REPLACE
     @KafkaListener(
             topics = "passenger-review-update",
             containerFactory = "listenerContainerFactory",
@@ -22,7 +23,7 @@ public class ReviewConsumer {
     public void listen(@Payload ReviewResponse review) {
         try {
             var passenger = passengerRepository.findById(review.userId())
-                    .orElseThrow(() -> new PassengerNotFoundException("Passenger not found"));
+                    .orElseThrow(() -> new PassengerNotFoundException("message"));
 
             passenger.setRating(review.review());
 
