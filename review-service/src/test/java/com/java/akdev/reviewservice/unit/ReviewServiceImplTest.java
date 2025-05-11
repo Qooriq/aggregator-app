@@ -20,8 +20,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ReviewServiceImplTest {
@@ -111,6 +110,8 @@ class ReviewServiceImplTest {
                 .thenReturn(updateReview);
         when(reviewMapper.toDto(updateReview))
                 .thenReturn(reviewUpdateDto);
+        when(reviewMapper.map(review, reviewCreateDto))
+                .thenReturn(updateReview);
 
         var revDto = reviewService.update(id, reviewCreateDto);
 
@@ -120,16 +121,16 @@ class ReviewServiceImplTest {
         verify(reviewRepository).findById(id);
         verify(reviewRepository).save(review);
         verify(reviewMapper).toDto(updateReview);
+        verify(reviewMapper).map(review, reviewCreateDto);
     }
 
     @Test
     @DisplayName("delete review by id")
     void deleteReview() {
-        when(reviewRepository.findById(id))
-                .thenReturn(Optional.of(review));
+        doNothing().when(reviewRepository).deleteById(id);
 
         reviewService.delete(id);
 
-        verify(reviewRepository).findById(id);
+        verify(reviewRepository).deleteById(id);
     }
 }
