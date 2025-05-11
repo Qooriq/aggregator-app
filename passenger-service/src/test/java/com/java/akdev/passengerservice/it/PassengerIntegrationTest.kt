@@ -82,7 +82,7 @@ open class PassengerIntegrationTest : IntegrationTestBase() {
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(passengerDuplicatedEmail)))
             .andExpect(MockMvcResultMatchers.status().isBadRequest)
-            .andExpect(jsonPath("$.email").value("email already exist"))
+            .andExpect(jsonPath("$.username").value("username already exists"))
     }
 
     @Test

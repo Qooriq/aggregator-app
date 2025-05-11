@@ -90,7 +90,7 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
         Map<String, String> errors = new HashMap<>();
         errors.put("id",
                 messageSource.getMessage(ex.getMessage(), null, request.getLocale()));
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errors);
     }
 
     @ExceptionHandler(UsernameAlreadyExistsException.class)
@@ -103,7 +103,7 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(PhoneNumberAlreadyExistsException.class)
-    public ResponseEntity<Object> handleUsernameAlreadyExistsException(PhoneNumberAlreadyExistsException ex,
+    public ResponseEntity<Object> handlePhoneNumberAlreadyExistsException(PhoneNumberAlreadyExistsException ex,
                                                                        WebRequest request) {
         Map<String, String> errors = new HashMap<>();
         errors.put("phoneNumber",
