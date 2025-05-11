@@ -5,7 +5,6 @@ import com.java.akdev.passengerservice.dto.PassengerReadDto;
 import com.java.akdev.passengerservice.enumeration.Order;
 import com.java.akdev.passengerservice.enumeration.SortField;
 import com.java.akdev.passengerservice.service.PassengerService;
-import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -22,17 +21,17 @@ public class PassengerController {
     private final PassengerService passengerService;
 
     @GetMapping
-    public ResponseEntity<Page<PassengerReadDto>> findAll(@RequestParam @Min(1) Integer page,
-                                                          @RequestParam @Min(1) Integer size,
+    public ResponseEntity<Page<PassengerReadDto>> findAll(@RequestParam Integer page,
+                                                          @RequestParam Integer size,
                                                           @RequestParam SortField sortField,
                                                           @RequestParam Order order) {
-        return ResponseEntity.status(200)
+        return ResponseEntity.ok()
                 .body(passengerService.findAll(page, size, sortField, order));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PassengerReadDto> findById(@PathVariable UUID id) {
-        return ResponseEntity.status(200)
+        return ResponseEntity.ok()
                 .body(passengerService.findPassengerById(id));
     }
 
@@ -46,7 +45,7 @@ public class PassengerController {
     @PutMapping("/{id}")
     public ResponseEntity<PassengerReadDto> update(@PathVariable UUID id,
                                                    @Validated @RequestBody PassengerCreateDto dto) {
-        return ResponseEntity.status(200)
+        return ResponseEntity.ok()
                 .body(passengerService.updatePassenger(id, dto));
     }
 

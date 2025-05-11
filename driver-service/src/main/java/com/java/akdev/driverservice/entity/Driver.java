@@ -14,6 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
 public class Driver {
@@ -41,10 +42,11 @@ public class Driver {
     @Column(name = "phone_number", unique = true)
     private String phoneNumber;
 
-    @OneToMany
-    @JoinColumn(name = "driver_id")
-    private List<DriverRating> driverRatings = new ArrayList<>();
+    @Builder.Default
+    @Column(name = "rating", nullable = false)
+    private Double rating = 5.0;
 
+    @Builder.Default
     @Column(name = "driver_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private DriverStatus status = DriverStatus.ACTIVE;

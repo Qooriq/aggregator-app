@@ -2,9 +2,11 @@ package com.java.akdev.passengerservice.dto;
 
 import lombok.Builder;
 
+import java.util.UUID;
+
 @Builder
 public record ReviewResponse(
-        String userId,
+        UUID userId,
         Double review
 ) {
 }

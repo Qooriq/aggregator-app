@@ -11,14 +11,21 @@ spring:
     bootstrap-servers: localhost:9092
     consumer:
       client-id: 1
+  artemis:
+    broker-url: tcp://localhost:61616
+    user: admin
+    password: admin
+    mode: native
 passenger-rating:
   limit: 50
   page-number: 0
-review-service:
-  kafka:
+app:
+  kafka-config-info:
     topic-name-passenger: passenger-review-update
-    topic-name-driver: driver-review-update
     replicas: 1
     partitions: 3
+  chrono-update: 0 * * * * ?
+  page: 1
+  size: 10
 server:
   port: 8084

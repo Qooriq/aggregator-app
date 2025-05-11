@@ -8,8 +8,6 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-
 @Component
 @RequiredArgsConstructor
 public class ReviewConsumer {
@@ -23,11 +21,8 @@ public class ReviewConsumer {
     )
     public void listen(@Payload ReviewResponse review) {
         try {
-            var passenger = passengerRepository.findById(UUID.fromString(review.userId()))
-                    .orElseThrow(() ->
-                            new PassengerNotFoundException(
-                            "PassengerController.passenger.notFound")
-                    );
+            var passenger = passengerRepository.findById(review.userId())
+                    .orElseThrow(PassengerNotFoundException::new);
 
             passenger.setRating(review.review());
 

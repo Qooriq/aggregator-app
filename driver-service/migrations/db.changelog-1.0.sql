@@ -11,6 +11,7 @@ CREATE TABLE drivers(
                            driver_status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE'
 );
 
+--changeset Anton Kazlouski:2
 CREATE TABLE driver_rating(
                                  id BIGSERIAL PRIMARY KEY,
                                  passenger_id UUID NOT NULL,

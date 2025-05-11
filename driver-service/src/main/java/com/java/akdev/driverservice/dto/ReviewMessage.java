@@ -1,4 +1,4 @@
-package com.java.akdev.reviewservice.dto;
+package com.java.akdev.driverservice.dto;
 
 import lombok.Builder;
 
