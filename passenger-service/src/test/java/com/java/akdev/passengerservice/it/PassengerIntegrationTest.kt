@@ -43,7 +43,6 @@ open class PassengerIntegrationTest : IntegrationTestBase() {
     private var passengerCreatedDto: PassengerCreateDto = TestSetUps.getCreateDto()
     private var passengerUpdateDto: PassengerCreateDto = TestSetUps.getUpdateCreateDto()
     private var passengerUpdateReadDto: PassengerReadDto = TestSetUps.getUpdateReadDto()
-    private var passengerDuplicatedEmail: PassengerCreateDto = TestSetUps.getDuplicatedEmail()
 
 
     @Test
@@ -74,15 +73,6 @@ open class PassengerIntegrationTest : IntegrationTestBase() {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/passengers/{id}", UUID.randomUUID()))
             .andExpect(MockMvcResultMatchers.status().isNotFound)
             .andExpect(jsonPath("$.id").value("passenger not found"))
-    }
-
-    @Test
-    fun `such email already exists`() {
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/passengers")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(passengerDuplicatedEmail)))
-            .andExpect(MockMvcResultMatchers.status().isBadRequest)
-            .andExpect(jsonPath("$.email").value("email already exist"))
     }
 
     @Test

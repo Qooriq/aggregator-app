@@ -35,12 +35,14 @@ class PassengerControllerTest {
     private lateinit var id: UUID
     private lateinit var passengerCreateDto: PassengerCreateDto
     private lateinit var passengerReadDto: PassengerReadDto
+    private lateinit var passengerUpdaReadDto: PassengerReadDto
 
     @BeforeEach
     fun setup() {
         id = TestSetUps.id
         passengerCreateDto = TestSetUps.getCreateDto()
         passengerReadDto = TestSetUps.getReadDto()
+        passengerUpdaReadDto = TestSetUps.getUpdateReadDto()
     }
 
 
@@ -59,7 +61,7 @@ class PassengerControllerTest {
     @Test
     fun `create passenger`() {
         `when`(passengerService.createPassenger(passengerCreateDto))
-            .thenReturn(passengerReadDto)
+            .thenReturn(passengerUpdaReadDto)
 
         mockMvc.perform(
             MockMvcRequestBuilders.post("/api/v1/passengers")
@@ -67,15 +69,15 @@ class PassengerControllerTest {
                 .content(objectMapper.writeValueAsString(passengerCreateDto))
         )
             .andExpect(MockMvcResultMatchers.status().isCreated)
-            .andExpect(jsonPath("$.firstName").value(passengerReadDto.firstName))
-            .andExpect(jsonPath("$.lastName").value(passengerReadDto.lastName))
-            .andExpect(jsonPath("$.username").value(passengerCreateDto.username))
+            .andExpect(jsonPath("$.firstName").value(passengerUpdaReadDto.firstName))
+            .andExpect(jsonPath("$.lastName").value(passengerUpdaReadDto.lastName))
+            .andExpect(jsonPath("$.username").value(passengerUpdaReadDto.username))
     }
 
     @Test
     fun `update passenger`() {
         `when`(passengerService.updatePassenger(id, passengerCreateDto))
-            .thenReturn(passengerReadDto)
+            .thenReturn(passengerUpdaReadDto)
 
         mockMvc.perform(
             MockMvcRequestBuilders.put("/api/v1/passengers/$id")
@@ -83,9 +85,9 @@ class PassengerControllerTest {
                 .content(objectMapper.writeValueAsString(passengerCreateDto))
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(jsonPath("$.firstName").value(passengerReadDto.firstName))
-            .andExpect(jsonPath("$.lastName").value(passengerReadDto.lastName))
-            .andExpect(jsonPath("$.username").value(passengerCreateDto.username))
+            .andExpect(jsonPath("$.firstName").value(passengerUpdaReadDto.firstName))
+            .andExpect(jsonPath("$.lastName").value(passengerUpdaReadDto.lastName))
+            .andExpect(jsonPath("$.username").value(passengerUpdaReadDto.username))
     }
 
     @Test
