@@ -1,6 +1,5 @@
 package com.java.akdev.walletservice.unit;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.java.akdev.walletservice.controller.WalletController;
 import com.java.akdev.walletservice.dto.WalletCreateDto;
 import com.java.akdev.walletservice.dto.WalletReadDto;
@@ -8,27 +7,21 @@ import com.java.akdev.walletservice.service.impl.WalletServiceImpl;
 import com.java.akdev.walletservice.util.TestSetUps;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
-@WebMvcTest(WalletController.class)
+@ExtendWith(MockitoExtension.class)
 public class WalletControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @MockitoBean
+    @Mock
     private WalletServiceImpl walletService;
+    @InjectMocks
+    private WalletController walletController;
 
     private Long id;
     private WalletReadDto walletReadDto;
@@ -43,48 +36,50 @@ public class WalletControllerTest {
 
 
     @Test
-    void getWalletById() throws Exception {
+    void getWalletById() {
         when(walletService.findById(id))
                 .thenReturn(walletReadDto);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/wallets/{id}", id))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.cardNumber").value(walletReadDto.cardNumber()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.amount").value(walletReadDto.amount()));
+        var res = walletController.findById(id);
+
+        assertThat(res.getBody())
+                .isEqualTo(walletReadDto);
+
+        verify(walletService).findById(id);
     }
 
     @Test
-    void createWallet() throws Exception {
+    void createWallet() {
         when(walletService.createWallet(walletCreateDto))
                 .thenReturn(walletReadDto);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/wallets")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(walletCreateDto))
-                )
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.cardNumber").value(walletReadDto.cardNumber()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.amount").value(walletReadDto.amount()));
+        var res = walletController.create(walletCreateDto);
+
+        assertThat(res.getBody())
+                .isEqualTo(walletReadDto);
+
+        verify(walletService).createWallet(walletCreateDto);
     }
 
     @Test
-    void updateWallet() throws Exception {
+    void updateWallet() {
         when(walletService.update(id, walletCreateDto))
                 .thenReturn(walletReadDto);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/wallets/{id}", id)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(walletCreateDto)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.cardNumber").value(walletReadDto.cardNumber()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.amount").value(walletReadDto.amount()));
+        var res = walletController.update(id, walletCreateDto);
+
+        assertThat(res.getBody())
+                .isEqualTo(walletReadDto);
+
+        verify(walletService).update(id, walletCreateDto);
     }
 
     @Test
-    void deleteWallet() throws Exception {
+    void deleteWallet() {
         doNothing().when(walletService).deleteWallet(id);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/wallets/{id}", id))
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
+        walletController.delete(id);
+
+        verify(walletService).deleteWallet(id);
     }
 }

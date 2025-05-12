@@ -107,13 +107,12 @@ class WalletServiceImplTest {
     @DisplayName("update wallet by id")
     void update() {
         when(walletRepository.findById(id))
-                .thenReturn(Optional.of(wallet));
+                .thenReturn(Optional.of(updateWallet));
         when(walletRepository.save(updateWallet))
                 .thenReturn(updateWallet);
         when(walletMapper.toWalletReadDto(updateWallet))
                 .thenReturn(walletUpdateDto);
-        when(walletMapper.map(wallet, walletUpdateCreateDto))
-                .thenReturn(updateWallet);
+        doNothing().when(walletMapper).map(updateWallet, walletUpdateCreateDto);
 
         var revDto = walletService.update(id, walletUpdateCreateDto);
 
@@ -123,7 +122,7 @@ class WalletServiceImplTest {
         verify(walletRepository).findById(id);
         verify(walletRepository).save(updateWallet);
         verify(walletMapper).toWalletReadDto(updateWallet);
-        verify(walletMapper).map(wallet, walletUpdateCreateDto);
+        verify(walletMapper).map(updateWallet, walletUpdateCreateDto);
     }
 
     @Test
