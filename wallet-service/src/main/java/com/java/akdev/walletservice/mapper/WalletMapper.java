@@ -15,5 +15,5 @@ public interface WalletMapper {
 
     Wallet toWallet(WalletCreateDto dto);
 
-    Wallet map(@MappingTarget Wallet wallet, WalletCreateDto dto);
+    void map(@MappingTarget Wallet wallet, WalletCreateDto dto);
 }
