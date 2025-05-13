@@ -6,6 +6,10 @@ plugins {
 
 apply from: "versions.gradle"
 
+ext {
+    springCloudVersion = "2024.0.1"
+}
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -22,6 +26,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${versions.springdoc}"
     implementation "org.mapstruct:mapstruct:${versions.mapstruct}"
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'
@@ -37,6 +42,12 @@ dependencies {
     testImplementation 'org.testcontainers:kafka'
     testImplementation 'org.testcontainers:postgresql'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
+    }
 }
 
 tasks.named('test') {
