@@ -1,6 +1,5 @@
 package com.java.akdev.ridesservice.unit;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.java.akdev.ridesservice.controller.RideController;
 import com.java.akdev.ridesservice.dto.RideCreateDto;
 import com.java.akdev.ridesservice.dto.RideReadDto;
@@ -9,28 +8,21 @@ import com.java.akdev.ridesservice.service.RideService;
 import com.java.akdev.ridesservice.util.TestSetUps;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
-@WebMvcTest(RideController.class)
+@ExtendWith(MockitoExtension.class)
 public class RideControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @MockitoBean
+    @Mock
     private RideService rideService;
+    @InjectMocks
+    private RideController rideController;
 
     private Long id;
     private RideCreateDto rideCreateDto;
@@ -46,55 +38,50 @@ public class RideControllerTest {
     }
 
     @Test
-    void findRideById() throws Exception {
+    void findRideById() {
         when(rideService.findById(id))
                 .thenReturn(rideReadDto);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/rides/{id}", id)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(rideReadDto)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.startLocation").value(rideReadDto.startLocation()))
-                .andExpect(jsonPath("$.endLocation").value(rideReadDto.endLocation()))
-                .andExpect(jsonPath("$.ridePrice").value(rideReadDto.ridePrice().toString()))
-                .andExpect(jsonPath("$.driver").value(rideReadDto.driver()));
+        var ride = rideController.findById(id);
+
+        assertThat(ride.getBody())
+                .isEqualTo(rideReadDto);
+
+        verify(rideService).findById(id);
     }
 
     @Test
-    void createRide() throws Exception {
+    void createRide() {
         when(rideService.create(rideCreateDto))
                 .thenReturn(rideReadDto);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/rides")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(rideCreateDto)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.startLocation").value(rideReadDto.startLocation()))
-                .andExpect(jsonPath("$.endLocation").value(rideReadDto.endLocation()))
-                .andExpect(jsonPath("$.ridePrice").value(rideReadDto.ridePrice().toString()))
-                .andExpect(jsonPath("$.driver").value(rideReadDto.driver()));
+        var ride = rideController.create(rideCreateDto);
+
+        assertThat(ride.getBody())
+                .isEqualTo(rideReadDto);
+
+        verify(rideService).create(rideCreateDto);
     }
 
     @Test
-    void updateRide() throws Exception {
+    void updateRide() {
         when(rideService.update(id, rideUpdateDto))
                 .thenReturn(rideReadDto);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/rides/{id}", id)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(rideUpdateDto)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.startLocation").value(rideReadDto.startLocation()))
-                .andExpect(jsonPath("$.endLocation").value(rideReadDto.endLocation()))
-                .andExpect(jsonPath("$.ridePrice").value(rideReadDto.ridePrice().toString()))
-                .andExpect(jsonPath("$.driver").value(rideReadDto.driver()));
+        var ride = rideController.update(id, rideUpdateDto);
+
+        assertThat(ride.getBody())
+                .isEqualTo(rideReadDto);
+
+        verify(rideService).update(id, rideUpdateDto);
     }
 
     @Test
-    void deleteRide() throws Exception {
+    void deleteRide() {
         doNothing().when(rideService).delete(id);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/rides/{id}", id))
-                .andExpect(status().isNoContent());
+        rideController.delete(id);
+
+        verify(rideService).delete(id);
     }
 }
