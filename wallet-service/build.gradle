@@ -6,6 +6,10 @@ plugins {
 
 apply from: 'versions.gradle'
 
+ext {
+    springCloudVersion = "2024.0.1"
+}
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -18,6 +22,7 @@ dependencies {
     implementation "org.springframework.data:spring-data-envers:${versions.spring}"
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation "org.mapstruct:mapstruct:${versions.mapstruct}"
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
 
     testImplementation 'org.liquibase:liquibase-core'
@@ -35,6 +40,12 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
+    }
 }
 
 tasks.named('test') {

@@ -22,7 +22,7 @@ public class ReviewConsumer {
     public void listen(@Payload ReviewResponse review) {
         try {
             var passenger = passengerRepository.findById(review.userId())
-                    .orElseThrow(PassengerNotFoundException::new);
+                    .orElseThrow(() -> new PassengerNotFoundException("message"));
 
             passenger.setRating(review.review());
 
