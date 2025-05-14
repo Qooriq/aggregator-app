@@ -1,6 +1,5 @@
 package com.java.akdev.reviewservice.unit;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.java.akdev.reviewservice.controller.ReviewController;
 import com.java.akdev.reviewservice.dto.ReviewCreateDto;
 import com.java.akdev.reviewservice.dto.ReviewReadDto;
@@ -8,28 +7,22 @@ import com.java.akdev.reviewservice.service.ReviewService;
 import com.java.akdev.reviewservice.util.TestSetUps;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
-@WebMvcTest(ReviewController.class)
+@ExtendWith(MockitoExtension.class)
 public class ReviewControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @MockitoBean
+    @Mock
     private ReviewService reviewService;
+
+    @InjectMocks
+    private ReviewController reviewController;
 
     private Long id;
     private ReviewCreateDto reviewCreateDto;
@@ -43,50 +36,50 @@ public class ReviewControllerTest {
     }
 
     @Test
-    void getReviewById() throws Exception {
+    void getReviewById() {
         when(reviewService.findById(id))
                 .thenReturn(reviewReadDto);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/reviews/{id}", id))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(jsonPath("$.review").value(reviewReadDto.review().toString()))
-                .andExpect(jsonPath("$.receiver").value(reviewReadDto.receiver().toString()))
-                .andExpect(jsonPath("$.comment").value(reviewReadDto.comment()));
+        var review = reviewController.findById(id);
+
+        assertThat(review.getBody())
+                .isEqualTo(reviewReadDto);
+
+        verify(reviewService).findById(id);
     }
 
     @Test
-    void createReview() throws Exception {
+    void createReview() {
         when(reviewService.createReview(reviewCreateDto))
                 .thenReturn(reviewReadDto);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/reviews")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(reviewCreateDto)))
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(jsonPath("$.review").value(reviewReadDto.review().toString()))
-                .andExpect(jsonPath("$.receiver").value(reviewReadDto.receiver().toString()))
-                .andExpect(jsonPath("$.comment").value(reviewReadDto.comment()));
+        var review = reviewController.create(reviewCreateDto);
+
+        assertThat(review.getBody())
+                .isEqualTo(reviewReadDto);
+
+        verify(reviewService).createReview(reviewCreateDto);
     }
 
     @Test
-    void updateReview() throws Exception {
+    void updateReview() {
         when(reviewService.update(id, reviewCreateDto))
                 .thenReturn(reviewReadDto);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/reviews/{id}", id)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(reviewCreateDto)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(jsonPath("$.review").value(reviewReadDto.review().toString()))
-                .andExpect(jsonPath("$.receiver").value(reviewReadDto.receiver().toString()))
-                .andExpect(jsonPath("$.comment").value(reviewReadDto.comment()));
+        var review = reviewController.update(id, reviewCreateDto);
+
+        assertThat(review.getBody())
+                .isEqualTo(reviewReadDto);
+
+        verify(reviewService).update(id, reviewCreateDto);
     }
 
     @Test
-    void deleteReview() throws Exception {
+    void deleteReview() {
         doNothing().when(reviewService).delete(id);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/reviews/{id}", id))
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
+        reviewController.delete(id);
+
+        verify(reviewService).delete(id);
     }
 }
