@@ -1,14 +1,19 @@
 package com.java.akdev.ridesservice.service;
 
+import com.java.akdev.ridesservice.client.CheckDriverExistClient;
+import com.java.akdev.ridesservice.client.CheckPassengerExistClient;
+import com.java.akdev.ridesservice.client.CheckReviewExistClient;
 import com.java.akdev.ridesservice.client.WalletFeignClient;
 import com.java.akdev.ridesservice.dto.RideCreateDto;
 import com.java.akdev.ridesservice.dto.RideReadDto;
 import com.java.akdev.ridesservice.dto.RideUpdateDto;
 import com.java.akdev.ridesservice.enumeration.*;
+import com.java.akdev.ridesservice.exception.EntityNotFoundException;
 import com.java.akdev.ridesservice.exception.NotEnoughMoneyException;
 import com.java.akdev.ridesservice.exception.RideNotFoundException;
 import com.java.akdev.ridesservice.mapper.RideMapper;
 import com.java.akdev.ridesservice.repository.RideRepository;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +30,9 @@ public class RideService {
     private final RideRepository rideRepository;
     private final WalletFeignClient client;
     private final RideMapper rideMapper;
+    private final CheckPassengerExistClient passengerClient;
+    private final CheckDriverExistClient driverClient;
+    private final CheckReviewExistClient reviewClient;
 
     @Transactional(readOnly = true)
     public Page<RideReadDto> findAll(Integer page, Integer size, SortField sortField, Order order) {
@@ -45,9 +53,15 @@ public class RideService {
 
     @Transactional
     public RideReadDto create(RideCreateDto dto) {
-        return rideMapper.toRideReadDto(
-                rideRepository.save(rideMapper.toRide(dto))
-        );
+        try {
+            passengerClient.findPassengerById(dto.passengerId());
+            return rideMapper.toRideReadDto(
+                    rideRepository.save(rideMapper.toRide(dto))
+            );
+        } catch (FeignException e) {
+            throw new EntityNotFoundException("message.rideNotFound.error");
+        }
+
     }
 
     public RideReadDto endRide(Long id, UUID passengerId) {
@@ -67,10 +81,19 @@ public class RideService {
 
     @Transactional
     public RideReadDto update(Long id, RideUpdateDto dto) {
-        return rideRepository.findById(id)
-                .map(ride -> rideMapper.updateRide(ride, dto))
-                .map(rideMapper::toRideReadDto)
-                .orElseThrow(() -> new RideNotFoundException("message.rideNotFound.error"));
+        try {
+            passengerClient.findPassengerById(dto.passengerId());
+            driverClient.findDriverById(dto.driverId());
+            reviewClient.findReviewById(dto.driverReviewPassenger());
+            reviewClient.findReviewById(dto.passengerReviewDriver());
+            return rideRepository.findById(id)
+                    .map(ride -> rideMapper.updateRide(ride, dto))
+                    .map(rideMapper::toRideReadDto)
+                    .orElseThrow(() -> new RideNotFoundException("message.rideNotFound.error"));
+        } catch (FeignException e) {
+            throw new EntityNotFoundException("message.entityNotFound.error");
+        }
+
     }
 
     @Transactional
