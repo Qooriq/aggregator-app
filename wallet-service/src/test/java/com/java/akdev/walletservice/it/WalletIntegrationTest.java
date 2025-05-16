@@ -1,4 +1,4 @@
-package com.java.akdev.walletservice.it.service;
+package com.java.akdev.walletservice.it;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.java.akdev.walletservice.IntegrationTestBase;
