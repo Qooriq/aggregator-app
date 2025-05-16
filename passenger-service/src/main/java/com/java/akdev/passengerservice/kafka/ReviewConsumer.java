@@ -15,6 +15,7 @@ public class ReviewConsumer {
 
     private final PassengerRepository passengerRepository;
 
+    //TODO: MESSAGE REPLACE
     @KafkaListener(
             topics = "passenger-review-update",
             containerFactory = "listenerContainerFactory",
@@ -24,7 +25,7 @@ public class ReviewConsumer {
         try {
             var passenger = passengerRepository.findById(review.userId())
                     .orElseThrow(() -> new PassengerNotFoundException(ExceptionMessages.PASSENGER_NOT_FOUND.getName()));
-
+          
             passenger.setRating(review.review());
 
             passengerRepository.save(passenger);
