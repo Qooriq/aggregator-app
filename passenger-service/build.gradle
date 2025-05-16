@@ -32,6 +32,11 @@ dependencies {
 	testAnnotationProcessor 'org.projectlombok:lombok'
 
 	testImplementation 'org.liquibase:liquibase-core'
+	testImplementation "io.rest-assured:rest-assured:${versions.rest_assured}"
+	testImplementation "io.cucumber:cucumber-java:${versions.cucumber}"
+	testImplementation "io.cucumber:cucumber-junit:${versions.cucumber}"
+	testImplementation "io.cucumber:cucumber-junit-platform-engine:${versions.cucumber}"
+	testImplementation "org.junit.vintage:junit-vintage-engine:${versions.junit_vintage}"
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
 	testImplementation 'org.springframework.kafka:spring-kafka-test'
