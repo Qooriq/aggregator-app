@@ -9,7 +9,7 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
         glue = "com.java.akdev.driverservice.e2e.steps",
         features = "src/test/resources/features",
-        plugin = {"pretty", "html:target/cucumber-reports.html"}
+        plugin = {"pretty", "html:build/cucumber-reports.html"}
 )
 public class DriverE2eRunnerTest {
 }
