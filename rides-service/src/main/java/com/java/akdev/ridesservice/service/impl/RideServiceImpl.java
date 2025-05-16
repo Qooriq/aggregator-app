@@ -17,6 +17,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+
 @Service
 @RequiredArgsConstructor
 public class RideServiceImpl implements RideService {
@@ -49,6 +51,7 @@ public class RideServiceImpl implements RideService {
     public RideReadDto create(RideCreateDto dto) {
         var ride = rideMapper.toRide(dto);
         ride.setRidePrice(10.0);
+        ride.setStartTime(Instant.now());
         return rideMapper.toRideReadDto(
                 rideRepository.save(ride));
     }
