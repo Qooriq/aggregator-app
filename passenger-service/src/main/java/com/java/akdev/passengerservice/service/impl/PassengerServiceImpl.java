@@ -4,6 +4,7 @@ package com.java.akdev.passengerservice.service.impl;
 import com.java.akdev.passengerservice.dto.PassengerCreateDto;
 import com.java.akdev.passengerservice.dto.PassengerReadDto;
 import com.java.akdev.passengerservice.entity.Passenger;
+import com.java.akdev.passengerservice.enumeration.ExceptionMessages;
 import com.java.akdev.passengerservice.enumeration.Order;
 import com.java.akdev.passengerservice.enumeration.PassengerStatus;
 import com.java.akdev.passengerservice.enumeration.SortField;
@@ -30,7 +31,6 @@ public class PassengerServiceImpl implements PassengerService {
     private final PassengerRepository passengerRepository;
     private final PassengerMapper passengerMapper;
 
-    private static final String MESSAGE = "PassengerController.passenger.notFound";
     private static final String ALREADY_EXIST = "PassengerController.field.alreadyExists";
 
     @Transactional(readOnly = true)
@@ -61,7 +61,9 @@ public class PassengerServiceImpl implements PassengerService {
                     passengerRepository.save(passenger);
                     return passengerMapper.toReadDto(passenger);
                 })
-                .orElseThrow(() -> new PassengerNotFoundException(MESSAGE));
+                .orElseThrow(() -> new PassengerNotFoundException(
+                        ExceptionMessages.PASSENGER_NOT_FOUND.getName()
+                ));
     }
 
     public PassengerReadDto createPassenger(PassengerCreateDto dto) {
@@ -89,6 +91,8 @@ public class PassengerServiceImpl implements PassengerService {
 
     private Passenger findPassenger(UUID id) {
         return passengerRepository.findById(id)
-                .orElseThrow(() -> new PassengerNotFoundException(MESSAGE));
+                .orElseThrow(() -> new PassengerNotFoundException(
+                        ExceptionMessages.PASSENGER_NOT_FOUND.getName()
+                ));
     }
 }
