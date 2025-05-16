@@ -19,4 +19,10 @@ public interface RideService {
     RideResponse update(Long id, RideUpdateDto dto);
 
     void delete(Long id);
+
+    RideReadDto findFirstAvailableRide();
+
+    RideReadDto startRide(Long id);
+
+    RideReadDto endRide(Long id);
 }
