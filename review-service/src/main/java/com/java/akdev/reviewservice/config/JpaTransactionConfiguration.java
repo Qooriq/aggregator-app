@@ -11,7 +11,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 public class JpaTransactionConfiguration {
 
     @Bean
-    @Primary  // Помечаем как основной TransactionManager
+    @Primary
     public PlatformTransactionManager jpaTransactionManager(EntityManagerFactory emf) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(emf);
