@@ -48,7 +48,7 @@ public class DriverSteps {
     public void driver_with_id(String driverId) throws Exception {
         response = given()
                 .baseUri(uri)
-                .get("/passengers/{id}", driverId);
+                .get("/drivers/{id}", driverId);
     }
 
     @When("I send a DELETE request to URL {string}")
