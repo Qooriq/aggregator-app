@@ -11,6 +11,7 @@ import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.testcontainers.containers.JdbcDatabaseContainer
 import org.testcontainers.containers.PostgreSQLContainer
+import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 import java.nio.file.Path
 import java.sql.DriverManager
@@ -18,39 +19,39 @@ import java.sql.DriverManager
 
 @Slf4j
 @Testcontainers
-open class IntegrationTestBase {
+object IntegrationTestBase {
 
-    companion object {
-        val POSTGRES: PostgreSQLContainer<*> = PostgreSQLContainer("postgres:16")
-            .withDatabaseName("scrapper_test")
-            .withUsername("postgres")
-            .withPassword("postgres")
-            .also {
-                it.start()
-                runMigrations(it)
-            }
-
-        @DynamicPropertySource
-        @JvmStatic
-        fun postgresProperties(registry: DynamicPropertyRegistry) {
-            registry.add("spring.datasource.url") { POSTGRES.jdbcUrl }
-            registry.add("spring.datasource.username") { POSTGRES.username }
-            registry.add("spring.datasource.password") { POSTGRES.password }
+    @Container
+    val POSTGRES: PostgreSQLContainer<*> = PostgreSQLContainer("postgres:16")
+        .withDatabaseName("scrapper_test")
+        .withUsername("postgres")
+        .withPassword("postgres")
+        .also {
+            it.start()
+            runMigrations(it)
         }
 
-        private fun runMigrations(c: JdbcDatabaseContainer<*>) {
-            val changelogPath = Path.of("./migrations/")
+    @DynamicPropertySource
+    @JvmStatic
+    fun postgresProperties(registry: DynamicPropertyRegistry) {
+        registry.add("spring.datasource.url") { POSTGRES.jdbcUrl }
+        registry.add("spring.datasource.username") { POSTGRES.username }
+        registry.add("spring.datasource.password") { POSTGRES.password }
+    }
 
-            try {
-                DriverManager.getConnection(c.jdbcUrl, c.username, c.password).use { connection ->
-                    val db = DatabaseFactory.getInstance()
-                        .findCorrectDatabaseImplementation(JdbcConnection(connection))
-                    val liquibase = Liquibase("master.xml", DirectoryResourceAccessor(changelogPath), db)
-                    liquibase.update(Contexts(), LabelExpression())
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
+    private fun runMigrations(c: JdbcDatabaseContainer<*>) {
+        val changelogPath = Path.of("./migrations/")
+
+        try {
+            DriverManager.getConnection(c.jdbcUrl, c.username, c.password).use { connection ->
+                val db = DatabaseFactory.getInstance()
+                    .findCorrectDatabaseImplementation(JdbcConnection(connection))
+                val liquibase = Liquibase("master.xml", DirectoryResourceAccessor(changelogPath), db)
+                liquibase.update(Contexts(), LabelExpression())
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
+
 }
