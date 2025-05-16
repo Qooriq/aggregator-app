@@ -91,7 +91,7 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
         Map<String, String> errors = new HashMap<>();
         errors.put("id",
                 messageSource.getMessage(ex.getMessage(), null, request.getLocale()));
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errors);
     }
 
     @ExceptionHandler(PhoneAlreadyExistsException.class)
