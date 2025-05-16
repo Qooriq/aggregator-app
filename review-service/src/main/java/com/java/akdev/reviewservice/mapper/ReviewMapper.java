@@ -14,5 +14,5 @@ public interface ReviewMapper {
 
     Review toEntity(ReviewCreateDto dto);
 
-    void map(@MappingTarget Review review, ReviewCreateDto dto);
+    Review map(@MappingTarget Review review, ReviewCreateDto dto);
 }
