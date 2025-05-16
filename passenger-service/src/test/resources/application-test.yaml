@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: passenger-service
+  liquibase:
+    enabled: false
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: passenger-group
+    properties:
+      security.protocol: PLAINTEXT
+passenger-service:
+  topic-name-passenger: passenger-review-update
+  kafka:
+    partitions: 3
+    replicas: 1
+server:
+  port: 8082
