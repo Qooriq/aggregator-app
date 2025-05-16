@@ -1,6 +1,7 @@
 package com.java.akdev.passengerservice.kafka;
 
 import com.java.akdev.passengerservice.dto.ReviewResponse;
+import com.java.akdev.passengerservice.enumeration.ExceptionMessages;
 import com.java.akdev.passengerservice.exception.PassengerNotFoundException;
 import com.java.akdev.passengerservice.repository.PassengerRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +24,8 @@ public class ReviewConsumer {
     public void listen(@Payload ReviewResponse review) {
         try {
             var passenger = passengerRepository.findById(review.userId())
-                    .orElseThrow(() -> new PassengerNotFoundException("message"));
-
+                    .orElseThrow(() -> new PassengerNotFoundException(ExceptionMessages.PASSENGER_NOT_FOUND.getName()));
+          
             passenger.setRating(review.review());
 
             passengerRepository.save(passenger);

@@ -22,8 +22,6 @@ dependencies {
 	implementation 'org.liquibase:liquibase-core'
 	implementation 'org.springframework.kafka:spring-kafka'
 	implementation "org.mapstruct:mapstruct:${versions.mapstruct}"
-	implementation 'org.springframework.boot:spring-boot-starter-artemis'
-	implementation "org.apache.activemq:artemis-jakarta-client:${versions.artemis_mq}"
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
