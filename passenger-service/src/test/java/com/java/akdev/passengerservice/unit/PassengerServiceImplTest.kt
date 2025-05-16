@@ -24,18 +24,18 @@ import java.util.*
 class PassengerServiceImplTest {
 
     @Mock
-    private val passengerRepository: PassengerRepository? = null
+    private lateinit var passengerRepository: PassengerRepository
 
     @Mock
-    private val passengerMapper: PassengerMapper? = null
+    private lateinit var passengerMapper: PassengerMapper
 
     @InjectMocks
-    private val passengerService: PassengerServiceImpl? = null
+    private lateinit var passengerService: PassengerServiceImpl
 
-    private var passenger: Passenger? = null
-    private var id: UUID? = null
-    private var createDto: PassengerCreateDto? = null
-    private var readDto: PassengerReadDto? = null
+    private lateinit var passenger: Passenger
+    private lateinit var id: UUID
+    private lateinit var createDto: PassengerCreateDto
+    private lateinit var readDto: PassengerReadDto
 
     @BeforeEach
     fun setUp() {
@@ -50,17 +50,17 @@ class PassengerServiceImplTest {
     fun `find passenger by id`() {
 
         `when`(
-            passengerRepository!!.findById(id!!)
-        ).thenReturn(Optional.of(passenger!!))
+            passengerRepository.findById(id)
+        ).thenReturn(Optional.of(passenger))
         `when`(
-            passengerMapper!!.toReadDto(passenger)
-        ).thenReturn(readDto!!)
+            passengerMapper.toReadDto(passenger)
+        ).thenReturn(readDto)
 
-        val pass: PassengerReadDto? = passengerService!!.findPassengerById(id)
+        val pass: PassengerReadDto? = passengerService.findPassengerById(id)
 
         assertThat(pass).isEqualTo(readDto)
 
-        verify(passengerRepository)!!.findById(id!!)
+        verify(passengerRepository)!!.findById(id)
         verify(passengerMapper)!!.toReadDto(passenger)
     }
 
@@ -68,43 +68,43 @@ class PassengerServiceImplTest {
     fun `update passenger by id`() {
 
         `when`(
-            passengerRepository?.findById(passenger!!.id!!)
-        ).thenReturn(Optional.of(passenger!!))
+            passengerRepository.findById(passenger.id!!)
+        ).thenReturn(Optional.of(passenger))
         `when`(
-            passengerRepository?.save(passenger!!)
+            passengerRepository.save(passenger)
         ).thenReturn(passenger)
         `when`(
-            passengerMapper?.toReadDto(passenger)
-        ).thenReturn(readDto!!)
+            passengerMapper.toReadDto(passenger)
+        ).thenReturn(readDto)
 
-        val pas: PassengerReadDto? = passengerService?.updatePassenger(id, createDto!!)
+        val pas: PassengerReadDto? = passengerService.updatePassenger(id, createDto)
 
         assertThat(pas)
             .isEqualTo(readDto)
 
-        verify(passengerRepository)!!.findById(id!!)
-        verify(passengerRepository)!!.save(passenger!!)
+        verify(passengerRepository)!!.findById(id)
+        verify(passengerRepository)!!.save(passenger)
         verify(passengerMapper)!!.toReadDto(passenger)
     }
 
     @Test
     fun `create passenger`() {
         `when`(
-            passengerRepository!!.save(passenger!!)
+            passengerRepository.save(passenger)
         ).thenReturn(passenger)
         `when`(
-            passengerMapper!!.toReadDto(passenger)
+            passengerMapper.toReadDto(passenger)
         ).thenReturn(readDto)
         `when`(
             passengerMapper.toPassenger(createDto)
         ).thenReturn(passenger)
 
-        val pas: PassengerReadDto? = passengerService?.createPassenger(createDto!!)
+        val pas: PassengerReadDto? = passengerService.createPassenger(createDto)
 
         assertThat(pas)
             .isEqualTo(readDto)
 
-        verify(passengerRepository)!!.save(passenger!!)
+        verify(passengerRepository)!!.save(passenger)
         verify(passengerMapper)!!.toReadDto(passenger)
         verify(passengerMapper)!!.toPassenger(createDto)
     }
@@ -112,28 +112,28 @@ class PassengerServiceImplTest {
     @Test
     fun `delete passenger by id`() {
         `when`(
-            passengerRepository?.findById(id!!)
-        ).thenReturn(Optional.of(passenger!!))
+            passengerRepository.findById(id)
+        ).thenReturn(Optional.of(passenger))
         `when`(
-            passengerRepository?.save(passenger!!)
+            passengerRepository.save(passenger)
         ).thenReturn(passenger)
 
-        assertThat(passengerService!!.deletePassenger(id!!))
+        assertThat(passengerService.deletePassenger(id))
 
-        verify(passengerRepository)!!.findById(id!!)
-        verify(passengerRepository)!!.save(passenger!!)
+        verify(passengerRepository)!!.findById(id)
+        verify(passengerRepository)!!.save(passenger)
     }
 
     @Test
     fun `find not existing user`() {
         `when`(
-            passengerRepository?.findById(passenger!!.id!!)
+            passengerRepository.findById(passenger.id!!)
         ).thenReturn(Optional.empty())
 
         assertThatThrownBy {
-            passengerService?.findPassengerById(id!!)
+            passengerService.findPassengerById(id)
         }.isInstanceOf(PassengerNotFoundException::class.java)
 
-        verify(passengerRepository)!!.findById(passenger!!.id!!)
+        verify(passengerRepository)!!.findById(passenger.id!!)
     }
 }
