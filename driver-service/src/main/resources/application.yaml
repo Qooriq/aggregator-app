@@ -12,10 +12,5 @@ spring:
     user: admin
     password: admin
     mode: native
-logging:
-  level:
-    org.springframework.jms.listener: TRACE
-    org.apache.activemq.artemis.core.client: DEBUG
-    org.apache.activemq.artemis.jms.client: DEBUG
 server:
   port: 8084
