@@ -2,6 +2,10 @@ ext {
     versions = [
             'mapstruct': '1.6.3',
             'spring': '3.4.4',
-            'springdoc': '2.8.6'
+            'springdoc': '2.8.6',
+            'cucumber': '7.20.1',
+            'junit': '1.11.4',
+            'rest_assured': '5.4.0',
+            'junit_vintage': '5.7.2'
     ]
 }

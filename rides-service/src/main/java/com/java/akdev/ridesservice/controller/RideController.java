@@ -12,8 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
-
 @RestController
 @RequestMapping("api/v1/rides")
 @RequiredArgsConstructor
@@ -43,10 +41,15 @@ public class RideController {
     }
 
     @PutMapping("/end-ride/{id}")
-    public ResponseEntity<RideReadDto> endRide(@PathVariable @Min(1) Long id,
-                                               @RequestParam UUID userId) {
+    public ResponseEntity<RideReadDto> endRide(@PathVariable @Min(1) Long id) {
         return ResponseEntity.status(200)
-                .body(rideService.endRide(id, userId));
+                .body(rideService.endRide(id));
+    }
+
+    @PutMapping("/take-ride/{id}")
+    public ResponseEntity<RideReadDto> takeRide(@PathVariable Long id) {
+        return ResponseEntity.status(200)
+                .body(rideService.startRide(id));
     }
 
     @PutMapping("/{id}")
@@ -59,5 +62,11 @@ public class RideController {
     public ResponseEntity<Void> delete(@PathVariable @Min(1) Long id) {
         rideService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/driver")
+    public ResponseEntity<RideReadDto> findFirstAvailableRide() {
+        return ResponseEntity.status(200)
+                .body(rideService.findFirstAvailableRide());
     }
 }

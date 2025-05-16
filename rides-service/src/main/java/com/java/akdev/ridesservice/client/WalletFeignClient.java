@@ -12,5 +12,5 @@ import java.util.UUID;
 public interface WalletFeignClient {
 
     @PutMapping("/payment/{id}")
-    ResponseEntity<WalletResponse> updateWallet(@PathVariable("id") Long id, Double price, UUID passengerId);
+    ResponseEntity<WalletResponse> updateWallet(@PathVariable("id") UUID passengerId, Double price);
 }
