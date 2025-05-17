@@ -27,57 +27,57 @@ public class RideControllerTest {
     private Long id;
     private RideCreateDto rideCreateDto;
     private RideUpdateDto rideUpdateDto;
-    private RideReadDto rideReadDto;
+    private RideReadDto expectedResult;
 
     @BeforeEach
     void setUp() {
         id = TestSetUps.id;
         rideCreateDto = TestSetUps.getCreateDto();
-        rideReadDto = TestSetUps.getReadDto();
+        expectedResult = TestSetUps.getReadDto();
         rideUpdateDto = TestSetUps.getRideUpdateDto();
     }
 
     @Test
-    void findRideById() {
+    void givenId_findById_returnUser() {
         when(rideService.findById(id))
-                .thenReturn(rideReadDto);
+                .thenReturn(expectedResult);
 
-        var ride = rideController.findById(id);
+        var actual = rideController.findById(id);
 
-        assertThat(ride.getBody())
-                .isEqualTo(rideReadDto);
+        assertThat(actual.getBody())
+                .isEqualTo(expectedResult);
 
         verify(rideService).findById(id);
     }
 
     @Test
-    void createRide() {
+    void givenRidePayload_create_returnCreatedUser() {
         when(rideService.create(rideCreateDto))
-                .thenReturn(rideReadDto);
+                .thenReturn(expectedResult);
 
-        var ride = rideController.create(rideCreateDto);
+        var actual = rideController.create(rideCreateDto);
 
-        assertThat(ride.getBody())
-                .isEqualTo(rideReadDto);
+        assertThat(actual.getBody())
+                .isEqualTo(expectedResult);
 
         verify(rideService).create(rideCreateDto);
     }
 
     @Test
-    void updateRide() {
+    void givenRideIdAndRideUpdatePayload_update_returnUpdatedUser() {
         when(rideService.update(id, rideUpdateDto))
-                .thenReturn(rideReadDto);
+                .thenReturn(expectedResult);
 
-        var ride = rideController.update(id, rideUpdateDto);
+        var actual = rideController.update(id, rideUpdateDto);
 
-        assertThat(ride.getBody())
-                .isEqualTo(rideReadDto);
+        assertThat(actual.getBody())
+                .isEqualTo(expectedResult);
 
         verify(rideService).update(id, rideUpdateDto);
     }
 
     @Test
-    void deleteRide() {
+    void givenRideId_delete_nothingReturn() {
         doNothing().when(rideService).delete(id);
 
         rideController.delete(id);
