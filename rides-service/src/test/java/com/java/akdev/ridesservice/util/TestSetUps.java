@@ -19,15 +19,17 @@ public class TestSetUps {
     public final static Integer DEFAULT_PAGE_SIZE = 10;
     public final static SortField SORT_FIELD = SortField.ID;
     public final static Order ORDER = Order.ASC;
-    private final static UUID PASSENGER_ID = UUID.fromString("4ebba608-6315-447e-9bf5-4e20da6fb0b0");
-    private final static UUID DRIVER_ID = UUID.randomUUID();
-    private final static Long PASSENGER_REVIEW_DRIVER = 5L;
-    private final static Long DRIVER_REVIEW_PASSENGER = 5L;
-    private final static Double RIDE_PRICE = 10.0;
-    private final static String START_LOCATION = "minsk";
-    private final static String END_LOCATION = "Lida";
-    private final static String NEW_END_LOCATION = "Lida2.0";
-    private final static String DRIVER = null;
+    public final static UUID PASSENGER_ID = UUID.fromString("4ebba608-6315-447e-9bf5-4e20da6fb0b0");
+    public final static UUID DRIVER_ID = UUID.randomUUID();
+    public final static Long PASSENGER_REVIEW_DRIVER = 5L;
+    public final static Long DRIVER_REVIEW_PASSENGER = 5L;
+    public final static Double RIDE_PRICE = 10.0;
+    public final static String START_LOCATION = "minsk";
+    public final static String END_LOCATION = "Lida";
+    public final static String NEW_END_LOCATION = "Lida2.0";
+    public final static String DRIVER = null;
+    public final static String startEndpoint = "/api/v1/rides";
+    public final static String startEndpointWithId = "/api/v1/rides/{id}";
 
     public static Ride getRide() {
         return Ride.builder()

@@ -9,6 +9,7 @@ import com.java.akdev.ridesservice.enumeration.Order;
 import com.java.akdev.ridesservice.enumeration.SortField;
 import com.java.akdev.ridesservice.util.TestSetUps;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -35,6 +36,8 @@ public class RideIntegrationTest extends IntegrationTestBase {
     @Autowired
     private ObjectMapper objectMapper;
 
+    private String startEndpoint;
+    private String startEndpointWithId;
     private Integer page;
     private Integer size;
     private SortField sortField;
@@ -48,6 +51,8 @@ public class RideIntegrationTest extends IntegrationTestBase {
     @BeforeEach
     void setUp() {
         id = TestSetUps.id;
+        startEndpoint = TestSetUps.startEndpoint;
+        startEndpointWithId = TestSetUps.startEndpointWithId;
         page = TestSetUps.DEFAULT_PAGE;
         size = TestSetUps.DEFAULT_PAGE_SIZE;
         order = TestSetUps.ORDER;
@@ -59,8 +64,9 @@ public class RideIntegrationTest extends IntegrationTestBase {
     }
 
     @Test
-    void findAll() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/rides")
+    @DisplayName("find all rides")
+    void givenPageSizeOrderSortField_findAll_returnArrayOfElements() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(startEndpoint)
                         .param("page", page.toString())
                         .param("size", size.toString())
                         .param("sortField", sortField.name())
@@ -71,8 +77,9 @@ public class RideIntegrationTest extends IntegrationTestBase {
     }
 
     @Test
-    void findById() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/rides/{id}", id.toString()))
+    @DisplayName("find ride by id")
+    void givenRideId_findById_returnRide() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(startEndpointWithId, id.toString()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.startLocation").value(rideReadDto.startLocation()))
                 .andExpect(jsonPath("$.endLocation").value(rideReadDto.endLocation()))
@@ -81,8 +88,9 @@ public class RideIntegrationTest extends IntegrationTestBase {
     }
 
     @Test
-    void create() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/rides")
+    @DisplayName("create ride with payload")
+    void givenRidePayload_create_returnCreatedUser() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post(startEndpoint)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(rideCreateDto)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
@@ -93,8 +101,9 @@ public class RideIntegrationTest extends IntegrationTestBase {
     }
 
     @Test
-    void update() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/rides/{id}", id.toString())
+    @DisplayName("update ride by id")
+    void givenRideIdRideWithUpdatePayload_update_returnUpdatedRide() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.put(startEndpointWithId, id.toString())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(rideUpdateDto)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -105,8 +114,9 @@ public class RideIntegrationTest extends IntegrationTestBase {
     }
 
     @Test
-    void delete() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/rides/{id}", id.toString()))
+    @DisplayName("delete ride by id")
+    void givenRideId_delete_returnNothing() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete(startEndpointWithId, id.toString()))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 }
