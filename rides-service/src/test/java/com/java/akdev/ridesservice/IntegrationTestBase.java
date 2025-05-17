@@ -54,6 +54,7 @@ public class IntegrationTestBase {
             liquibase.update(new Contexts(), new LabelExpression());
         } catch (SQLException | LiquibaseException | FileNotFoundException e) {
             log.error(e.getLocalizedMessage());
+            log.error(e.getMessage(), e.getCause());
         }
     }
 }
