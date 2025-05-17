@@ -15,6 +15,7 @@ import java.util.UUID;
 public class TestSetUps {
 
     public static Long id = 1L;
+    public static Long negativeId = -1L;
     public final static Integer DEFAULT_PAGE = 1;
     public final static Integer DEFAULT_PAGE_SIZE = 10;
     public final static SortField SORT_FIELD = SortField.ID;

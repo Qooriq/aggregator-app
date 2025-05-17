@@ -43,6 +43,7 @@ public class RideIntegrationTest extends IntegrationTestBase {
     private SortField sortField;
     private Order order;
     private Long id;
+    private Long negativeId;
     private RideReadDto rideReadDto;
     private RideCreateDto rideCreateDto;
     private RideUpdateDto rideUpdateDto;
@@ -51,6 +52,7 @@ public class RideIntegrationTest extends IntegrationTestBase {
     @BeforeEach
     void setUp() {
         id = TestSetUps.id;
+        negativeId = TestSetUps.negativeId;
         startEndpoint = TestSetUps.startEndpoint;
         startEndpointWithId = TestSetUps.startEndpointWithId;
         page = TestSetUps.DEFAULT_PAGE;
@@ -118,5 +120,12 @@ public class RideIntegrationTest extends IntegrationTestBase {
     void givenRideId_delete_returnNothing() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete(startEndpointWithId, id.toString()))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("throw bad request")
+    void givenRideId_findById_throwBadRequest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(startEndpointWithId, negativeId.toString()))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 }
