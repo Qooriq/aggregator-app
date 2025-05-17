@@ -13,6 +13,7 @@ import java.util.UUID;
 public final class TestSetUps {
 
     public static Long id = 1L;
+    public static Long negativeId = -1L;
     public final static UUID PASSENGER_ID = UUID.fromString("4ebba608-6315-447e-9bf5-4e20da6fb0b0");
     public final static UUID DRIVER_ID = UUID.fromString("1826829b-d77a-4908-b1b4-94cf5346a038");
     public final static Long PASSENGER_REVIEW_DRIVER = 5L;

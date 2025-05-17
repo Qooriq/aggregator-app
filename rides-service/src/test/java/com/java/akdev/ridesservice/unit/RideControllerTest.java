@@ -6,7 +6,9 @@ import com.java.akdev.ridesservice.dto.RideReadDto;
 import com.java.akdev.ridesservice.dto.RideUpdateDto;
 import com.java.akdev.ridesservice.service.RideService;
 import com.java.akdev.ridesservice.util.TestSetUps;
+import jakarta.validation.ValidationException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,7 +16,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class RideControllerTest {
@@ -25,6 +32,7 @@ public class RideControllerTest {
     private RideController rideController;
 
     private Long id;
+    private Long negativeId;
     private RideCreateDto rideCreateDto;
     private RideUpdateDto rideUpdateDto;
     private RideReadDto expectedResult;
@@ -32,15 +40,16 @@ public class RideControllerTest {
     @BeforeEach
     void setUp() {
         id = TestSetUps.id;
+        negativeId = TestSetUps.negativeId;
         rideCreateDto = TestSetUps.getCreateDto();
         expectedResult = TestSetUps.getReadDto();
         rideUpdateDto = TestSetUps.getRideUpdateDto();
     }
 
     @Test
+    @DisplayName("find ride by id")
     void givenId_findById_returnUser() {
-        when(rideService.findById(id))
-                .thenReturn(expectedResult);
+        doReturn(expectedResult).when(rideService).findById(id);
 
         var actual = rideController.findById(id);
 
@@ -51,6 +60,7 @@ public class RideControllerTest {
     }
 
     @Test
+    @DisplayName("create ride with payload")
     void givenRidePayload_create_returnCreatedUser() {
         when(rideService.create(rideCreateDto))
                 .thenReturn(expectedResult);
@@ -64,6 +74,7 @@ public class RideControllerTest {
     }
 
     @Test
+    @DisplayName("update ride by id")
     void givenRideIdAndRideUpdatePayload_update_returnUpdatedUser() {
         when(rideService.update(id, rideUpdateDto))
                 .thenReturn(expectedResult);
@@ -77,11 +88,23 @@ public class RideControllerTest {
     }
 
     @Test
+    @DisplayName("delete ride by id")
     void givenRideId_delete_nothingReturn() {
         doNothing().when(rideService).delete(id);
 
         rideController.delete(id);
 
         verify(rideService).delete(id);
+    }
+
+    @Test
+    @DisplayName("throw validation exception with negative id")
+    void givenNegativeRideId_findRideById_throwValidationException() {
+        doThrow(new ValidationException()).when(rideService).findById(negativeId);
+
+        assertThrows(ValidationException.class,
+                () -> rideController.findById(negativeId));
+
+        verify(rideService).findById(negativeId);
     }
 }
