@@ -54,7 +54,7 @@ public class RideService {
         var ride = rideRepository.findById(id)
                 .orElseThrow(() -> new RideNotFoundException("message.rideNotFound.error"));
         if (ride.getPaymentMethod() == PaymentMethod.CARD) {
-            var response = client.updateWallet(id, ride.getRidePrice(), passengerId);
+            var response = client.updateWallet(passengerId, ride.getRidePrice());
             if (response.getBody().message().equals(OperationResult.DECLINED)){
                 ride.setPaymentMethod(PaymentMethod.CASH);
                 rideRepository.save(ride);
