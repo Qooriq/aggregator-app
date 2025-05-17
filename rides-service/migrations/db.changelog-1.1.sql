@@ -8,7 +8,7 @@ ALTER TABLE rides
 ALTER TABLE rides
  ADD COLUMN payment_method VARCHAR(16);
 
---changeset Anton Kazlouski:3
+--changeset Anton Kazlouski:3 context:test
 INSERT INTO rides(passenger_id, driver_id, driver_review_passenger, passenger_review_driver, start_location, end_location, start_time, end_time, ride_price, ride_status, payment_method)
 VALUES
 ('4ebba608-6315-447e-9bf5-4e20da6fb0b0', null, null, null, 'minsk', 'Lida', '2025-04-21 01:12:54.431536', null, 10, 'COMPLETED', null),

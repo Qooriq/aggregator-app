@@ -51,7 +51,7 @@ public class IntegrationTestBase {
             Database db = DatabaseFactory.getInstance()
                     .findCorrectDatabaseImplementation(new JdbcConnection(connection));
             Liquibase liquibase = new Liquibase("master.xml", new DirectoryResourceAccessor(changelogPath), db);
-            liquibase.update(new Contexts(), new LabelExpression());
+            liquibase.update(new Contexts("test"), new LabelExpression());
         } catch (SQLException | LiquibaseException | FileNotFoundException e) {
             log.error(e.getLocalizedMessage());
             log.error(e.getMessage(), e.getCause());
