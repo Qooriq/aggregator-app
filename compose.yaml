@@ -74,14 +74,14 @@ services:
     volumes:
       - ./wallet-service/migrations:/liquibase/changelog
   zookeeper:
-    image: confluentinc/cp-zookeeper:3.9.3
+    image: confluentinc/cp-zookeeper:7.3.2
     ports:
       - "2181:2181"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
   kafka:
-    image: confluentinc/cp-kafka:4.0.0
+    image: confluentinc/cp-kafka:7.3.2
     ports:
       - "9092:9092"
     restart: on-failure
@@ -100,3 +100,67 @@ services:
       - "61616:61616"
     environment:
       ANONYMOUS_LOGIN: true
+  driver-service:
+    container_name: driver-service
+    ports:
+      - "8083:8083"
+    build:
+      context: ./driver-service
+      dockerfile: Dockerfile
+    depends_on:
+      - postgresql
+      - artemis-mq
+    restart: on-failure
+    env_file:
+      - ./driver-service/.env
+  passenger-service:
+    container_name: passenger-service
+    ports:
+      - "8082:8082"
+    build:
+      context: ./passenger-service
+      dockerfile: Dockerfile
+    depends_on:
+      - postgresql
+      - kafka
+    restart: on-failure
+    env_file:
+      - ./passenger-service/.env
+  review-service:
+    container_name: review-service
+    ports:
+      - "8084:8084"
+    build:
+      context: ./review-service
+      dockerfile: Dockerfile
+    depends_on:
+      - postgresql
+      - kafka
+      - artemis-mq
+    restart: on-failure
+    env_file:
+      - ./review-service/.env
+  ride-service:
+    container_name: ride-service
+    ports:
+      - "8085:8085"
+    build:
+      context: ./rides-service
+      dockerfile: Dockerfile
+    depends_on:
+      - postgresql
+    restart: on-failure
+    env_file:
+      - ./rides-service/.env
+  wallet-service:
+    container_name: wallet-service
+    ports:
+      - "8086:8086"
+    build:
+      context: ./wallet-service
+      dockerfile: Dockerfile
+    depends_on:
+      - postgresql
+    restart: on-failure
+    env_file:
+      - ./wallet-service/.env
