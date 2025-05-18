@@ -36,8 +36,8 @@ public class RideIntegrationTest extends IntegrationTestBase {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private String startEndpoint;
-    private String startEndpointWithId;
+    private String rideBaseUrl;
+    private String rideBaseUrlWithId;
     private Integer page;
     private Integer size;
     private SortField sortField;
@@ -51,10 +51,10 @@ public class RideIntegrationTest extends IntegrationTestBase {
 
     @BeforeEach
     void setUp() {
-        id = TestSetUps.id;
-        negativeId = TestSetUps.negativeId;
-        startEndpoint = TestSetUps.startEndpoint;
-        startEndpointWithId = TestSetUps.startEndpointWithId;
+        id = TestSetUps.ID;
+        negativeId = TestSetUps.NEGATIVE_ID;
+        rideBaseUrl = TestSetUps.RIDE_BASE_URL;
+        rideBaseUrlWithId = TestSetUps.RIDE_BASE_URL_WITH_ID;
         page = TestSetUps.DEFAULT_PAGE;
         size = TestSetUps.DEFAULT_PAGE_SIZE;
         order = TestSetUps.ORDER;
@@ -68,7 +68,7 @@ public class RideIntegrationTest extends IntegrationTestBase {
     @Test
     @DisplayName("find all rides")
     void givenPageSizeOrderSortField_findAll_returnArrayOfElements() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(startEndpoint)
+        mockMvc.perform(MockMvcRequestBuilders.get(rideBaseUrl)
                         .param("page", page.toString())
                         .param("size", size.toString())
                         .param("sortField", sortField.name())
@@ -79,9 +79,9 @@ public class RideIntegrationTest extends IntegrationTestBase {
     }
 
     @Test
-    @DisplayName("find ride by id")
+    @DisplayName("find ride by ID")
     void givenRideId_findById_returnRide() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(startEndpointWithId, id.toString()))
+        mockMvc.perform(MockMvcRequestBuilders.get(rideBaseUrlWithId, id.toString()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.startLocation").value(rideReadDto.startLocation()))
                 .andExpect(jsonPath("$.endLocation").value(rideReadDto.endLocation()))
@@ -92,7 +92,7 @@ public class RideIntegrationTest extends IntegrationTestBase {
     @Test
     @DisplayName("create ride with payload")
     void givenRidePayload_create_returnCreatedUser() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post(startEndpoint)
+        mockMvc.perform(MockMvcRequestBuilders.post(rideBaseUrl)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(rideCreateDto)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
@@ -103,9 +103,9 @@ public class RideIntegrationTest extends IntegrationTestBase {
     }
 
     @Test
-    @DisplayName("update ride by id")
+    @DisplayName("update ride by ID")
     void givenRideIdRideWithUpdatePayload_update_returnUpdatedRide() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.put(startEndpointWithId, id.toString())
+        mockMvc.perform(MockMvcRequestBuilders.put(rideBaseUrlWithId, id.toString())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(rideUpdateDto)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -116,16 +116,16 @@ public class RideIntegrationTest extends IntegrationTestBase {
     }
 
     @Test
-    @DisplayName("delete ride by id")
+    @DisplayName("delete ride by ID")
     void givenRideId_delete_returnNothing() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete(startEndpointWithId, id.toString()))
+        mockMvc.perform(MockMvcRequestBuilders.delete(rideBaseUrlWithId, id.toString()))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
     @Test
     @DisplayName("throw bad request")
     void givenRideId_findById_throwBadRequest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(startEndpointWithId, negativeId.toString()))
+        mockMvc.perform(MockMvcRequestBuilders.get(rideBaseUrlWithId, negativeId.toString()))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 }

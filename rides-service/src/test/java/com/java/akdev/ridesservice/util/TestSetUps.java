@@ -14,27 +14,27 @@ import java.util.UUID;
 @UtilityClass
 public class TestSetUps {
 
-    public static Long id = 1L;
-    public static Long negativeId = -1L;
-    public final static Integer DEFAULT_PAGE = 1;
-    public final static Integer DEFAULT_PAGE_SIZE = 10;
-    public final static SortField SORT_FIELD = SortField.ID;
-    public final static Order ORDER = Order.ASC;
-    public final static UUID PASSENGER_ID = UUID.fromString("4ebba608-6315-447e-9bf5-4e20da6fb0b0");
-    public final static UUID DRIVER_ID = UUID.randomUUID();
-    public final static Long PASSENGER_REVIEW_DRIVER = 5L;
-    public final static Long DRIVER_REVIEW_PASSENGER = 5L;
-    public final static Double RIDE_PRICE = 10.0;
-    public final static String START_LOCATION = "minsk";
-    public final static String END_LOCATION = "Lida";
-    public final static String NEW_END_LOCATION = "Lida2.0";
-    public final static String DRIVER = null;
-    public final static String startEndpoint = "/api/v1/rides";
-    public final static String startEndpointWithId = "/api/v1/rides/{id}";
+    public static final Long ID = 1L;
+    public static final Long NEGATIVE_ID = -1L;
+    public static final Integer DEFAULT_PAGE = 1;
+    public static final Integer DEFAULT_PAGE_SIZE = 10;
+    public static final SortField SORT_FIELD = SortField.ID;
+    public static final Order ORDER = Order.ASC;
+    public static final UUID PASSENGER_ID = UUID.fromString("4ebba608-6315-447e-9bf5-4e20da6fb0b0");
+    public static final UUID DRIVER_ID = UUID.fromString("1826829b-d77a-4908-b1b4-94cf5346a038");
+    public static final Long PASSENGER_REVIEW_DRIVER = 5L;
+    public static final Long DRIVER_REVIEW_PASSENGER = 5L;
+    public static final Double RIDE_PRICE = 10.0;
+    public static final String START_LOCATION = "minsk";
+    public static final String END_LOCATION = "Lida";
+    public static final String NEW_END_LOCATION = "Lida2.0";
+    public static final String DRIVER = null;
+    public static final String RIDE_BASE_URL = "/api/v1/rides";
+    public static final String RIDE_BASE_URL_WITH_ID = "/api/v1/rides/{id}";
 
     public static Ride getRide() {
         return Ride.builder()
-                .id(id)
+                .id(ID)
                 .passengerId(PASSENGER_ID)
                 .driverId(DRIVER_ID)
                 .passengerReviewDriver(PASSENGER_REVIEW_DRIVER)
@@ -52,7 +52,7 @@ public class TestSetUps {
 
     public static Ride getUpdateReview() {
         return Ride.builder()
-                .id(id)
+                .id(ID)
                 .passengerId(PASSENGER_ID)
                 .driverId(DRIVER_ID)
                 .passengerReviewDriver(PASSENGER_REVIEW_DRIVER)

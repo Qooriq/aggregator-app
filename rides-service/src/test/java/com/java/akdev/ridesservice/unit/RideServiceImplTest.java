@@ -44,7 +44,7 @@ class RideServiceImplTest {
     @BeforeEach
     void setUp() {
         ride = TestSetUps.getRide();
-        id = TestSetUps.id;
+        id = TestSetUps.ID;
         rideCreateDto = TestSetUps.getCreateDto();
         rideReadDto = TestSetUps.getReadDto();
         rideUpdateDto = TestSetUps.getUpdateDto();
@@ -53,7 +53,7 @@ class RideServiceImplTest {
     }
 
     @Test
-    @DisplayName("find ride by id")
+    @DisplayName("find ride by ID")
     void findRideById() {
 
         when(rideRepository.findById(id))
@@ -105,7 +105,7 @@ class RideServiceImplTest {
     }
 
     @Test
-    @DisplayName("update ride by id")
+    @DisplayName("update ride by ID")
     void update() {
         when(rideRepository.findById(id))
                 .thenReturn(Optional.of(ride));
@@ -128,7 +128,7 @@ class RideServiceImplTest {
     }
 
     @Test
-    @DisplayName("delete ride by id")
+    @DisplayName("delete ride by ID")
     void deleteRide() {
         doNothing().when(rideRepository).deleteById(id);
 
