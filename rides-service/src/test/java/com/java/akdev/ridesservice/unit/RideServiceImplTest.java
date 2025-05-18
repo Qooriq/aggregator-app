@@ -46,7 +46,7 @@ class RideServiceImplTest {
     @BeforeEach
     void setUp() {
         ride = TestSetUps.getRide();
-        id = TestSetUps.id;
+        id = TestSetUps.ID;
         rideCreateDto = TestSetUps.getCreateDto();
         expectedResult = TestSetUps.getReadDto();
         expectedResultInUpdate = TestSetUps.getUpdateDto();

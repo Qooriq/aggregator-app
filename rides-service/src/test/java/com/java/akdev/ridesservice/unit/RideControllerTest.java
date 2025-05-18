@@ -35,7 +35,7 @@ public class RideControllerTest {
 
     @BeforeEach
     void setUp() {
-        id = TestSetUps.id;
+        id = TestSetUps.ID;
         rideCreateDto = TestSetUps.getCreateDto();
         expectedResult = TestSetUps.getReadDto();
         rideUpdateDto = TestSetUps.getRideUpdateDto();

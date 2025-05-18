@@ -43,9 +43,10 @@ public class RideServiceImpl implements RideService {
 
     @Transactional
     public RideReadDto create(RideCreateDto dto) {
+        var ride = rideMapper.toRide(dto);
+        ride.setRidePrice(10.0);
         return rideMapper.toRideReadDto(
-                rideRepository.save(rideMapper.toRide(dto))
-        );
+                rideRepository.save(ride));
     }
 
     @Transactional
