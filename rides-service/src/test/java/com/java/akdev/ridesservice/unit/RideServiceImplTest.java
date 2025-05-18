@@ -21,7 +21,9 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class RideServiceImplTest {
@@ -36,9 +38,9 @@ class RideServiceImplTest {
     private Ride ride;
     private Ride updateRide;
     private RideCreateDto rideCreateDto;
-    private RideReadDto rideUpdateDto;
+    private RideReadDto expectedResultInUpdate;
     private RideUpdateDto rideForUpdateDto;
-    private RideReadDto rideReadDto;
+    private RideReadDto expectedResult;
     private Long id;
 
     @BeforeEach
@@ -46,25 +48,24 @@ class RideServiceImplTest {
         ride = TestSetUps.getRide();
         id = TestSetUps.ID;
         rideCreateDto = TestSetUps.getCreateDto();
-        rideReadDto = TestSetUps.getReadDto();
-        rideUpdateDto = TestSetUps.getUpdateDto();
+        expectedResult = TestSetUps.getReadDto();
+        expectedResultInUpdate = TestSetUps.getUpdateDto();
         updateRide = TestSetUps.getUpdateReview();
         rideForUpdateDto = TestSetUps.getRideUpdateDto();
     }
 
     @Test
-    @DisplayName("find ride by ID")
-    void findRideById() {
-
+    @DisplayName("find ride by id")
+    void givenId_findById_returnUser() {
         when(rideRepository.findById(id))
                 .thenReturn(Optional.of(ride));
         when(rideMapper.toRideReadDto(ride))
-                .thenReturn(rideReadDto);
+                .thenReturn(expectedResult);
 
-        var rev = reviewService.findById(id);
+        var actual = reviewService.findById(id);
 
-        assertThat(rev)
-                .isEqualTo(rideReadDto);
+        assertThat(actual)
+                .isEqualTo(expectedResult);
 
         verify(rideMapper).toRideReadDto(ride);
         verify(rideRepository).findById(id);
@@ -72,8 +73,7 @@ class RideServiceImplTest {
 
     @Test
     @DisplayName("ride not found exception")
-    void findRideNotFoundById() {
-
+    void givenId_findById_thrownRideNotFoundException() {
         when(rideRepository.findById(id))
                 .thenReturn(Optional.empty());
 
@@ -86,18 +86,18 @@ class RideServiceImplTest {
 
     @Test
     @DisplayName("create ride")
-    void createRide() {
+    void givenRidePayload_create_returnCreatedUser() {
         when(rideRepository.save(ride))
                 .thenReturn(ride);
         when(rideMapper.toRide(rideCreateDto))
                 .thenReturn(ride);
         when(rideMapper.toRideReadDto(ride))
-                .thenReturn(rideReadDto);
+                .thenReturn(expectedResult);
 
-        var rid = reviewService.create(rideCreateDto);
+        var actual = reviewService.create(rideCreateDto);
 
-        assertThat(rid)
-                .isEqualTo(rideReadDto);
+        assertThat(actual)
+                .isEqualTo(expectedResult);
 
         verify(rideRepository).save(ride);
         verify(rideMapper).toRide(rideCreateDto);
@@ -105,21 +105,21 @@ class RideServiceImplTest {
     }
 
     @Test
-    @DisplayName("update ride by ID")
-    void update() {
+    @DisplayName("update ride by id")
+    void givenRideIdAndRideUpdatePayload_update_returnUpdatedUser() {
         when(rideRepository.findById(id))
                 .thenReturn(Optional.of(ride));
         when(rideRepository.save(ride))
                 .thenReturn(updateRide);
         when(rideMapper.toRideReadDto(updateRide))
-                .thenReturn(rideUpdateDto);
+                .thenReturn(expectedResultInUpdate);
         when(rideMapper.updateRide(ride, rideForUpdateDto))
                 .thenReturn(updateRide);
 
         var ridDto = reviewService.update(id, rideForUpdateDto);
 
         assertThat(ridDto)
-                .isEqualTo(rideUpdateDto);
+                .isEqualTo(expectedResultInUpdate);
 
         verify(rideRepository).findById(id);
         verify(rideRepository).save(ride);
@@ -128,8 +128,8 @@ class RideServiceImplTest {
     }
 
     @Test
-    @DisplayName("delete ride by ID")
-    void deleteRide() {
+    @DisplayName("delete ride by id")
+    void givenRideId_delete_nothingReturn() {
         doNothing().when(rideRepository).deleteById(id);
 
         reviewService.delete(id);

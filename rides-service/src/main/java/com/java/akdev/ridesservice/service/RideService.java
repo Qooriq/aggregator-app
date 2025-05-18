@@ -7,6 +7,7 @@ import com.java.akdev.ridesservice.enumeration.Order;
 import com.java.akdev.ridesservice.enumeration.SortField;
 import org.springframework.data.domain.Page;
 
+
 public interface RideService {
 
     Page<RideReadDto> findAll(Integer page, Integer size, SortField sortField, Order order);

@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.4'
 	id 'io.spring.dependency-management' version '1.1.7'
+    id 'org.jetbrains.kotlin.jvm'
 }
 
 apply from: 'versions.gradle'
@@ -18,11 +19,8 @@ dependencies {
 	implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${versions.springdoc}"
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.liquibase:liquibase-core'
 	implementation 'org.springframework.kafka:spring-kafka'
 	implementation "org.mapstruct:mapstruct:${versions.mapstruct}"
-	implementation 'org.springframework.boot:spring-boot-starter-artemis'
-	implementation "org.apache.activemq:artemis-jakarta-client:${versions.artemis_mq}"
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
@@ -30,6 +28,15 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	annotationProcessor "org.mapstruct:mapstruct-processor:${versions.mapstruct}"
 
+	testCompileOnly 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+
+	testImplementation 'org.liquibase:liquibase-core'
+	testImplementation "io.rest-assured:rest-assured:${versions.rest_assured}"
+	testImplementation "io.cucumber:cucumber-java:${versions.cucumber}"
+	testImplementation "io.cucumber:cucumber-junit:${versions.cucumber}"
+	testImplementation "io.cucumber:cucumber-junit-platform-engine:${versions.cucumber}"
+	testImplementation "org.junit.vintage:junit-vintage-engine:${versions.junit_vintage}"
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
 	testImplementation 'org.springframework.kafka:spring-kafka-test'
@@ -38,8 +45,13 @@ dependencies {
 	testImplementation 'org.testcontainers:kafka'
 	testImplementation 'org.testcontainers:postgresql'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}"
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+kotlin {
+    jvmToolchain(22)
 }

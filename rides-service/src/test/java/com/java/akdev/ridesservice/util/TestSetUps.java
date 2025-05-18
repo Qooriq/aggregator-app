@@ -6,13 +6,14 @@ import com.java.akdev.ridesservice.dto.RideUpdateDto;
 import com.java.akdev.ridesservice.entity.Ride;
 import com.java.akdev.ridesservice.enumeration.Order;
 import com.java.akdev.ridesservice.enumeration.SortField;
-import lombok.experimental.UtilityClass;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 import java.util.UUID;
 
-@UtilityClass
-public class TestSetUps {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class TestSetUps {
 
     public static final Long ID = 1L;
     public static final Long NEGATIVE_ID = -1L;
@@ -24,7 +25,7 @@ public class TestSetUps {
     public static final UUID DRIVER_ID = UUID.fromString("1826829b-d77a-4908-b1b4-94cf5346a038");
     public static final Long PASSENGER_REVIEW_DRIVER = 5L;
     public static final Long DRIVER_REVIEW_PASSENGER = 5L;
-    public static final Double RIDE_PRICE = 10.0;
+    public static final Double RIDE_PRICE = 12.0;
     public static final String START_LOCATION = "minsk";
     public static final String END_LOCATION = "Lida";
     public static final String NEW_END_LOCATION = "Lida2.0";
