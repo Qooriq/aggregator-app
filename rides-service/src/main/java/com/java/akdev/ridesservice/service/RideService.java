@@ -1,11 +1,12 @@
 package com.java.akdev.ridesservice.service;
 
+import com.java.akdev.ridesservice.client.WalletFeignClient;
 import com.java.akdev.ridesservice.dto.RideCreateDto;
 import com.java.akdev.ridesservice.dto.RideReadDto;
 import com.java.akdev.ridesservice.dto.RideUpdateDto;
 import com.java.akdev.ridesservice.enumeration.Order;
 import com.java.akdev.ridesservice.enumeration.SortField;
-import org.springframework.data.domain.Page;
+
 
 public interface RideService {
 
