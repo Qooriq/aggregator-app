@@ -12,8 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
-
 @RestController
 @RequestMapping("api/v1/rides")
 @RequiredArgsConstructor
@@ -40,13 +38,6 @@ public class RideController {
     public ResponseEntity<RideReadDto> create(@RequestBody RideCreateDto dto) {
         return ResponseEntity.status(201)
                 .body(rideService.create(dto));
-    }
-
-    @PutMapping("/end-ride/{id}")
-    public ResponseEntity<RideReadDto> endRide(@PathVariable @Min(1) Long id,
-                                               @RequestParam UUID userId) {
-        return ResponseEntity.status(200)
-                .body(rideService.endRide(id, userId));
     }
 
     @PutMapping("/{id}")
