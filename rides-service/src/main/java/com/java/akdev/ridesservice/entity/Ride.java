@@ -1,5 +1,6 @@
 package com.java.akdev.ridesservice.entity;
 
+import com.java.akdev.ridesservice.enumeration.PaymentMethod;
 import com.java.akdev.ridesservice.enumeration.RideStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,6 +12,7 @@ import java.util.UUID;
 @Table(name = "rides")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -52,4 +54,8 @@ public class Ride {
     @Column(name = "ride_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private RideStatus status;
+
+    @Column(name = "payment_method", nullable = false)
+    @Enumerated(EnumType.STRING)
+    PaymentMethod paymentMethod;
 }

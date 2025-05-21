@@ -1,6 +1,5 @@
 package com.java.akdev.driverservice.unit;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.java.akdev.driverservice.controller.DriverController;
 import com.java.akdev.driverservice.dto.DriverCreateDto;
 import com.java.akdev.driverservice.dto.DriverReadDto;
@@ -8,29 +7,23 @@ import com.java.akdev.driverservice.service.DriverService;
 import com.java.akdev.driverservice.util.TestSetUps;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.UUID;
 
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
-@WebMvcTest(DriverController.class)
+@ExtendWith(MockitoExtension.class)
 public class DriverControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @MockitoBean
+    @Mock
     private DriverService driverService;
+    @InjectMocks
+    private DriverController driverController;
 
     private UUID id;
     private DriverCreateDto driverCreateDto;
@@ -44,51 +37,51 @@ public class DriverControllerTest {
     }
 
     @Test
-    void getDriver() throws Exception {
+    void getDriver() {
         when(driverService.findDriverById(id))
                 .thenReturn(driverReadDto);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/drivers/{id}", id.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(driverReadDto.firstName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value(driverReadDto.lastName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.username").value(driverReadDto.username()));
+        var driver = driverController.findById(id);
+
+        assertThat(driver.getBody()).
+                isEqualTo(driverReadDto);
+
+        verify(driverService).findDriverById(id);
     }
 
     @Test
-    void createDriver() throws Exception {
+    void createDriver() {
         when(driverService.createDriver(driverCreateDto))
                 .thenReturn(driverReadDto);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/drivers")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(driverCreateDto)))
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(driverReadDto.firstName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value(driverReadDto.lastName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.username").value(driverReadDto.username()));
+        var driver = driverController.create(driverCreateDto);
+
+        assertThat(driver.getBody())
+                .isEqualTo(driverReadDto);
+
+        verify(driverService).createDriver(driverCreateDto);
     }
 
     @Test
-    void updateDriver() throws Exception {
+    void updateDriver() {
         when(driverService.update(id, driverCreateDto))
                 .thenReturn(driverReadDto);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/drivers/{id}", id)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(driverCreateDto)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(driverReadDto.firstName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value(driverReadDto.lastName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.username").value(driverReadDto.username()));
+        var driver = driverController.update(id, driverCreateDto);
+
+        assertThat(driver.getBody())
+                .isEqualTo(driverReadDto);
+
+        verify(driverService).update(id, driverCreateDto);
     }
 
     @Test
-    void deleteDriver() throws Exception {
+    void deleteDriver() {
         doNothing().when(driverService).deleteDriver(id);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/drivers/{id}", id.toString()))
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
+        driverController.delete(id);
+
+        verify(driverService).deleteDriver(id);
     }
 
 }

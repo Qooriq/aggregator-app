@@ -2,6 +2,10 @@ ext {
     versions = [
             'mapstruct': '1.6.3',
             'springdoc': '2.8.6',
-            'artemis_mq': '2.37.0'
+            'kotlin': '2.0.21',
+            'artemis_mq': '2.37.0',
+            'cucumber': '7.20.1',
+            'rest_assured': '5.4.0',
+            'junit_vintage': '5.7.2'
     ]
 }
