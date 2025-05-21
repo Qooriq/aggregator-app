@@ -104,6 +104,8 @@ class ReviewServiceImplTest {
                 .thenReturn(updateReview);
         when(reviewMapper.toDto(updateReview))
                 .thenReturn(reviewUpdateDto);
+        when(reviewMapper.map(review, reviewCreateDto))
+                .thenReturn(updateReview);
 
         var revDto = reviewService.update(id, reviewCreateDto);
         assertThat(revDto).isEqualTo(reviewUpdateDto);
@@ -111,6 +113,7 @@ class ReviewServiceImplTest {
         verify(reviewRepository).findById(id);
         verify(reviewRepository).save(review);
         verify(reviewMapper).toDto(updateReview);
+        verify(reviewMapper).map(review, reviewCreateDto);
     }
 
     @Test
