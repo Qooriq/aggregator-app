@@ -1,8 +1,5 @@
-package com.java.akdev.ridesservice.dto;
+package com.java.akdev.commonmodels.dto;
 
-import lombok.Builder;
-
-@Builder
 public record UserResponse(
         String firstName,
         String lastName,

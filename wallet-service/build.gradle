@@ -17,6 +17,7 @@ configurations {
 }
 
 dependencies {
+    implementation project(':common-models')
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation "org.springframework.data:spring-data-envers:${versions.spring}"

@@ -1,7 +1,7 @@
 package com.java.akdev.ridesservice.service.impl;
 
+import com.java.akdev.commonmodels.dto.RideResponse;
 import com.java.akdev.ridesservice.dto.RideCreateDto;
-import com.java.akdev.ridesservice.dto.RideReadDto;
 import com.java.akdev.ridesservice.dto.RideUpdateDto;
 import com.java.akdev.ridesservice.enumeration.Order;
 import com.java.akdev.ridesservice.enumeration.SortField;
@@ -24,37 +24,37 @@ public class RideServiceImpl implements RideService {
     private final RideMapper rideMapper;
 
     @Transactional(readOnly = true)
-    public Page<RideReadDto> findAll(Integer page, Integer size, SortField sortField, Order order) {
+    public Page<RideResponse> findAll(Integer page, Integer size, SortField sortField, Order order) {
         Sort.Direction dir = getDirection(order);
         var req = PageRequest.of(page - 1,
                 size,
                 dir,
                 sortField.getName());
         return rideRepository.findAll(req)
-                .map(rideMapper::toRideReadDto);
+                .map(rideMapper::toRideResponse);
     }
 
     @Transactional(readOnly = true)
-    public RideReadDto findById(Long id) {
+    public RideResponse findById(Long id) {
         return rideRepository.findById(id)
-                .map(rideMapper::toRideReadDto)
+                .map(rideMapper::toRideResponse)
                 .orElseThrow(() -> new RideNotFoundException("message.rideNotFound.error"));
     }
 
     @Transactional
-    public RideReadDto create(RideCreateDto dto) {
+    public RideResponse create(RideCreateDto dto) {
         var ride = rideMapper.toRide(dto);
         ride.setRidePrice(10.0);
-        return rideMapper.toRideReadDto(
+        return rideMapper.toRideResponse(
                 rideRepository.save(ride));
     }
 
     @Transactional
-    public RideReadDto update(Long id, RideUpdateDto dto) {
+    public RideResponse update(Long id, RideUpdateDto dto) {
         return rideRepository.findById(id)
                 .map(ride -> rideMapper.updateRide(ride, dto))
                 .map(rideRepository::save)
-                .map(rideMapper::toRideReadDto)
+                .map(rideMapper::toRideResponse)
                 .orElseThrow(() -> new RideNotFoundException("message.rideNotFound.error"));
     }
 

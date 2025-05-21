@@ -1,6 +1,6 @@
 package com.java.akdev.ridesservice.client;
 
-import com.java.akdev.ridesservice.dto.UserResponse;
+import com.java.akdev.commonmodels.dto.UserResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

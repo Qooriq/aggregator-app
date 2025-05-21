@@ -1,6 +1,6 @@
 package com.java.akdev.ridesservice.client;
 
-import com.java.akdev.ridesservice.dto.ReviewResponse;
+import com.java.akdev.commonmodels.dto.ReviewResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

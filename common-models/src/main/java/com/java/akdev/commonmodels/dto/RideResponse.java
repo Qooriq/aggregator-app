@@ -1,8 +1,5 @@
-package com.java.akdev.reviewservice.dto;
+package com.java.akdev.commonmodels.dto;
 
-import lombok.Builder;
-
-@Builder
 public record RideResponse(
         String startLocation,
         String endLocation,

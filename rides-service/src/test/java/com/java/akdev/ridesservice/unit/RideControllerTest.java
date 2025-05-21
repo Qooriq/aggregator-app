@@ -1,8 +1,8 @@
 package com.java.akdev.ridesservice.unit;
 
+import com.java.akdev.commonmodels.dto.RideResponse;
 import com.java.akdev.ridesservice.controller.RideController;
 import com.java.akdev.ridesservice.dto.RideCreateDto;
-import com.java.akdev.ridesservice.dto.RideReadDto;
 import com.java.akdev.ridesservice.dto.RideUpdateDto;
 import com.java.akdev.ridesservice.service.RideService;
 import com.java.akdev.ridesservice.util.TestSetUps;
@@ -31,7 +31,7 @@ public class RideControllerTest {
     private Long id;
     private RideCreateDto rideCreateDto;
     private RideUpdateDto rideUpdateDto;
-    private RideReadDto expectedResult;
+    private RideResponse expectedResult;
 
     @BeforeEach
     void setUp() {

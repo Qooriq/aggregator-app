@@ -1,6 +1,6 @@
 package com.java.akdev.ridesservice.client;
 
-import com.java.akdev.ridesservice.dto.WalletResponse;
+import com.java.akdev.commonmodels.dto.WalletResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
