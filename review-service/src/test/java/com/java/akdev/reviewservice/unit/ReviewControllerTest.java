@@ -41,9 +41,7 @@ public class ReviewControllerTest {
                 .thenReturn(reviewReadDto);
 
         var review = reviewController.findById(id);
-
-        assertThat(review.getBody())
-                .isEqualTo(reviewReadDto);
+        assertThat(review.getBody()).isEqualTo(reviewReadDto);
 
         verify(reviewService).findById(id);
     }
@@ -54,9 +52,7 @@ public class ReviewControllerTest {
                 .thenReturn(reviewReadDto);
 
         var review = reviewController.create(reviewCreateDto);
-
-        assertThat(review.getBody())
-                .isEqualTo(reviewReadDto);
+        assertThat(review.getBody()).isEqualTo(reviewReadDto);
 
         verify(reviewService).createReview(reviewCreateDto);
     }
@@ -67,9 +63,7 @@ public class ReviewControllerTest {
                 .thenReturn(reviewReadDto);
 
         var review = reviewController.update(id, reviewCreateDto);
-
-        assertThat(review.getBody())
-                .isEqualTo(reviewReadDto);
+        assertThat(review.getBody()).isEqualTo(reviewReadDto);
 
         verify(reviewService).update(id, reviewCreateDto);
     }
