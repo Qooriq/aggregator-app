@@ -1,4 +1,4 @@
-FROM openjdk:22 AS builder
+FROM eclipse-temurin:22-jre AS builder
 ARG JAR_FILE=build/libs/*.jar
 COPY $JAR_FILE driver-service.jar
 RUN java -Djarmode=layertools -jar driver-service.jar extract
