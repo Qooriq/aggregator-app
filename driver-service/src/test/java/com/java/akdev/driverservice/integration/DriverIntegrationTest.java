@@ -1,6 +1,5 @@
 package com.java.akdev.driverservice.integration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.java.akdev.driverservice.IntegrationTestBase;
 import com.java.akdev.driverservice.dto.DriverCreateDto;
 import com.java.akdev.driverservice.dto.DriverReadDto;
@@ -9,33 +8,18 @@ import com.java.akdev.driverservice.enumeration.SortField;
 import com.java.akdev.driverservice.util.TestSetUps;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@Transactional
-@Rollback
+
 @ActiveProfiles("test")
 public class DriverIntegrationTest extends IntegrationTestBase {
-
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
 
     private UUID id;
     private Integer page;
@@ -61,10 +45,10 @@ public class DriverIntegrationTest extends IntegrationTestBase {
     @Test
     void findAll() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/drivers")
-                .param("page", page.toString())
-                .param("size", size.toString())
-                .param("sortField", sortField.name())
-                .param("order", order.name()))
+                        .param("page", page.toString())
+                        .param("size", size.toString())
+                        .param("sortField", sortField.name())
+                        .param("order", order.name()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.content").isArray())
                 .andExpect(jsonPath("$.content.length()").isNotEmpty());
@@ -89,8 +73,8 @@ public class DriverIntegrationTest extends IntegrationTestBase {
     @Test
     void createDriver() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/drivers")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(driverCreateDto)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(driverCreateDto)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(jsonPath("$.firstName").value(driverUpdateReadDto.firstName()))
                 .andExpect(jsonPath("$.lastName").value(driverUpdateReadDto.lastName()))
@@ -100,8 +84,8 @@ public class DriverIntegrationTest extends IntegrationTestBase {
     @Test
     void updateDriver() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/drivers/{id}", id.toString())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(driverCreateDto)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(driverCreateDto)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.firstName").value(driverUpdateReadDto.firstName()))
                 .andExpect(jsonPath("$.lastName").value(driverUpdateReadDto.lastName()))
