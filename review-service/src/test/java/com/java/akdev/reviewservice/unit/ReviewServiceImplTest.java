@@ -52,16 +52,13 @@ class ReviewServiceImplTest {
     @Test
     @DisplayName("find review by id")
     void findReviewById() {
-
         when(reviewRepository.findById(id))
                 .thenReturn(Optional.of(review));
         when(reviewMapper.toDto(review))
                 .thenReturn(reviewReadDto);
 
         var rev = reviewService.findById(id);
-
-        assertThat(rev)
-                .isEqualTo(reviewReadDto);
+        assertThat(rev).isEqualTo(reviewReadDto);
 
         verify(reviewMapper).toDto(review);
         verify(reviewRepository).findById(id);
@@ -70,7 +67,6 @@ class ReviewServiceImplTest {
     @Test
     @DisplayName("review not found exception")
     void findReviewNotFoundById() {
-
         when(reviewRepository.findById(id))
                 .thenReturn(Optional.empty());
 
@@ -92,9 +88,7 @@ class ReviewServiceImplTest {
                 .thenReturn(reviewReadDto);
 
         var rev = reviewService.createReview(reviewCreateDto);
-
-        assertThat(rev)
-                .isEqualTo(reviewReadDto);
+        assertThat(rev).isEqualTo(reviewReadDto);
 
         verify(reviewRepository).save(review);
         verify(reviewMapper).toEntity(reviewCreateDto);
@@ -114,9 +108,7 @@ class ReviewServiceImplTest {
                 .thenReturn(updateReview);
 
         var revDto = reviewService.update(id, reviewCreateDto);
-
-        assertThat(revDto)
-                .isEqualTo(reviewUpdateDto);
+        assertThat(revDto).isEqualTo(reviewUpdateDto);
 
         verify(reviewRepository).findById(id);
         verify(reviewRepository).save(review);
