@@ -2,6 +2,8 @@ package com.java.akdev.driverservice.handler;
 
 import com.java.akdev.driverservice.enumeration.ExceptionMessages;
 import com.java.akdev.driverservice.exception.DriverNotFoundException;
+import com.java.akdev.driverservice.exception.PhoneAlreadyExistsException;
+import com.java.akdev.driverservice.exception.UsernameAlreadyExistsException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
@@ -89,6 +91,22 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
         Map<String, String> errors = new HashMap<>();
         errors.put("id",
                 messageSource.getMessage(ex.getMessage(), null, request.getLocale()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    @ExceptionHandler(PhoneAlreadyExistsException.class)
+    public ResponseEntity<Object> handlePhoneAlreadyExists(PhoneAlreadyExistsException ex, WebRequest request) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("phoneNumber",
+                messageSource.getMessage(ex.getMessage(), new Object[]{"phoneNumber"}, request.getLocale()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    @ExceptionHandler(UsernameAlreadyExistsException.class)
+    public ResponseEntity<Object> handleUsernameAlreadyExists(PhoneAlreadyExistsException ex, WebRequest request) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("username",
+                messageSource.getMessage(ex.getMessage(), new Object[]{"username"}, request.getLocale()));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 }
