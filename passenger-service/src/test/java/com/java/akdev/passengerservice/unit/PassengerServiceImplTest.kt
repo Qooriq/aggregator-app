@@ -1,7 +1,7 @@
 package com.java.akdev.passengerservice.unit
 
+import com.java.akdev.commonmodels.dto.UserResponse
 import com.java.akdev.passengerservice.dto.PassengerCreateDto
-import com.java.akdev.passengerservice.dto.PassengerReadDto
 import com.java.akdev.passengerservice.entity.Passenger
 import com.java.akdev.passengerservice.exception.PassengerNotFoundException
 import com.java.akdev.passengerservice.mapper.PassengerMapper
@@ -35,7 +35,7 @@ class PassengerServiceImplTest {
     private lateinit var passenger: Passenger
     private lateinit var id: UUID
     private lateinit var createDto: PassengerCreateDto
-    private lateinit var readDto: PassengerReadDto
+    private lateinit var readDto: UserResponse
 
     @BeforeEach
     fun setUp() {
@@ -56,7 +56,7 @@ class PassengerServiceImplTest {
             passengerMapper.toReadDto(passenger)
         ).thenReturn(readDto)
 
-        val pass: PassengerReadDto? = passengerService.findPassengerById(id)
+        val pass: UserResponse? = passengerService.findPassengerById(id)
 
         assertThat(pass).isEqualTo(readDto)
 
@@ -77,7 +77,7 @@ class PassengerServiceImplTest {
             passengerMapper.toReadDto(passenger)
         ).thenReturn(readDto)
 
-        val pas: PassengerReadDto? = passengerService.updatePassenger(id, createDto)
+        val pas: UserResponse? = passengerService.updatePassenger(id, createDto)
 
         assertThat(pas)
             .isEqualTo(readDto)
@@ -99,7 +99,7 @@ class PassengerServiceImplTest {
             passengerMapper.toPassenger(createDto)
         ).thenReturn(passenger)
 
-        val pas: PassengerReadDto? = passengerService.createPassenger(createDto)
+        val pas: UserResponse? = passengerService.createPassenger(createDto)
 
         assertThat(pas)
             .isEqualTo(readDto)

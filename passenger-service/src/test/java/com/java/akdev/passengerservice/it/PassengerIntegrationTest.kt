@@ -1,9 +1,9 @@
 package com.java.akdev.passengerservice.it
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.java.akdev.commonmodels.dto.UserResponse
 import com.java.akdev.passengerservice.IntegrationTestBase
 import com.java.akdev.passengerservice.dto.PassengerCreateDto
-import com.java.akdev.passengerservice.dto.PassengerReadDto
 import com.java.akdev.passengerservice.enumeration.Order
 import com.java.akdev.passengerservice.enumeration.SortField
 import com.java.akdev.passengerservice.util.TestSetUps
@@ -39,10 +39,10 @@ open class PassengerIntegrationTest : IntegrationTestBase() {
     private var pageSize: Int = TestSetUps.DEFAULT_PAGE_SIZE
     private var sortField: SortField = TestSetUps.SORT_FIELD
     private var order: Order = TestSetUps.ORDER
-    private var passengerReadDto: PassengerReadDto = TestSetUps.getReadDto()
+    private var UserResponse: UserResponse = TestSetUps.getReadDto()
     private var passengerCreatedDto: PassengerCreateDto = TestSetUps.getCreateDto()
     private var passengerUpdateDto: PassengerCreateDto = TestSetUps.getUpdateCreateDto()
-    private var passengerUpdateReadDto: PassengerReadDto = TestSetUps.getUpdateReadDto()
+    private var passengerUpdateReadDto: UserResponse = TestSetUps.getUpdateReadDto()
 
 
     @Test
@@ -63,9 +63,9 @@ open class PassengerIntegrationTest : IntegrationTestBase() {
     fun `find passenger by id`() {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/passengers/{id}", id.toString()))
             .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(jsonPath("$.firstName").value(passengerReadDto.firstName))
-            .andExpect(jsonPath("$.lastName").value(passengerReadDto.lastName))
-            .andExpect(jsonPath("$.username").value(passengerReadDto.username))
+            .andExpect(jsonPath("$.firstName").value(UserResponse.firstName))
+            .andExpect(jsonPath("$.lastName").value(UserResponse.lastName))
+            .andExpect(jsonPath("$.username").value(UserResponse.username))
     }
 
     @Test

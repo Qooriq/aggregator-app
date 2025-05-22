@@ -1,7 +1,7 @@
 package com.java.akdev.reviewservice.service;
 
-import com.java.akdev.reviewservice.dto.ReviewReadDto;
-import com.java.akdev.reviewservice.dto.ReviewResponse;
+import com.java.akdev.reviewservice.dto.ReviewResponseAmount;
+import com.java.akdev.commonmodels.dto.ReviewResponse;
 import com.java.akdev.reviewservice.dto.ReviewCreateDto;
 import com.java.akdev.reviewservice.enumeration.Order;
 import com.java.akdev.reviewservice.enumeration.Receiver;
@@ -11,15 +11,15 @@ import org.springframework.data.domain.Page;
 
 public interface ReviewService {
 
-    Page<ReviewReadDto> findAll(Integer page, Integer size, SortField field, Order direction);
+    Page<ReviewResponse> findAll(Integer page, Integer size, SortField field, Order direction);
 
-    ReviewReadDto findById(Long id);
+    ReviewResponse findById(Long id);
 
-    ReviewReadDto createReview(ReviewCreateDto dto);
+    ReviewResponse createReview(ReviewCreateDto dto);
 
-    ReviewReadDto update(Long id, ReviewCreateDto dto);
+    ReviewResponse update(Long id, ReviewCreateDto dto);
 
     void delete(Long id);
 
-    ReviewResponse findAverageRating(UUID user, Receiver receiver);
+    ReviewResponseAmount findAverageRating(UUID user, Receiver receiver);
 }

@@ -1,7 +1,7 @@
 package com.java.akdev.passengerservice.util
 
+import com.java.akdev.commonmodels.dto.UserResponse
 import com.java.akdev.passengerservice.dto.PassengerCreateDto
-import com.java.akdev.passengerservice.dto.PassengerReadDto
 import com.java.akdev.passengerservice.entity.Passenger
 import com.java.akdev.passengerservice.enumeration.Order
 import com.java.akdev.passengerservice.enumeration.SortField
@@ -43,16 +43,16 @@ object TestSetUps {
         return PassengerCreateDto(NAME, LAST_NAME, NEW_EMAIL, PASSWORD, PHONE_NUMBER)
     }
 
-    fun getReadDto(): PassengerReadDto {
-        return PassengerReadDto(NAME, LAST_NAME, EMAIL)
+    fun getReadDto(): UserResponse {
+        return UserResponse(NAME, LAST_NAME, EMAIL)
     }
 
     fun getUpdateCreateDto(): PassengerCreateDto {
         return PassengerCreateDto(NAME, LAST_NAME, NEW_EMAIL, PASSWORD, PHONE_NUMBER)
     }
 
-    fun getUpdateReadDto(): PassengerReadDto {
-        return PassengerReadDto(NAME, LAST_NAME, NEW_EMAIL)
+    fun getUpdateReadDto(): UserResponse {
+        return UserResponse(NAME, LAST_NAME, NEW_EMAIL)
     }
 
 }

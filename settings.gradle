@@ -15,3 +15,5 @@ include 'rides-service'
 include 'auth-service'
 include 'review-service'
 include 'wallet-service'
+include 'common-models'
+

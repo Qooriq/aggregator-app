@@ -9,3 +9,13 @@ spring:
     enabled: false
 server:
   port: 8086
+feign:
+  passenger_name: passenger-feign-client
+  driver_name: driver-feign-client
+  review_name: review-feign-client
+  wallet_name: wallet-feign-client
+  url:
+    passenger: localhost:8082/api/v1/passengers
+    driver: localhost:8083/api/v1/drivers
+    review: localhost:8084/api/v1/reviews
+    wallet: localhost:8086/api/v1/wallets

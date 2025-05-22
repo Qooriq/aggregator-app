@@ -1,6 +1,7 @@
 package com.java.akdev.driverservice.artemis;
 
-import com.java.akdev.driverservice.dto.ReviewMessage;
+import com.java.akdev.commonmodels.dto.ReviewMessage;
+import com.java.akdev.driverservice.enumeration.ExceptionMessages;
 import com.java.akdev.driverservice.exception.DriverNotFoundException;
 import com.java.akdev.driverservice.repository.DriverRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class ReviewListener {
             containerFactory = "jmsListenerContainerFactory")
     public void receiveReview(ReviewMessage review) {
         var driver = driverRepository.findById(review.userId())
-                .orElseThrow(() -> new DriverNotFoundException("Driver not found"));
+                .orElseThrow(() -> new DriverNotFoundException(ExceptionMessages.DRIVER_NOT_FOUND.getName()));
 
         driver.setRating(review.review());
 

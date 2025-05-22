@@ -1,11 +1,11 @@
 package com.java.akdev.reviewservice.service.impl;
 
+import com.java.akdev.commonmodels.dto.ReviewMessage;
+import com.java.akdev.commonmodels.dto.ReviewResponse;
 import com.java.akdev.reviewservice.artemis.ReviewArtemisProducer;
 import com.java.akdev.reviewservice.config.AppConfiguration;
 import com.java.akdev.reviewservice.dto.ReviewCreateDto;
-import com.java.akdev.reviewservice.dto.ReviewMessage;
-import com.java.akdev.reviewservice.dto.ReviewReadDto;
-import com.java.akdev.reviewservice.dto.ReviewResponse;
+import com.java.akdev.reviewservice.dto.ReviewResponseAmount;
 import com.java.akdev.reviewservice.entity.Review;
 import com.java.akdev.reviewservice.enumeration.Order;
 import com.java.akdev.reviewservice.enumeration.Receiver;
@@ -37,7 +37,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     private final static String ERROR_MESSAGE = "ReviewController.review.notFound";
 
-    public Page<ReviewReadDto> findAll(Integer page, Integer size, SortField field, Order order) {
+    public Page<ReviewResponse> findAll(Integer page, Integer size, SortField field, Order order) {
         Sort.Direction dir = getDirection(order);
         var req = PageRequest.of(page,
                 size,
@@ -47,20 +47,20 @@ public class ReviewServiceImpl implements ReviewService {
                 .map(reviewMapper::toDto);
     }
 
-    public ReviewReadDto findById(Long id) {
+    public ReviewResponse findById(Long id) {
         return reviewRepository.findById(id)
                 .map(reviewMapper::toDto)
                 .orElseThrow(() -> new ReviewNotFoundException(ERROR_MESSAGE));
     }
 
-    public ReviewReadDto createReview(ReviewCreateDto dto) {
+    public ReviewResponse createReview(ReviewCreateDto dto) {
         var entity = reviewMapper.toEntity(dto);
         var res = reviewRepository.save(entity);
         return reviewMapper.toDto(res);
     }
 
     @Transactional
-    public ReviewReadDto update(Long id, ReviewCreateDto dto) {
+    public ReviewResponse update(Long id, ReviewCreateDto dto) {
         var review = reviewRepository.findById(id)
                 .orElseThrow(() -> new ReviewNotFoundException(ERROR_MESSAGE));
         review = reviewMapper.map(review, dto);
@@ -73,8 +73,8 @@ public class ReviewServiceImpl implements ReviewService {
         reviewRepository.deleteById(id);
     }
 
-    public ReviewResponse findAverageRating(UUID user, Receiver receiver) {
-        return new ReviewResponse(reviewRepository.findAllByUser(
+    public ReviewResponseAmount findAverageRating(UUID user, Receiver receiver) {
+        return new ReviewResponseAmount(reviewRepository.findAllByUser(
                         user, receiver, PageRequest.of(
                                 appConfiguration.page(),
                                 appConfiguration.size()
@@ -116,8 +116,8 @@ public class ReviewServiceImpl implements ReviewService {
         );
     }
 
-    private ReviewResponse findAverageRating(UUID user) {
-        return new ReviewResponse(reviewRepository.findAllByReceiverId(user)
+    private ReviewResponseAmount findAverageRating(UUID user) {
+        return new ReviewResponseAmount(reviewRepository.findAllByReceiverId(user)
                 .stream()
                 .map(Review::getReview)
                 .mapToDouble(Short::shortValue)

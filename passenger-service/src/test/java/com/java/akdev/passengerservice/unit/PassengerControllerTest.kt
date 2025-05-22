@@ -1,8 +1,8 @@
 package com.java.akdev.passengerservice.unit
 
+import com.java.akdev.commonmodels.dto.UserResponse
 import com.java.akdev.passengerservice.controller.PassengerController
 import com.java.akdev.passengerservice.dto.PassengerCreateDto
-import com.java.akdev.passengerservice.dto.PassengerReadDto
 import com.java.akdev.passengerservice.service.PassengerService
 import com.java.akdev.passengerservice.util.TestSetUps
 import org.assertj.core.api.Assertions.assertThat
@@ -26,7 +26,7 @@ class PassengerControllerTest {
 
     private lateinit var id: UUID
     private lateinit var passengerCreateDto: PassengerCreateDto
-    private lateinit var passengerReadDto: PassengerReadDto
+    private lateinit var passengerReadDto: UserResponse
 
     @BeforeEach
     fun setup() {

@@ -1,6 +1,6 @@
 package com.java.akdev.reviewservice.artemis;
 
-import com.java.akdev.reviewservice.dto.ReviewMessage;
+import com.java.akdev.commonmodels.dto.ReviewMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
