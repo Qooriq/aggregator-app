@@ -1,5 +1,6 @@
 package com.java.akdev.reviewservice.service;
 
+import com.java.akdev.commonmodels.dto.ReviewMessage;
 import com.java.akdev.commonmodels.dto.ReviewResponse;
 import com.java.akdev.reviewservice.artemis.ReviewArtemisProducer;
 import com.java.akdev.reviewservice.client.CheckDriverExistClient;
@@ -7,12 +8,10 @@ import com.java.akdev.reviewservice.client.CheckPassengerExistClient;
 import com.java.akdev.reviewservice.client.CheckRideExistClient;
 import com.java.akdev.reviewservice.config.AppConfiguration;
 import com.java.akdev.reviewservice.dto.ReviewCreateDto;
-import com.java.akdev.reviewservice.dto.ReviewMessage;
 import com.java.akdev.reviewservice.dto.ReviewResponseAmount;
 import com.java.akdev.reviewservice.entity.Review;
 import com.java.akdev.reviewservice.enumeration.Receiver;
 import com.java.akdev.reviewservice.enumeration.SortField;
-import com.java.akdev.reviewservice.exception.EntityNotFoundException;
 import com.java.akdev.reviewservice.exception.ReviewNotFoundException;
 import com.java.akdev.reviewservice.kafka.ReviewKafkaSender;
 import com.java.akdev.reviewservice.mapper.ReviewMapper;
@@ -57,22 +56,18 @@ public class ReviewService {
     }
 
     public ReviewResponse createReview(ReviewCreateDto dto) {
-        try {
-            if (dto.receiver().equals(Receiver.DRIVER)) {
-                driverClient.findDriverById(dto.receiverId());
-                passengerClient.findPassengerById(dto.reviewerId());
-                rideClient.findRideById(dto.rideId());
-            } else {
-                driverClient.findDriverById(dto.reviewerId());
-                passengerClient.findPassengerById(dto.receiverId());
-                rideClient.findRideById(dto.rideId());
-            }
-            return reviewMapper
-                    .toDto(reviewRepository
-                            .save(reviewMapper.toEntity(dto)));
-        } catch (Exception e) {
-            throw new EntityNotFoundException(ERROR_MESSAGE);
+        if (dto.receiver().equals(Receiver.DRIVER)) {
+            driverClient.findDriverById(dto.receiverId());
+            passengerClient.findPassengerById(dto.reviewerId());
+            rideClient.findRideById(dto.rideId());
+        } else {
+            driverClient.findDriverById(dto.reviewerId());
+            passengerClient.findPassengerById(dto.receiverId());
+            rideClient.findRideById(dto.rideId());
         }
+        return reviewMapper
+                .toDto(reviewRepository
+                        .save(reviewMapper.toEntity(dto)));
     }
 
     public ReviewResponse update(Long id, ReviewCreateDto dto) {

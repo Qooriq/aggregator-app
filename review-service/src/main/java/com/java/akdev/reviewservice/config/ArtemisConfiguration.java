@@ -64,7 +64,7 @@ public class ArtemisConfiguration {
         MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
         converter.setTargetType(MessageType.TEXT);
         converter.setTypeIdMappings(Map.of(
-                "ReviewMessage", com.java.akdev.reviewservice.dto.ReviewMessage.class
+                "ReviewMessage", com.java.akdev.commonmodels.dto.ReviewMessage.class
         ));
         converter.setTypeIdPropertyName("_type");
         return converter;

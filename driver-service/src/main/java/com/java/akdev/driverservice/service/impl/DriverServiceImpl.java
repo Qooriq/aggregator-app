@@ -4,6 +4,7 @@ import com.java.akdev.commonmodels.dto.UserResponse;
 import com.java.akdev.driverservice.dto.DriverCreateDto;
 import com.java.akdev.driverservice.entity.Driver;
 import com.java.akdev.driverservice.enumeration.DriverStatus;
+import com.java.akdev.driverservice.enumeration.ExceptionMessages;
 import com.java.akdev.driverservice.enumeration.Order;
 import com.java.akdev.driverservice.enumeration.SortField;
 import com.java.akdev.driverservice.exception.DriverNotFoundException;
@@ -29,9 +30,6 @@ public class DriverServiceImpl implements DriverService {
     private final DriverRepository driverRepository;
     private final DriverMapper driverMapper;
 
-    private static final String DRIVER_NOT_FOUND = "DriverController.driver.notFound";
-    private static final String ALREADY_EXISTS = "DriverController.field.alreadyExists";
-
     @Transactional(readOnly = true)
     public Page<UserResponse> findAll(Integer page,
                                       Integer size,
@@ -49,11 +47,11 @@ public class DriverServiceImpl implements DriverService {
 
     public UserResponse createDriver(DriverCreateDto dto) {
         if (driverRepository.existsByUsername(dto.username())) {
-            throw new UsernameAlreadyExistsException(ALREADY_EXISTS);
+            throw new UsernameAlreadyExistsException(ExceptionMessages.ALREADY_EXISTS.getName());
         }
         if (Objects.nonNull(dto.phoneNumber()) &&
             driverRepository.existsByPhoneNumber(dto.phoneNumber())) {
-            throw new PhoneAlreadyExistsException(ALREADY_EXISTS);
+            throw new PhoneAlreadyExistsException(ExceptionMessages.ALREADY_EXISTS.getName());
         }
         var driver = driverMapper.toDriver(dto);
         var res = driverRepository.save(driver);
@@ -63,11 +61,11 @@ public class DriverServiceImpl implements DriverService {
     @Transactional
     public UserResponse update(UUID id, DriverCreateDto dto) {
         if (driverRepository.existsByUsername(dto.username())) {
-            throw new UsernameAlreadyExistsException(ALREADY_EXISTS);
+            throw new UsernameAlreadyExistsException(ExceptionMessages.ALREADY_EXISTS.getName());
         }
         if (Objects.nonNull(dto.phoneNumber()) &&
                      driverRepository.existsByPhoneNumber(dto.phoneNumber())) {
-            throw new PhoneAlreadyExistsException(ALREADY_EXISTS);
+            throw new PhoneAlreadyExistsException(ExceptionMessages.ALREADY_EXISTS.getName());
         }
         var driver = findById(id);
         driverMapper.updateDriver(driver, dto);
@@ -84,7 +82,7 @@ public class DriverServiceImpl implements DriverService {
 
     private Driver findById(UUID id) {
         return driverRepository.findById(id)
-                .orElseThrow(() -> new DriverNotFoundException(DRIVER_NOT_FOUND));
+                .orElseThrow(() -> new DriverNotFoundException(ExceptionMessages.DRIVER_NOT_FOUND.getName()));
     }
 
     private Sort.Direction getDirection(Order order) {

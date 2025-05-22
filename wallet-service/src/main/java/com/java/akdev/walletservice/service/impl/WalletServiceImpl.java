@@ -9,12 +9,10 @@ import com.java.akdev.walletservice.dto.WalletReadDto;
 import com.java.akdev.walletservice.enumeration.Order;
 import com.java.akdev.walletservice.enumeration.SortField;
 import com.java.akdev.walletservice.enumeration.WalletOwner;
-import com.java.akdev.walletservice.exception.UserNotFoundException;
 import com.java.akdev.walletservice.exception.WalletNotFoundException;
 import com.java.akdev.walletservice.mapper.WalletMapper;
 import com.java.akdev.walletservice.repository.WalletRepository;
 import com.java.akdev.walletservice.service.WalletService;
-import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,7 +31,6 @@ public class WalletServiceImpl implements WalletService {
     private final CheckPassengerFeignClient passengerClient;
     private final CheckDriverFeignClient driverClient;
     private final static String ERROR_MESSAGE = "WalletController.wallet.notFound";
-    private final static String USER_NOT_EXISTS = "WalletController.userNotFound.error";
 
     @Transactional(readOnly = true)
     public Page<WalletReadDto> findAll(Integer page, Integer size, SortField sortField, Order order) {
@@ -52,38 +49,29 @@ public class WalletServiceImpl implements WalletService {
 
     @Transactional
     public WalletReadDto update(Long id, WalletCreateDto dto) {
-        try {
-            if (dto.walletOwner().equals(WalletOwner.DRIVER)) {
-                driverClient.findDriverById(dto.userId()).getBody();
-            } else {
-                passengerClient.findPassengerById(dto.userId()).getBody();
-            }
-            return walletRepository.findById(id)
-                    .map(wallet -> {
-                        walletMapper.map(wallet, dto);
-                        walletRepository.save(wallet);
-                        return walletMapper.toWalletReadDto(wallet);
-                    })
-                    .orElseThrow(() -> new WalletNotFoundException(ERROR_MESSAGE));
-        } catch (FeignException e) {
-            throw new UserNotFoundException(USER_NOT_EXISTS);
+        if (dto.walletOwner().equals(WalletOwner.DRIVER)) {
+            driverClient.findDriverById(dto.userId()).getBody();
+        } else {
+            passengerClient.findPassengerById(dto.userId()).getBody();
         }
-
+        return walletRepository.findById(id)
+                .map(wallet -> {
+                    walletMapper.map(wallet, dto);
+                    walletRepository.save(wallet);
+                    return walletMapper.toWalletReadDto(wallet);
+                })
+                .orElseThrow(() -> new WalletNotFoundException(ERROR_MESSAGE));
     }
 
     public WalletReadDto createWallet(WalletCreateDto dto) {
-        try {
-            if (dto.walletOwner().equals(WalletOwner.DRIVER)) {
-                driverClient.findDriverById(dto.userId());
-            } else {
-                passengerClient.findPassengerById(dto.userId());
-            }
-            var wallet = walletMapper.toWallet(dto);
-            var res = walletRepository.save(wallet);
-            return walletMapper.toWalletReadDto(res);
-        } catch (FeignException e) {
-            throw new UserNotFoundException(USER_NOT_EXISTS);
+        if (dto.walletOwner().equals(WalletOwner.DRIVER)) {
+            driverClient.findDriverById(dto.userId());
+        } else {
+            passengerClient.findPassengerById(dto.userId());
         }
+        var wallet = walletMapper.toWallet(dto);
+        var res = walletRepository.save(wallet);
+        return walletMapper.toWalletReadDto(res);
     }
 
     @Transactional
