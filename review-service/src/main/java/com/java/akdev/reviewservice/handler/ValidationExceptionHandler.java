@@ -2,6 +2,7 @@ package com.java.akdev.reviewservice.handler;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.java.akdev.reviewservice.enumeration.ExceptionMessages;
+import com.java.akdev.reviewservice.exception.EntityNotFoundException;
 import com.java.akdev.reviewservice.exception.ReviewNotFoundException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -106,6 +107,15 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
         Map<String, String> errors = new HashMap<>();
         errors.put("id",
                 messageSource.getMessage(ex.getMessage(), null, request.getLocale()));
+        return ResponseEntity.status(404).body(errors);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<Object> handleEntityNotFoundException(EntityNotFoundException ex,
+                                                                WebRequest request){
+        Map<String, String> errors = new HashMap<>();
+        errors.put("entity",
+                messageSource.getMessage(ex.getMessage(), new Object[]{"entity"}, request.getLocale()));
         return ResponseEntity.status(404).body(errors);
     }
 }
