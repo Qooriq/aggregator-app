@@ -1,5 +1,6 @@
 package com.java.akdev.walletservice.client;
 
+import com.java.akdev.walletservice.config.FeignConfiguration;
 import com.java.akdev.walletservice.dto.UserReadDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.UUID;
 
-@FeignClient(name = "driver-feign-client", url = "localhost:8083/api/v1/drivers")
+@FeignClient(name = "${feign.driver_name}", url = "${feign.url.driver}", configuration = FeignConfiguration.class)
 public interface CheckDriverFeignClient {
 
     @GetMapping("/{id}")
