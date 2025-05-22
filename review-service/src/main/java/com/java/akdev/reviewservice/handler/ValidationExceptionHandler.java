@@ -22,6 +22,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @RestControllerAdvice(basePackages = "com.java.akdev.reviewservice.controller")
@@ -114,8 +115,9 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleEntityNotFoundException(EntityNotFoundException ex,
                                                                 WebRequest request){
         Map<String, String> errors = new HashMap<>();
-        errors.put("entity",
-                messageSource.getMessage(ex.getMessage(), new Object[]{"entity"}, request.getLocale()));
+        Locale locale = request.getLocale();
+        String message = messageSource.getMessage(ex.getMessage(), new Object[]{"entity"}, locale);
+        errors.put("entity", message);
         return ResponseEntity.status(404).body(errors);
     }
 }

@@ -12,7 +12,7 @@ public interface DriverMapper {
 
     UserResponse toUserResponse(Driver driver);
 
-    Driver toDriver(DriverCreateDto UserResponse);
+    Driver toDriver(DriverCreateDto driverCreateDto);
 
     void updateDriver(@MappingTarget Driver to, DriverCreateDto from);
 }
