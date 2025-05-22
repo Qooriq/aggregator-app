@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 import java.util.UUID;
 
-@FeignClient(name = "wallet-client", url = "localhost:8085/api/v1/wallets")
+@FeignClient(name = "wallet-client", url = "wallet-service:8086/api/v1/wallets")
 public interface WalletFeignClient {
 
     @PutMapping("/payment/{id}")
-    ResponseEntity<WalletResponse> updateWallet(@PathVariable("id") Long id, Double price, UUID passengerId);
+    ResponseEntity<WalletResponse> updateWallet(@PathVariable("id") UUID passengerId, Double price);
 }
