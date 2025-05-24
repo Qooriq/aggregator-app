@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
@@ -53,6 +54,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .orElseThrow(() -> new ReviewNotFoundException(ERROR_MESSAGE));
     }
 
+    @Transactional
     public ReviewReadDto createReview(ReviewCreateDto dto) {
         var entity = reviewMapper.toEntity(dto);
         var res = reviewRepository.save(entity);
