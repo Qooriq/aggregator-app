@@ -1,9 +1,9 @@
-package com.java.akdev.passengerservice.dto;
+package com.java.akdev.walletservice.dto;
 
 import lombok.Builder;
 
 @Builder
-public record PassengerReadDto(
+public record UserReadDto(
         String firstName,
         String lastName,
         String username

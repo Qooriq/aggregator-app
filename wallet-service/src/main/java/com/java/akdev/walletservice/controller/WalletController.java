@@ -1,8 +1,8 @@
 package com.java.akdev.walletservice.controller;
 
+import com.java.akdev.commonmodels.dto.WalletResponse;
 import com.java.akdev.walletservice.dto.WalletCreateDto;
 import com.java.akdev.walletservice.dto.WalletReadDto;
-import com.java.akdev.walletservice.dto.WalletResponse;
 import com.java.akdev.walletservice.enumeration.Order;
 import com.java.akdev.walletservice.enumeration.SortField;
 import com.java.akdev.walletservice.service.WalletService;

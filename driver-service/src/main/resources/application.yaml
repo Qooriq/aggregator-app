@@ -18,4 +18,4 @@ logging:
     org.apache.activemq.artemis.core.client: DEBUG
     org.apache.activemq.artemis.jms.client: DEBUG
 server:
-  port: 8084
+  port: 8083
