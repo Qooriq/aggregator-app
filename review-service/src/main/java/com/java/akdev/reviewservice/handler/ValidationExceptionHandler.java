@@ -2,6 +2,7 @@ package com.java.akdev.reviewservice.handler;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.java.akdev.reviewservice.enumeration.ExceptionMessages;
+import com.java.akdev.reviewservice.exception.EntityNotFoundException;
 import com.java.akdev.reviewservice.exception.ReviewNotFoundException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @RestControllerAdvice(basePackages = "com.java.akdev.reviewservice.controller")
@@ -106,6 +108,16 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
         Map<String, String> errors = new HashMap<>();
         errors.put("id",
                 messageSource.getMessage(ex.getMessage(), null, request.getLocale()));
+        return ResponseEntity.status(404).body(errors);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<Object> handleEntityNotFoundException(EntityNotFoundException ex,
+                                                                WebRequest request){
+        Map<String, String> errors = new HashMap<>();
+        Locale locale = request.getLocale();
+        String message = messageSource.getMessage(ex.getMessage(), new Object[]{"entity"}, locale);
+        errors.put("entity", message);
         return ResponseEntity.status(404).body(errors);
     }
 }

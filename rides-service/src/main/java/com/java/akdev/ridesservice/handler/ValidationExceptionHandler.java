@@ -3,6 +3,7 @@ package com.java.akdev.ridesservice.handler;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.java.akdev.ridesservice.dto.ErrorResponse;
 import com.java.akdev.ridesservice.enumeration.ExceptionMessages;
+import com.java.akdev.ridesservice.exception.EntityNotFoundException;
 import com.java.akdev.ridesservice.exception.RideNotFoundException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -94,5 +95,10 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
         errors.put(propertyName,
                 ExceptionMessages.WRONG_TYPE.getName());
         return ResponseEntity.status(400).body(errors);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException ex) {
+        return ResponseEntity.status(404).body(new ErrorResponse(ex.getMessage()));
     }
 }

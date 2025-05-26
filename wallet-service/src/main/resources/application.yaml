@@ -4,7 +4,7 @@ spring:
   liquibase:
     enabled: false
   datasource:
-    url: jdbc:postgresql://localhost:5433/wallet_service
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/}wallet_service
     username: postgres
     password: root
   jpa:
@@ -12,4 +12,10 @@ spring:
       ddl-auto: validate
     show-sql: true
 server:
-  port: 8084
+  port: 8085
+feign:
+  passenger_name: passenger-feign-client
+  driver_name: driver-feign-client
+  url:
+    passenger: localhost:8082/api/v1/passengers
+    driver: localhost:8083/api/v1/drivers

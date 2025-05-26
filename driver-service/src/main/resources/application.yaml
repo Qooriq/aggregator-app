@@ -13,4 +13,4 @@ spring:
     password: admin
     mode: native
 server:
-  port: 8084
+  port: 8083

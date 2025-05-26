@@ -1,9 +1,14 @@
 package com.java.akdev.walletservice.service.impl;
 
+import com.java.akdev.commonmodels.dto.WalletResponse;
+import com.java.akdev.commonmodels.enumeration.OperationResult;
+import com.java.akdev.walletservice.client.CheckDriverFeignClient;
+import com.java.akdev.walletservice.client.CheckPassengerFeignClient;
 import com.java.akdev.walletservice.dto.WalletCreateDto;
 import com.java.akdev.walletservice.dto.WalletReadDto;
 import com.java.akdev.walletservice.enumeration.Order;
 import com.java.akdev.walletservice.enumeration.SortField;
+import com.java.akdev.walletservice.enumeration.WalletOwner;
 import com.java.akdev.walletservice.exception.WalletNotFoundException;
 import com.java.akdev.walletservice.mapper.WalletMapper;
 import com.java.akdev.walletservice.repository.WalletRepository;
@@ -15,13 +20,17 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class WalletServiceImpl implements WalletService {
 
     private final WalletRepository walletRepository;
     private final WalletMapper walletMapper;
-    private final static String ERROR_MESSAGE = "WalletController.walletNotFound.error";
+    private final CheckPassengerFeignClient passengerClient;
+    private final CheckDriverFeignClient driverClient;
+    private final static String ERROR_MESSAGE = "WalletController.wallet.notFound";
 
     @Transactional(readOnly = true)
     public Page<WalletReadDto> findAll(Integer page, Integer size, SortField sortField, Order order) {
@@ -40,6 +49,11 @@ public class WalletServiceImpl implements WalletService {
 
     @Transactional
     public WalletReadDto update(Long id, WalletCreateDto dto) {
+        if (dto.walletOwner().equals(WalletOwner.DRIVER)) {
+            driverClient.findDriverById(dto.userId()).getBody();
+        } else {
+            passengerClient.findPassengerById(dto.userId()).getBody();
+        }
         return walletRepository.findById(id)
                 .map(wallet -> {
                     walletMapper.map(wallet, dto);
@@ -50,6 +64,11 @@ public class WalletServiceImpl implements WalletService {
     }
 
     public WalletReadDto createWallet(WalletCreateDto dto) {
+        if (dto.walletOwner().equals(WalletOwner.DRIVER)) {
+            driverClient.findDriverById(dto.userId());
+        } else {
+            passengerClient.findPassengerById(dto.userId());
+        }
         var wallet = walletMapper.toWallet(dto);
         var res = walletRepository.save(wallet);
         return walletMapper.toWalletReadDto(res);
@@ -58,6 +77,18 @@ public class WalletServiceImpl implements WalletService {
     @Transactional
     public void deleteWallet(Long id) {
         walletRepository.deleteById(id);
+    }
+
+    @Override
+    public WalletResponse payment(UUID userId, Double amount) {
+        var wallet = walletRepository.findByUserId(userId);
+        var curAmount = wallet.getAmount();
+        if (curAmount < amount) {
+            return new WalletResponse(OperationResult.DECLINED);
+        }
+        wallet.setAmount(curAmount - amount);
+        walletRepository.save(wallet);
+        return new WalletResponse(OperationResult.SUCCESSFUL);
     }
 
 

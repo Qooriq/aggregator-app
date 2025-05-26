@@ -2,6 +2,7 @@ package com.java.akdev.walletservice.handler;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.java.akdev.walletservice.enumeration.ExceptionMessages;
+import com.java.akdev.walletservice.exception.UserNotFoundException;
 import com.java.akdev.walletservice.exception.WalletNotFoundException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -103,6 +104,14 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(WalletNotFoundException.class)
     public ResponseEntity<Object> handleWalletNotFound(WalletNotFoundException ex, WebRequest request) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("id",
+                messageSource.getMessage(ex.getMessage(), null, request.getLocale()));
+        return ResponseEntity.status(404).body(errors);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Object> handleUserNotFound(UserNotFoundException ex, WebRequest request) {
         Map<String, String> errors = new HashMap<>();
         errors.put("id",
                 messageSource.getMessage(ex.getMessage(), null, request.getLocale()));
