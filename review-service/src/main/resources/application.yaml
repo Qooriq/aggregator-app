@@ -29,3 +29,11 @@ app:
   size: 10
 server:
   port: ${PORT:8084}
+feign:
+  passenger_name: passenger-feign-client
+  driver_name: driver-feign-client
+  ride_name: ride-feign-client
+  url:
+    passenger: localhost:8082/api/v1/passengers
+    driver: localhost:8083/api/v1/drivers
+    ride: localhost:8085/api/v1/rides
