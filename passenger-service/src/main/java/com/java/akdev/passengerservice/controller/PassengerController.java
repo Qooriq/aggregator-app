@@ -37,14 +37,14 @@ public class PassengerController {
 
     @PostMapping
     public ResponseEntity<UserResponse> create(@Validated
-                                                   @RequestBody PassengerCreateDto dto) {
+                                               @RequestBody PassengerCreateDto dto) {
         return ResponseEntity.status(201)
                 .body(passengerService.createPassenger(dto));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<UserResponse> update(@PathVariable UUID id,
-                                                   @Validated @RequestBody PassengerCreateDto dto) {
+                                               @Validated @RequestBody PassengerCreateDto dto) {
         return ResponseEntity.ok()
                 .body(passengerService.updatePassenger(id, dto));
     }
