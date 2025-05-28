@@ -1,7 +1,7 @@
 package com.java.akdev.passengerservice.controller;
 
+import com.java.akdev.commonmodels.dto.UserResponse;
 import com.java.akdev.passengerservice.dto.PassengerCreateDto;
-import com.java.akdev.passengerservice.dto.PassengerReadDto;
 import com.java.akdev.passengerservice.enumeration.Order;
 import com.java.akdev.passengerservice.enumeration.SortField;
 import com.java.akdev.passengerservice.service.PassengerService;
@@ -21,29 +21,29 @@ public class PassengerController {
     private final PassengerService passengerService;
 
     @GetMapping
-    public ResponseEntity<Page<PassengerReadDto>> findAll(@RequestParam Integer page,
-                                                          @RequestParam Integer size,
-                                                          @RequestParam SortField sortField,
-                                                          @RequestParam Order order) {
+    public ResponseEntity<Page<UserResponse>> findAll(@RequestParam Integer page,
+                                                      @RequestParam Integer size,
+                                                      @RequestParam SortField sortField,
+                                                      @RequestParam Order order) {
         return ResponseEntity.ok()
                 .body(passengerService.findAll(page, size, sortField, order));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PassengerReadDto> findById(@PathVariable UUID id) {
+    public ResponseEntity<UserResponse> findById(@PathVariable UUID id) {
         return ResponseEntity.ok()
                 .body(passengerService.findPassengerById(id));
     }
 
     @PostMapping
-    public ResponseEntity<PassengerReadDto> create(@Validated
+    public ResponseEntity<UserResponse> create(@Validated
                                                    @RequestBody PassengerCreateDto dto) {
         return ResponseEntity.status(201)
                 .body(passengerService.createPassenger(dto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PassengerReadDto> update(@PathVariable UUID id,
+    public ResponseEntity<UserResponse> update(@PathVariable UUID id,
                                                    @Validated @RequestBody PassengerCreateDto dto) {
         return ResponseEntity.ok()
                 .body(passengerService.updatePassenger(id, dto));

@@ -1,7 +1,7 @@
 package com.java.akdev.ridesservice.util;
 
+import com.java.akdev.commonmodels.dto.RideResponse;
 import com.java.akdev.ridesservice.dto.RideCreateDto;
-import com.java.akdev.ridesservice.dto.RideReadDto;
 import com.java.akdev.ridesservice.dto.RideUpdateDto;
 import com.java.akdev.ridesservice.entity.Ride;
 import com.java.akdev.ridesservice.enumeration.Order;
@@ -63,12 +63,12 @@ public final class TestSetUps {
                 .build();
     }
 
-    public static RideReadDto getUpdateDto() {
-        return new RideReadDto(START_LOCATION, NEW_END_LOCATION, RIDE_PRICE, DRIVER);
+    public static RideResponse getUpdateDto() {
+        return new RideResponse(START_LOCATION, NEW_END_LOCATION, RIDE_PRICE, DRIVER);
     }
 
-    public static RideReadDto getReadDto() {
-        return new RideReadDto(START_LOCATION, END_LOCATION, RIDE_PRICE, DRIVER);
+    public static RideResponse getReadDto() {
+        return new RideResponse(START_LOCATION, END_LOCATION, RIDE_PRICE, DRIVER);
     }
 
     public static RideUpdateDto getRideUpdateDto() {

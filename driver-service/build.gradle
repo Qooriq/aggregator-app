@@ -11,12 +11,14 @@ ext {
 }
 
 configurations {
+    cucumberRuntime
     compileOnly {
         extendsFrom annotationProcessor
     }
 }
 
 dependencies {
+    implementation project(':common-models')
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -34,6 +36,13 @@ dependencies {
     annotationProcessor "org.mapstruct:mapstruct-processor:${versions.mapstruct}"
     annotationProcessor 'org.projectlombok:lombok'
 
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+    testImplementation "io.rest-assured:rest-assured:${versions.rest_assured}"
+    testImplementation "io.cucumber:cucumber-java:${versions.cucumber}"
+    testImplementation "io.cucumber:cucumber-junit:${versions.cucumber}"
+    testImplementation "io.cucumber:cucumber-junit-platform-engine:${versions.cucumber}"
+    testImplementation "org.junit.vintage:junit-vintage-engine:${versions.junit_vintage}"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'
     testImplementation 'org.springframework.kafka:spring-kafka-test'

@@ -1,8 +1,8 @@
 package com.java.akdev.passengerservice.service.impl;
 
 
+import com.java.akdev.commonmodels.dto.UserResponse;
 import com.java.akdev.passengerservice.dto.PassengerCreateDto;
-import com.java.akdev.passengerservice.dto.PassengerReadDto;
 import com.java.akdev.passengerservice.entity.Passenger;
 import com.java.akdev.passengerservice.enumeration.ExceptionMessages;
 import com.java.akdev.passengerservice.enumeration.Order;
@@ -34,20 +34,20 @@ public class PassengerServiceImpl implements PassengerService {
     private static final String ALREADY_EXIST = "PassengerController.field.alreadyExists";
 
     @Transactional(readOnly = true)
-    public Page<PassengerReadDto> findAll(Integer page, Integer size, SortField sortField, Order order) {
+    public Page<UserResponse> findAll(Integer page, Integer size, SortField sortField, Order order) {
         var direction = getDirection(order);
         var req = PageRequest.of(page, size, direction, sortField.getName());
         return passengerRepository.findAll(req)
                 .map(passengerMapper::toReadDto);
     }
 
-    public PassengerReadDto findPassengerById(UUID id) {
+    public UserResponse findPassengerById(UUID id) {
         var passenger = findPassenger(id);
         return passengerMapper.toReadDto(passenger);
     }
 
     @Transactional
-    public PassengerReadDto updatePassenger(UUID id, PassengerCreateDto dto) {
+    public UserResponse updatePassenger(UUID id, PassengerCreateDto dto) {
         if (passengerRepository.existsByUsername(dto.username())) {
             throw new UsernameAlreadyExistsException(ALREADY_EXIST);
         }
@@ -66,7 +66,7 @@ public class PassengerServiceImpl implements PassengerService {
                 ));
     }
 
-    public PassengerReadDto createPassenger(PassengerCreateDto dto) {
+    public UserResponse createPassenger(PassengerCreateDto dto) {
         if (passengerRepository.existsByUsername(dto.username())) {
             throw new UsernameAlreadyExistsException(ALREADY_EXIST);
         }

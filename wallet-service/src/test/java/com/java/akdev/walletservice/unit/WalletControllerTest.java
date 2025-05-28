@@ -29,7 +29,7 @@ public class WalletControllerTest {
 
     @BeforeEach
     void setUp() {
-        id = TestSetUps.id;
+        id = TestSetUps.ID;
         walletReadDto = TestSetUps.getReadDto();
         walletCreateDto = TestSetUps.getCreateDto();
     }
