@@ -3,82 +3,105 @@ services:
   postgresql:
     image: postgres:16
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: root
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
       - "5433:5432"
     volumes:
       - ./db-init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    networks:
+      - application
 
   liquibase-migrations-passenger:
     image: liquibase/liquibase:4.25
     depends_on:
-      - postgresql
+      postgresql:
+        condition: service_healthy
     command:
       - --changelog-file=master.xml
       - --driver=org.postgresql.Driver
       - --url=jdbc:postgresql://postgresql:5432/passenger_service
-      - --username=postgres
-      - --password=root
+      - --username=${DB_USERNAME}
+      - --password=${DB_PASSWORD}
       - update
     volumes:
       - ./passenger-service/migrations:/liquibase/changelog
+    networks:
+      - application
 
   liquibase-migrations-driver:
     image: liquibase/liquibase:4.25
     depends_on:
-      - postgresql
+      postgresql:
+        condition: service_healthy
     command:
       - --changelog-file=master.xml
       - --driver=org.postgresql.Driver
       - --url=jdbc:postgresql://postgresql:5432/driver_service
-      - --username=postgres
-      - --password=root
+      - --username=${DB_USERNAME}
+      - --password=${DB_PASSWORD}
       - update
     volumes:
       - ./driver-service/migrations:/liquibase/changelog
+    networks:
+      - application
 
   liquibase-migrations-rides:
     image: liquibase/liquibase:4.25
     depends_on:
-      - postgresql
+      postgresql:
+        condition: service_healthy
     command:
       - --changelog-file=master.xml
       - --driver=org.postgresql.Driver
       - --url=jdbc:postgresql://postgresql:5432/rides_service
-      - --username=postgres
-      - --password=root
+      - --username=${DB_USERNAME}
+      - --password=${DB_PASSWORD}
       - update
     volumes:
       - ./rides-service/migrations:/liquibase/changelog
+    networks:
+      - application
 
   liquibase-migrations-reviews:
     image: liquibase/liquibase:4.25
     depends_on:
-      - postgresql
+      postgresql:
+        condition: service_healthy
     command:
       - --changelog-file=master.xml
       - --driver=org.postgresql.Driver
       - --url=jdbc:postgresql://postgresql:5432/review_service
-      - --username=postgres
-      - --password=root
+      - --username=${DB_USERNAME}
+      - --password=${DB_PASSWORD}
       - update
     volumes:
       - ./review-service/migrations:/liquibase/changelog
+    networks:
+      - application
 
   liquibase-migrations-wallets:
     image: liquibase/liquibase:4.25
     depends_on:
-      - postgresql
+      postgresql:
+        condition: service_healthy
     command:
       - --changelog-file=master.xml
       - --driver=org.postgresql.Driver
       - --url=jdbc:postgresql://postgresql:5432/wallet_service
-      - --username=postgres
-      - --password=root
+      - --username=${DB_USERNAME}
+      - --password=${DB_PASSWORD}
       - update
     volumes:
       - ./wallet-service/migrations:/liquibase/changelog
+    networks:
+      - application
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.2
@@ -87,12 +110,13 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - application
 
   kafka:
     image: confluentinc/cp-kafka:7.3.2
     ports:
       - "9092:9092"
-    restart: on-failure
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -100,15 +124,20 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
     depends_on:
-      - zookeeper
+      zookeeper:
+        condition: service_started
+    networks:
+      - application
 
   artemis-mq:
-    image: apache/activemq-artemis:latest-alpine
+    image: apache/activemq-artemis:2.41.0-alpine
     ports:
       - "8161:8161"
       - "61616:61616"
     environment:
       ANONYMOUS_LOGIN: true
+    networks:
+      - application
 
   driver-service:
     container_name: driver-service
@@ -118,11 +147,14 @@ services:
       context: ./driver-service
       dockerfile: Dockerfile
     depends_on:
-      - postgresql
-      - artemis-mq
-    restart: on-failure
+      postgresql:
+        condition: service_healthy
+      artemis-mq:
+        condition: service_started
     env_file:
       - ./driver-service/.env
+    networks:
+      - application
 
   passenger-service:
     container_name: passenger-service
@@ -132,11 +164,14 @@ services:
       context: ./passenger-service
       dockerfile: Dockerfile
     depends_on:
-      - postgresql
-      - kafka
-    restart: on-failure
+      postgresql:
+        condition: service_healthy
+      kafka:
+        condition: service_started
     env_file:
       - ./passenger-service/.env
+    networks:
+      - application
 
   review-service:
     container_name: review-service
@@ -146,12 +181,16 @@ services:
       context: ./review-service
       dockerfile: Dockerfile
     depends_on:
-      - postgresql
-      - kafka
-      - artemis-mq
-    restart: on-failure
+      postgresql:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+      artemis-mq:
+        condition: service_started
     env_file:
       - ./review-service/.env
+    networks:
+      - application
 
   ride-service:
     container_name: ride-service
@@ -161,10 +200,12 @@ services:
       context: ./rides-service
       dockerfile: Dockerfile
     depends_on:
-      - postgresql
-    restart: on-failure
+      postgresql:
+        condition: service_healthy
     env_file:
       - ./rides-service/.env
+    networks:
+      - application
 
   wallet-service:
     container_name: wallet-service
@@ -174,7 +215,12 @@ services:
       context: ./wallet-service
       dockerfile: Dockerfile
     depends_on:
-      - postgresql
-    restart: on-failure
+      postgresql:
+        condition: service_healthy
     env_file:
       - ./wallet-service/.env
+    networks:
+      - application
+
+networks:
+  application:
