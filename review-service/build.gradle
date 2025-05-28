@@ -27,6 +27,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-artemis'
     implementation "org.apache.activemq:artemis-jakarta-client:${versions.artemis_mq}"
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    implementation "me.paulschwarz:spring-dotenv:${versions.dot_env}"
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'

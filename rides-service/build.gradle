@@ -28,6 +28,7 @@ dependencies {
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${versions.springdoc}"
     implementation "org.mapstruct:mapstruct:${versions.mapstruct}"
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    implementation "me.paulschwarz:spring-dotenv:${versions.dot_env}"
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'

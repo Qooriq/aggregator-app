@@ -2,13 +2,13 @@ spring:
   application:
     name: passenger-service
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5433/}passenger_service
-    username: postgres
-    password: root
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   liquibase:
     enabled: false
   kafka:
-    bootstrap-servers: ${KAFKA_URL:localhost:9092}
+    bootstrap-servers: ${KAFKA_URL}
     consumer:
       group-id: passenger-group
     properties:
@@ -19,4 +19,4 @@ passenger-service:
     partitions: 3
     replicas: 1
 server:
-  port: ${PORT:8082}
+  port: ${PORT}
