@@ -18,5 +18,9 @@ passenger-service:
   kafka:
     partitions: 3
     replicas: 1
+  resilience4j:
+    failure-rate: 50
+    duration-in-open-state: 10000
+    sliding-window-size: 10
 server:
   port: 8082

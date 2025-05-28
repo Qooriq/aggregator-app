@@ -2,6 +2,7 @@ package com.java.akdev.passengerservice.config;
 
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,6 +10,13 @@ import java.time.Duration;
 
 @Configuration
 public class Resilience4jConfiguration {
+
+    @Value("${passenger-service.resilience4j.failure-rate}")
+    private int failureRateThreshold;
+    @Value("${passenger-service.resilience4j.duration-in-open-state}")
+    private int durationInOpenState;
+    @Value("${passenger-service.resilience4j.sliding-window-size}")
+    private int slidingWindowSize;
 
     @Bean
     public CircuitBreakerRegistry circuitBreakerRegistry() {
@@ -18,9 +26,9 @@ public class Resilience4jConfiguration {
     @Bean
     public CircuitBreakerConfig customCircuitBreakerConfig() {
         return CircuitBreakerConfig.custom()
-                .failureRateThreshold(50)
-                .waitDurationInOpenState(Duration.ofMillis(10000))
-                .slidingWindowSize(10)
+                .failureRateThreshold(failureRateThreshold)
+                .waitDurationInOpenState(Duration.ofMillis(durationInOpenState))
+                .slidingWindowSize(slidingWindowSize)
                 .build();
     }
 }
