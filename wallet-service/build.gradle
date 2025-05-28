@@ -25,6 +25,7 @@ dependencies {
     implementation "org.mapstruct:mapstruct:${versions.mapstruct}"
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     implementation "me.paulschwarz:spring-dotenv:${versions.dot_env}"
+    implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
 
     testImplementation 'org.liquibase:liquibase-core'
     testImplementation 'org.testcontainers:junit-jupiter'

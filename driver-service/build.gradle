@@ -6,6 +6,10 @@ plugins {
 
 apply from: 'versions.gradle'
 
+ext {
+    springCloudVersion = "2024.0.1"
+}
+
 configurations {
     cucumberRuntime
     compileOnly {
@@ -25,6 +29,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-artemis'
     implementation "org.apache.activemq:artemis-jakarta-client:${versions.artemis_mq}"
     implementation "me.paulschwarz:spring-dotenv:${versions.dot_env}"
+    implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'
@@ -47,6 +52,12 @@ dependencies {
     testImplementation 'org.testcontainers:kafka'
     testImplementation 'org.testcontainers:postgresql'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
+    }
 }
 
 tasks.named('test') {

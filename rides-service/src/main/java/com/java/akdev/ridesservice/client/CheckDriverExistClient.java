@@ -2,6 +2,8 @@ package com.java.akdev.ridesservice.client;
 
 import com.java.akdev.commonmodels.dto.UserResponse;
 import com.java.akdev.ridesservice.config.FeignConfiguration;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,5 +15,7 @@ import java.util.UUID;
 public interface CheckDriverExistClient {
 
     @GetMapping("/{id}")
+    @CircuitBreaker(name = "driverClient")
+    @Retry(name = "driverClientRetry")
     ResponseEntity<UserResponse> findDriverById(@PathVariable("id") UUID id);
 }
