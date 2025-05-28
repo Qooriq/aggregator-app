@@ -28,6 +28,7 @@ dependencies {
     implementation "org.apache.activemq:artemis-jakarta-client:${versions.artemis_mq}"
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'
@@ -37,6 +38,11 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.liquibase:liquibase-core'
+    testImplementation "io.rest-assured:rest-assured:${versions.rest_assured}"
+    testImplementation "io.cucumber:cucumber-java:${versions.cucumber}"
+    testImplementation "io.cucumber:cucumber-junit:${versions.cucumber}"
+    testImplementation "io.cucumber:cucumber-junit-platform-engine:${versions.cucumber}"
+    testImplementation "org.junit.vintage:junit-vintage-engine:${versions.junit_vintage}"
     testImplementation 'org.springframework.kafka:spring-kafka-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'

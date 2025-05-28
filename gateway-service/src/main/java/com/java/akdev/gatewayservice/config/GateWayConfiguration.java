@@ -12,11 +12,15 @@ public class GateWayConfiguration {
     public RouteLocator routeLocator(RouteLocatorBuilder builder) {
         return builder.routes()
                 .route("driver-service", r -> r.path("/api/v1/driver-service/**")
-                        .uri("http://localhost:8081/"))
+                        .uri("lb://driver-service"))
                 .route("passenger-service", r -> r.path("/api/v1/passenger-service/**")
-                        .uri("http://localhost:8082/"))
+                        .uri("lb://passenger-service"))
                 .route("rides-service", r -> r.path("/api/v1/rides-service/**")
-                        .uri("http://localhost:8083/"))
+                        .uri("lb://rides-service"))
+                .route("wallet-service", r -> r.path("/api/v1/wallets/**")
+                        .uri("lb://wallet-service"))
+                .route("review-service", r -> r.path("/api/v1/reviews/**")
+                        .uri("lb://review-service"))
                 .build();
     }
 }
