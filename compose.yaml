@@ -1,4 +1,5 @@
 services:
+
   postgresql:
     image: postgres:16
     environment:
@@ -8,6 +9,7 @@ services:
       - "5433:5432"
     volumes:
       - ./db-init:/docker-entrypoint-initdb.d
+
   liquibase-migrations-passenger:
     image: liquibase/liquibase:4.25
     depends_on:
@@ -21,6 +23,7 @@ services:
       - update
     volumes:
       - ./passenger-service/migrations:/liquibase/changelog
+
   liquibase-migrations-driver:
     image: liquibase/liquibase:4.25
     depends_on:
@@ -34,6 +37,7 @@ services:
       - update
     volumes:
       - ./driver-service/migrations:/liquibase/changelog
+
   liquibase-migrations-rides:
     image: liquibase/liquibase:4.25
     depends_on:
@@ -47,6 +51,7 @@ services:
       - update
     volumes:
       - ./rides-service/migrations:/liquibase/changelog
+
   liquibase-migrations-reviews:
     image: liquibase/liquibase:4.25
     depends_on:
@@ -60,6 +65,7 @@ services:
       - update
     volumes:
       - ./review-service/migrations:/liquibase/changelog
+
   liquibase-migrations-wallets:
     image: liquibase/liquibase:4.25
     depends_on:
@@ -73,6 +79,7 @@ services:
       - update
     volumes:
       - ./wallet-service/migrations:/liquibase/changelog
+
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.2
     ports:
@@ -80,6 +87,7 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+
   kafka:
     image: confluentinc/cp-kafka:7.3.2
     ports:
@@ -93,6 +101,7 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
     depends_on:
       - zookeeper
+
   artemis-mq:
     image: apache/activemq-artemis:latest-alpine
     ports:
@@ -100,6 +109,7 @@ services:
       - "61616:61616"
     environment:
       ANONYMOUS_LOGIN: true
+
   driver-service:
     container_name: driver-service
     ports:
@@ -113,6 +123,7 @@ services:
     restart: on-failure
     env_file:
       - ./driver-service/.env
+
   passenger-service:
     container_name: passenger-service
     ports:
@@ -126,6 +137,7 @@ services:
     restart: on-failure
     env_file:
       - ./passenger-service/.env
+
   review-service:
     container_name: review-service
     ports:
@@ -140,6 +152,7 @@ services:
     restart: on-failure
     env_file:
       - ./review-service/.env
+
   ride-service:
     container_name: ride-service
     ports:
@@ -152,6 +165,7 @@ services:
     restart: on-failure
     env_file:
       - ./rides-service/.env
+
   wallet-service:
     container_name: wallet-service
     ports:
