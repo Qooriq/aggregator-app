@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.UUID;
 
-@FeignClient(name = "${feign.driver_name}", url = "${feign.url.driver}", configuration = FeignConfiguration.class)
+@FeignClient(name = "${feign.name.driver}", configuration = FeignConfiguration.class)
 public interface CheckDriverFeignClient {
 
-    @GetMapping("/{id}")
+    @GetMapping("/api/v1/drivers/{id}")
     @CircuitBreaker(name = "driverClient")
     @Retry(name = "driverClientRetry")
     ResponseEntity<UserReadDto> findDriverById(@PathVariable("id") UUID id);

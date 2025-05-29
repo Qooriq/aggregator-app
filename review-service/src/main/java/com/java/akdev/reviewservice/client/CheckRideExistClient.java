@@ -9,10 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "${feign.ride_name}", url = "${feign.url.ride}", configuration = FeignConfiguration.class)
+@FeignClient(name = "${feign.name.ride}", configuration = FeignConfiguration.class)
 public interface CheckRideExistClient {
 
-    @GetMapping("/{id}")
+    @GetMapping("/api/v1/rides/{id}")
     @CircuitBreaker(name = "rideClient")
     @Retry(name = "rideClientRetry")
     ResponseEntity<RideResponse> findRideById(@PathVariable("id") Long id);
