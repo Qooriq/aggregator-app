@@ -5,8 +5,8 @@ spring:
     enabled: false
   datasource:
     url: ${DB_URL}
-    username: postgres
-    password: root
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: validate
