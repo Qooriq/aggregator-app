@@ -35,7 +35,7 @@ public class WalletServiceImpl implements WalletService {
     @Transactional(readOnly = true)
     public Page<WalletReadDto> findAll(Integer page, Integer size, SortField sortField, Order order) {
         Sort.Direction direction = getDirection(order);
-        PageRequest pageRequest = PageRequest.of(page, size, direction, sortField.getName());
+        PageRequest pageRequest = PageRequest.of(page - 1, size, direction, sortField.getName());
         return walletRepository.findAll(pageRequest)
                 .map(walletMapper::toWalletReadDto);
     }

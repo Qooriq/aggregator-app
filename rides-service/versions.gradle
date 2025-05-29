@@ -6,6 +6,7 @@ ext {
             'cucumber': '7.20.1',
             'junit': '1.11.4',
             'rest_assured': '5.4.0',
-            'junit_vintage': '5.7.2'
+            'junit_vintage': '5.7.2',
+            'dot_end': '4.0.0'
     ]
 }

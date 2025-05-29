@@ -36,7 +36,7 @@ public class PassengerServiceImpl implements PassengerService {
     @Transactional(readOnly = true)
     public Page<UserResponse> findAll(Integer page, Integer size, SortField sortField, Order order) {
         var direction = getDirection(order);
-        var req = PageRequest.of(page, size, direction, sortField.getName());
+        var req = PageRequest.of(page - 1, size, direction, sortField.getName());
         return passengerRepository.findAll(req)
                 .map(passengerMapper::toReadDto);
     }
