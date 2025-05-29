@@ -31,9 +31,11 @@ dependencies {
     implementation "me.paulschwarz:spring-dotenv:${versions.dot_env}"
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 
     annotationProcessor "org.mapstruct:mapstruct-processor:${versions.mapstruct}"
     annotationProcessor 'org.projectlombok:lombok'

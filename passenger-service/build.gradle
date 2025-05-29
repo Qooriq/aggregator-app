@@ -61,7 +61,7 @@ tasks.named('test') {
 }
 
 kotlin {
-    jvmToolchain(22)
+    jvmToolchain(21)
 }
 
 dependencyManagement {
