@@ -40,6 +40,18 @@ public class RideController {
                 .body(rideService.create(dto));
     }
 
+    @PutMapping("/end-ride/{id}")
+    public ResponseEntity<RideResponse> endRide(@PathVariable @Min(1) Long id) {
+        return ResponseEntity.status(200)
+                .body(rideService.endRide(id));
+    }
+
+    @PutMapping("/take-ride/{id}")
+    public ResponseEntity<RideResponse> takeRide(@PathVariable Long id) {
+        return ResponseEntity.status(200)
+                .body(rideService.startRide(id));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<RideResponse> update(@PathVariable @Min(1) Long id, @RequestBody RideUpdateDto dto) {
         return ResponseEntity.status(200)
@@ -50,5 +62,11 @@ public class RideController {
     public ResponseEntity<Void> delete(@PathVariable @Min(1) Long id) {
         rideService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/driver")
+    public ResponseEntity<RideResponse> findFirstAvailableRide() {
+        return ResponseEntity.status(200)
+                .body(rideService.findFirstAvailableRide());
     }
 }

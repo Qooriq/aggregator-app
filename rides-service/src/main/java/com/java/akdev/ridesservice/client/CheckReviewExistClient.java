@@ -9,10 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "${feign.review_name}", url = "${feign.url.review}", configuration = FeignConfiguration.class)
+@FeignClient(name = "${feign.name.review}", configuration = FeignConfiguration.class)
 public interface CheckReviewExistClient {
 
-    @GetMapping("/{id}")
+    @GetMapping("/api/v1/reviews/{id}")
     @CircuitBreaker(name = "reviewClient")
     @Retry(name = "reviewClientRetry")
     ResponseEntity<ReviewResponse> findReviewById(@PathVariable("id") Long id);

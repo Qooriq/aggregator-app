@@ -1,6 +1,7 @@
 package com.java.akdev.ridesservice.service.impl;
 
 import com.java.akdev.commonmodels.dto.RideResponse;
+import com.java.akdev.commonmodels.enumeration.OperationResult;
 import com.java.akdev.ridesservice.client.CheckDriverExistClient;
 import com.java.akdev.ridesservice.client.CheckPassengerExistClient;
 import com.java.akdev.ridesservice.client.CheckReviewExistClient;
@@ -8,7 +9,10 @@ import com.java.akdev.ridesservice.client.WalletFeignClient;
 import com.java.akdev.ridesservice.dto.RideCreateDto;
 import com.java.akdev.ridesservice.dto.RideUpdateDto;
 import com.java.akdev.ridesservice.enumeration.Order;
+import com.java.akdev.ridesservice.enumeration.PaymentMethod;
+import com.java.akdev.ridesservice.enumeration.RideStatus;
 import com.java.akdev.ridesservice.enumeration.SortField;
+import com.java.akdev.ridesservice.exception.NotEnoughMoneyException;
 import com.java.akdev.ridesservice.exception.RideNotFoundException;
 import com.java.akdev.ridesservice.mapper.RideMapper;
 import com.java.akdev.ridesservice.repository.RideRepository;
@@ -19,6 +23,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
 
 @Service
 @RequiredArgsConstructor
@@ -75,6 +81,41 @@ public class RideServiceImpl implements RideService {
     @Transactional
     public void delete(Long id) {
         rideRepository.deleteById(id);
+    }
+
+    @Override
+    public RideResponse startRide(Long id) {
+        var ride = rideRepository.findById(id)
+                .orElseThrow(() -> new RideNotFoundException(EXCEPTION));
+        ride.setStatus(RideStatus.IN_PROGRESS);
+        ride.setStartTime(Instant.now());
+        rideRepository.save(ride);
+        return rideMapper.toRideResponse(ride);
+    }
+
+    @Override
+    public RideResponse endRide(Long id) {
+        var ride = rideRepository.findById(id)
+                .orElseThrow(() -> new RideNotFoundException(EXCEPTION));
+        var passengerId = ride.getPassengerId();
+        if (ride.getPaymentMethod() == PaymentMethod.CARD) {
+            var response = walletClient.updateWallet(passengerId, ride.getRidePrice());
+            if (response.getBody().message().equals(OperationResult.DECLINED)) {
+                ride.setPaymentMethod(PaymentMethod.CASH);
+                rideRepository.save(ride);
+                throw new NotEnoughMoneyException("message.notEnoughMoney.error");
+            }
+        }
+        ride.setStatus(RideStatus.COMPLETED);
+        return rideMapper.toRideResponse(rideRepository.save(ride));
+    }
+
+    @Override
+    public RideResponse findFirstAvailableRide() {
+        var req = PageRequest.of(0, 10);
+        var rides = rideRepository.findAllByStatus(RideStatus.PENDING, req);
+        return rideMapper.toRideResponse(rides.stream().findFirst()
+                .orElseThrow(() -> new RideNotFoundException(EXCEPTION)));
     }
 
     private Sort.Direction getDirection(Order order) {

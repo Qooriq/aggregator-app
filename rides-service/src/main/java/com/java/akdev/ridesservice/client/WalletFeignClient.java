@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 import java.util.UUID;
 
-@FeignClient(name = "${feign.wallet_name}", url = "${feign.url.wallet}", configuration = FeignConfiguration.class)
+@FeignClient(name = "${feign.name.wallet}", configuration = FeignConfiguration.class)
 public interface WalletFeignClient {
 
-    @PutMapping("/payment/{id}")
+    @PutMapping("/api/v1/wallets/payment/{id}")
     @CircuitBreaker(name = "walletClient")
     @Retry(name = "walletClientRetry")
     ResponseEntity<WalletResponse> updateWallet(@PathVariable("id") UUID passengerId, Double price);
