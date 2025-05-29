@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.UUID;
 
-@FeignClient(name = "${feign.passenger_name}", url = "${feign.url.passenger}", configuration = FeignConfiguration.class)
+@FeignClient(name = "${feign.name.passenger}", configuration = FeignConfiguration.class)
 public interface CheckPassengerFeignClient {
 
-    @GetMapping("/{id}")
+    @GetMapping("/api/v1/passengers/{id}")
     @CircuitBreaker(name = "passengerClient")
     @Retry(name = "passengerClientRetry")
     ResponseEntity<UserReadDto> findPassengerById(@PathVariable UUID id);

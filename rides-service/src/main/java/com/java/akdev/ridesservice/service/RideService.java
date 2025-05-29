@@ -20,9 +20,9 @@ public interface RideService {
 
     void delete(Long id);
 
-    RideReadDto findFirstAvailableRide();
+    RideResponse findFirstAvailableRide();
 
-    RideReadDto startRide(Long id);
+    RideResponse startRide(Long id);
 
-    RideReadDto endRide(Long id);
+    RideResponse endRide(Long id);
 }

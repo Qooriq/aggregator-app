@@ -17,3 +17,7 @@ spring:
       dialect: postgresql
 server:
   port: ${PORT}
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
