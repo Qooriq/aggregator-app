@@ -2,13 +2,13 @@ spring:
   application:
     name: passenger-service
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/passenger_service}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:root}
   liquibase:
     enabled: false
   kafka:
-    bootstrap-servers: ${KAFKA_URL}
+    bootstrap-servers: ${KAFKA_URL:localhost:9092}
     consumer:
       group-id: passenger-group
     properties:
@@ -23,7 +23,7 @@ passenger-service:
     duration-in-open-state: 10000
     sliding-window-size: 10
 server:
-  port: ${PORT}
+  port: ${PORT:8082}
 eureka:
   client:
     service-url:

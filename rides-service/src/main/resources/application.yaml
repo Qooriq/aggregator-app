@@ -2,13 +2,13 @@ spring:
   application:
     name: rides-service
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/rides_service}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:root}
   liquibase:
     enabled: false
 server:
-  port: ${PORT}
+  port: ${PORT:8085}
 eureka:
   client:
     service-url:
