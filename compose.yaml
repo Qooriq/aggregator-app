@@ -222,21 +222,54 @@ services:
     networks:
       - application
 
+  gateway-service:
+    container_name: gateway-service
+    ports:
+      - "8080:8080"
+    build:
+      context: ./gateway-service
+      dockerfile: Dockerfile
+    depends_on:
+      eureka-server:
+        condition: service_started
+    env_file:
+      - ./gateway-service/.env
+    networks:
+      - application
+
+  eureka-server:
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    build:
+      context: ./eureka-server
+      dockerfile: Dockerfile
+    networks:
+      - application
+
   prometheus:
-    image: prom/prometheus:4.2.0
+    image: prom/prometheus:v3.4.1
     ports:
       - "9090:9090"
     volumes:
-      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./monitoring/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml
+    networks:
+      - application
+      - monitoring
 
-    grafana:
-      image: grafana/grafana:12.0.1
-      ports:
-        - "3000:3000"
-      volumes:
-        - grafana-storage:/var/lib/grafana
-      depends_on:
-        - prometheus
+  grafana:
+    image: grafana/grafana:12.0.1
+    depends_on:
+      prometheus:
+        condition: service_started
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./monitoring/grafana:/var/lib/grafana
+    networks:
+      - application
+      - monitoring
 
 networks:
   application:
+  monitoring:

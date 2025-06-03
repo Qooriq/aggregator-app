@@ -27,6 +27,7 @@ dependencies {
     implementation "me.paulschwarz:spring-dotenv:${versions.dot_env}"
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
     testImplementation 'org.liquibase:liquibase-core'
     testImplementation 'org.testcontainers:junit-jupiter'
@@ -38,6 +39,7 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor "org.mapstruct:mapstruct-processor:${versions.mapstruct}"
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
