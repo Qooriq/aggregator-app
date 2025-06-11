@@ -6,6 +6,7 @@ ext {
             'dot_env': '4.0.0',
             'cucumber': '7.20.1',
             'rest_assured': '5.4.0',
-            'junit_vintage': '5.7.2'
+            'junit_vintage': '5.7.2',
+            'logstash': '8.0'
     ]
 }

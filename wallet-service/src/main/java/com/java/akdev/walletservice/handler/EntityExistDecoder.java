@@ -10,7 +10,7 @@ public class EntityExistDecoder implements ErrorDecoder {
     public Exception decode(String s, Response response) {
         switch (response.status()) {
             case 404:
-                return new UserNotFoundException("WalletController.entity.notFound");
+                return new UserNotFoundException("WalletController.userNotFound.error");
             default:
                 return new RuntimeException("RideController.api.error");
         }
