@@ -8,5 +8,5 @@ import org.mapstruct.*;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
-public interface MapperConfiguration {
+public interface MapperConfigurationn {
 }

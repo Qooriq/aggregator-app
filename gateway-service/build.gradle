@@ -8,13 +8,24 @@ ext {
 	set('springCloudVersion', "2024.0.1")
 }
 
+apply from: 'versions.gradle'
+
+repositories {
+	mavenCentral()
+}
+
 dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation "me.paulschwarz:spring-dotenv:${versions.dot_env}"
+	implementation 'io.micrometer:micrometer-tracing-bridge-brave'
+	implementation 'io.github.openfeign:feign-micrometer'
+	implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 

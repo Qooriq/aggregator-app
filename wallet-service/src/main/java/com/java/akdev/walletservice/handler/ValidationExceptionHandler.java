@@ -6,6 +6,7 @@ import com.java.akdev.walletservice.exception.UserNotFoundException;
 import com.java.akdev.walletservice.exception.WalletNotFoundException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
@@ -26,6 +27,7 @@ import java.util.Map;
 
 @ControllerAdvice(basePackages = "com.java.akdev.walletservice.controller")
 @RequiredArgsConstructor
+@Slf4j
 public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
 
     private final MessageSource messageSource;
@@ -103,7 +105,8 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(WalletNotFoundException.class)
-    public ResponseEntity<Object> handleWalletNotFound(WalletNotFoundException ex, WebRequest request) {
+    public ResponseEntity<Object> handleWalletNotFound(WalletNotFoundException ex,
+                                                       @NonNull WebRequest request) {
         Map<String, String> errors = new HashMap<>();
         errors.put("id",
                 messageSource.getMessage(ex.getMessage(), null, request.getLocale()));

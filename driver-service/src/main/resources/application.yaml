@@ -2,22 +2,40 @@ spring:
   application:
     name: driver-service
   datasource:
-    url: ${DB_URL}
-    password: ${DB_USERNAME}
-    username: ${DB_PASSWORD}
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/driver_service}
+    password: ${DB_PASSWORD:root}
+    username: ${DB_USERNAME:postgres}
   liquibase:
     enabled: false
   artemis:
-    broker-url: ${ARTEMIS_URL}
-    user: ${ARTEMIS_USERNAME}
-    password: ${ARTEMIS_PASSWORD}
+    broker-url: ${ARTEMIS_URL:tcp://localhost:61616}
+    user: ${ARTEMIS_USERNAME:admin}
+    password: ${ARTEMIS_PASSWORD:admin}
     mode: native
   data:
     jdbc:
       dialect: postgresql
 server:
-  port: ${PORT}
+  port: ${PORT:8083}
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  tracing:
+    sampling:
+      probability: 1.0
+    propagation:
+      consume: b3
+      produce: b3
+    enabled: true
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
