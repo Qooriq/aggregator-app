@@ -1,7 +1,7 @@
 package com.java.akdev.reviewservice.repository;
 
 import com.java.akdev.reviewservice.entity.Review;
-import com.java.akdev.reviewservice.enumeration.Receiver;
+import com.java.akdev.commonmodels.enumeration.Receiver;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

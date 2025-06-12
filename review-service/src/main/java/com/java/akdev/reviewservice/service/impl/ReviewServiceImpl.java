@@ -8,7 +8,7 @@ import com.java.akdev.reviewservice.dto.ReviewCreateDto;
 import com.java.akdev.reviewservice.dto.ReviewResponseAmount;
 import com.java.akdev.reviewservice.entity.Review;
 import com.java.akdev.reviewservice.enumeration.Order;
-import com.java.akdev.reviewservice.enumeration.Receiver;
+import com.java.akdev.commonmodels.enumeration.Receiver;
 import com.java.akdev.reviewservice.enumeration.SortField;
 import com.java.akdev.reviewservice.exception.ReviewNotFoundException;
 import com.java.akdev.reviewservice.kafka.ReviewKafkaSender;
@@ -35,7 +35,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewArtemisProducer artemisProducer;
     private final AppConfiguration appConfiguration;
 
-    private final static String ERROR_MESSAGE = "ReviewController.review.notFound";
+    private final static String ERROR_MESSAGE = "ReviewController.entity.notFound";
 
     public Page<ReviewResponse> findAll(Integer page, Integer size, SortField field, Order order) {
         Sort.Direction dir = getDirection(order);

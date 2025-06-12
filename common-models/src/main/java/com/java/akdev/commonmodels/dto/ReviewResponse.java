@@ -1,8 +1,10 @@
 package com.java.akdev.commonmodels.dto;
 
+import com.java.akdev.commonmodels.enumeration.Receiver;
+
 public record ReviewResponse(
         Short review,
-        String receiver,
+        Receiver receiver,
         String comment
 ) {
 }

@@ -1,34 +1,34 @@
 package com.java.akdev.reviewservice.it;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.java.akdev.commonmodels.dto.ReviewResponse;
 import com.java.akdev.reviewservice.IntegrationTestBase;
+import com.java.akdev.reviewservice.artemis.ReviewArtemisProducer;
 import com.java.akdev.reviewservice.dto.ReviewCreateDto;
-import com.java.akdev.reviewservice.dto.ReviewReadDto;
 import com.java.akdev.reviewservice.enumeration.Order;
 import com.java.akdev.reviewservice.enumeration.SortField;
+import com.java.akdev.reviewservice.kafka.ReviewKafkaSender;
 import com.java.akdev.reviewservice.util.TestSetUps;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@Transactional
-@Rollback
+
 @ActiveProfiles("test")
 public class ReviewIntegrationTest extends IntegrationTestBase {
 
+    @MockitoBean
+    ReviewArtemisProducer artemisProducer;
+    @MockitoBean
+    ReviewKafkaSender fakeReviewKafkaSender;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -39,9 +39,9 @@ public class ReviewIntegrationTest extends IntegrationTestBase {
     private Integer size;
     private SortField sortField;
     private Order order;
-    private ReviewReadDto reviewReadDto;
+    private ReviewResponse reviewReadDto;
     private ReviewCreateDto reviewCreateDto;
-    private ReviewReadDto reviewUpdateReadDto;
+    private ReviewResponse reviewUpdateReadDto;
 
     @BeforeEach
     void setUp() {

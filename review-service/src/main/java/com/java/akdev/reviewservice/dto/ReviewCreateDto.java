@@ -1,6 +1,6 @@
 package com.java.akdev.reviewservice.dto;
 
-import com.java.akdev.reviewservice.enumeration.Receiver;
+import com.java.akdev.commonmodels.enumeration.Receiver;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
