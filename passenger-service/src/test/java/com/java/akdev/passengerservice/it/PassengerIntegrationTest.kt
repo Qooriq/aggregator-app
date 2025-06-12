@@ -6,6 +6,7 @@ import com.java.akdev.passengerservice.IntegrationTestBase
 import com.java.akdev.passengerservice.dto.PassengerCreateDto
 import com.java.akdev.passengerservice.enumeration.Order
 import com.java.akdev.passengerservice.enumeration.SortField
+import com.java.akdev.passengerservice.kafka.ReviewConsumer
 import com.java.akdev.passengerservice.util.TestSetUps
 import jakarta.transaction.Transactional
 import org.junit.jupiter.api.Test
@@ -15,18 +16,18 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import java.util.*
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@Transactional
-@Rollback
 @ActiveProfiles("test")
 open class PassengerIntegrationTest : IntegrationTestBase() {
+
+    @MockitoBean
+    private lateinit var consumer: ReviewConsumer
 
     @Autowired
     private lateinit var mockMvc: MockMvc
