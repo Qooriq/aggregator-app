@@ -2,6 +2,9 @@ package com.java.akdev.walletservice.it;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.java.akdev.walletservice.IntegrationTestBase;
+import com.java.akdev.walletservice.client.CheckDriverFeignClient;
+import com.java.akdev.walletservice.client.CheckPassengerFeignClient;
+import com.java.akdev.walletservice.dto.UserReadDto;
 import com.java.akdev.walletservice.dto.WalletCreateDto;
 import com.java.akdev.walletservice.dto.WalletReadDto;
 import com.java.akdev.walletservice.enumeration.Order;
@@ -10,25 +13,25 @@ import com.java.akdev.walletservice.util.TestSetUps;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.Rollback;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.transaction.annotation.Transactional;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@Transactional
-@Rollback
 @ActiveProfiles("test")
 public class WalletIntegrationTest extends IntegrationTestBase {
 
+    @MockitoBean
+    private CheckDriverFeignClient checkDriverFeignClient;
+    @MockitoBean
+    private CheckPassengerFeignClient checkPassengerFeignClient;
     @Autowired
     private MockMvc mockMvc;
 
@@ -52,7 +55,6 @@ public class WalletIntegrationTest extends IntegrationTestBase {
 
     @Test
     void findAllWallets() throws Exception {
-
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/wallets")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("page", TestSetUps.DEFAULT_PAGE)
@@ -76,9 +78,13 @@ public class WalletIntegrationTest extends IntegrationTestBase {
 
     @Test
     void createWallet() throws Exception {
+        when(checkDriverFeignClient.findDriverById(any()))
+                .thenReturn(ResponseEntity.ok(new UserReadDto("a", "a", "a")));
+        when(checkPassengerFeignClient.findPassengerById(any()))
+                .thenReturn(ResponseEntity.ok(new UserReadDto("a", "a", "a")));
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/wallets")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(walletCreateDto)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(walletCreateDto)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.cardNumber").value(walletCreateDto.cardNumber()))
@@ -87,9 +93,13 @@ public class WalletIntegrationTest extends IntegrationTestBase {
 
     @Test
     void updateWallet() throws Exception {
+        when(checkDriverFeignClient.findDriverById(any()))
+                .thenReturn(ResponseEntity.ok(new UserReadDto("a", "a", "a")));
+        when(checkPassengerFeignClient.findPassengerById(any()))
+                .thenReturn(ResponseEntity.ok(new UserReadDto("a", "a", "a")));
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/wallets/{id}", id)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(walletUpdateDto)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(walletUpdateDto)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.cardNumber").value(walletUpdateReadDto.cardNumber()))

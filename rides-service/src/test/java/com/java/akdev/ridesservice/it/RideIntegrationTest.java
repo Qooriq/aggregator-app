@@ -1,9 +1,15 @@
 package com.java.akdev.ridesservice.it;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.java.akdev.commonmodels.dto.ReviewResponse;
+import com.java.akdev.commonmodels.dto.RideResponse;
+import com.java.akdev.commonmodels.dto.UserResponse;
+import com.java.akdev.commonmodels.enumeration.Receiver;
 import com.java.akdev.ridesservice.IntegrationTestBase;
+import com.java.akdev.ridesservice.client.CheckDriverExistClient;
+import com.java.akdev.ridesservice.client.CheckPassengerExistClient;
+import com.java.akdev.ridesservice.client.CheckReviewExistClient;
 import com.java.akdev.ridesservice.dto.RideCreateDto;
-import com.java.akdev.ridesservice.dto.RideReadDto;
 import com.java.akdev.ridesservice.dto.RideUpdateDto;
 import com.java.akdev.ridesservice.enumeration.Order;
 import com.java.akdev.ridesservice.enumeration.SortField;
@@ -11,25 +17,28 @@ import com.java.akdev.ridesservice.util.TestSetUps;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.Rollback;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.transaction.annotation.Transactional;
 
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@Transactional
-@Rollback
 @ActiveProfiles("test")
 public class RideIntegrationTest extends IntegrationTestBase {
+
+    @MockitoBean
+    private CheckPassengerExistClient checkPassengerExistClient;
+    @MockitoBean
+    private CheckDriverExistClient checkDriverExistClient;
+    @MockitoBean
+    private CheckReviewExistClient checkReviewExistClient;
 
     @Autowired
     private MockMvc mockMvc;
@@ -44,10 +53,10 @@ public class RideIntegrationTest extends IntegrationTestBase {
     private Order order;
     private Long id;
     private Long negativeId;
-    private RideReadDto rideReadDto;
+    private RideResponse rideReadDto;
     private RideCreateDto rideCreateDto;
     private RideUpdateDto rideUpdateDto;
-    private RideReadDto rideUpdateReadDto;
+    private RideResponse rideUpdateReadDto;
 
     @BeforeEach
     void setUp() {
@@ -92,6 +101,8 @@ public class RideIntegrationTest extends IntegrationTestBase {
     @Test
     @DisplayName("create ride with payload")
     void givenRidePayload_create_returnCreatedUser() throws Exception {
+        when(checkPassengerExistClient.findPassengerById(Mockito.any()))
+                .thenReturn(ResponseEntity.ok(new UserResponse("a", "a", "a")));
         mockMvc.perform(MockMvcRequestBuilders.post(rideBaseUrl)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(rideCreateDto)))
@@ -105,6 +116,12 @@ public class RideIntegrationTest extends IntegrationTestBase {
     @Test
     @DisplayName("update ride by ID")
     void givenRideIdRideWithUpdatePayload_update_returnUpdatedRide() throws Exception {
+        when(checkPassengerExistClient.findPassengerById(Mockito.any()))
+                .thenReturn(ResponseEntity.ok(new UserResponse("a", "a", "a")));
+        when(checkDriverExistClient.findDriverById(Mockito.any()))
+                .thenReturn(ResponseEntity.ok(new UserResponse("a", "a", "a")));
+        when(checkReviewExistClient.findReviewById(Mockito.anyLong()))
+                .thenReturn(ResponseEntity.ok(new ReviewResponse((short) 2, Receiver.PASSENGER, "a")));
         mockMvc.perform(MockMvcRequestBuilders.put(rideBaseUrlWithId, id.toString())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(rideUpdateDto)))

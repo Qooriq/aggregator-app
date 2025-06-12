@@ -1,5 +1,8 @@
 package com.java.akdev.walletservice.unit;
 
+import com.java.akdev.walletservice.client.CheckDriverFeignClient;
+import com.java.akdev.walletservice.client.CheckPassengerFeignClient;
+import com.java.akdev.walletservice.dto.UserReadDto;
 import com.java.akdev.walletservice.dto.WalletCreateDto;
 import com.java.akdev.walletservice.dto.WalletReadDto;
 import com.java.akdev.walletservice.entity.Wallet;
@@ -15,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Optional;
 
@@ -29,6 +33,8 @@ class WalletServiceImplTest {
     private WalletMapper walletMapper;
     @Mock
     private WalletRepository walletRepository;
+    @Mock
+    private CheckPassengerFeignClient checkPassengerFeignClient;
     @InjectMocks
     private WalletServiceImpl walletService;
 
@@ -92,6 +98,8 @@ class WalletServiceImplTest {
                 .thenReturn(wallet);
         when(walletMapper.toWalletReadDto(wallet))
                 .thenReturn(walletReadDto);
+        when(checkPassengerFeignClient.findPassengerById(any()))
+                .thenReturn(ResponseEntity.ok(new UserReadDto("a", "a", "a")));
 
         var rev = walletService.createWallet(walletCreateDto);
 
@@ -101,6 +109,7 @@ class WalletServiceImplTest {
         verify(walletRepository).save(wallet);
         verify(walletMapper).toWallet(walletCreateDto);
         verify(walletMapper).toWalletReadDto(wallet);
+        verify(checkPassengerFeignClient).findPassengerById(any());
     }
 
     @Test
@@ -113,6 +122,8 @@ class WalletServiceImplTest {
         when(walletMapper.toWalletReadDto(updateWallet))
                 .thenReturn(walletUpdateDto);
         doNothing().when(walletMapper).map(updateWallet, walletUpdateCreateDto);
+        when(checkPassengerFeignClient.findPassengerById(any()))
+                .thenReturn(ResponseEntity.ok(new UserReadDto("a", "a", "a")));
 
         var revDto = walletService.update(id, walletUpdateCreateDto);
 
@@ -123,6 +134,7 @@ class WalletServiceImplTest {
         verify(walletRepository).save(updateWallet);
         verify(walletMapper).toWalletReadDto(updateWallet);
         verify(walletMapper).map(updateWallet, walletUpdateCreateDto);
+        verify(checkPassengerFeignClient).findPassengerById(any());
     }
 
     @Test

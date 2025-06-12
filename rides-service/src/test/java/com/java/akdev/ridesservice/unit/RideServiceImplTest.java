@@ -1,7 +1,13 @@
 package com.java.akdev.ridesservice.unit;
 
+import com.java.akdev.commonmodels.dto.ReviewResponse;
+import com.java.akdev.commonmodels.dto.UserResponse;
+import com.java.akdev.commonmodels.enumeration.Receiver;
+import com.java.akdev.ridesservice.client.CheckDriverExistClient;
+import com.java.akdev.ridesservice.client.CheckPassengerExistClient;
+import com.java.akdev.ridesservice.client.CheckReviewExistClient;
 import com.java.akdev.ridesservice.dto.RideCreateDto;
-import com.java.akdev.ridesservice.dto.RideReadDto;
+import com.java.akdev.commonmodels.dto.RideResponse;
 import com.java.akdev.ridesservice.dto.RideUpdateDto;
 import com.java.akdev.ridesservice.entity.Ride;
 import com.java.akdev.ridesservice.exception.RideNotFoundException;
@@ -16,11 +22,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.verification.VerificationMode;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
@@ -32,15 +43,21 @@ class RideServiceImplTest {
     private RideMapper rideMapper;
     @Mock
     private RideRepository rideRepository;
+    @Mock
+    private CheckPassengerExistClient checkPassengerExistClient;
+    @Mock
+    private CheckDriverExistClient checkDriverExistClient;
+    @Mock
+    private CheckReviewExistClient checkReviewExistClient;
     @InjectMocks
     private RideServiceImpl reviewService;
 
     private Ride ride;
     private Ride updateRide;
     private RideCreateDto rideCreateDto;
-    private RideReadDto expectedResultInUpdate;
+    private RideResponse expectedResultInUpdate;
     private RideUpdateDto rideForUpdateDto;
-    private RideReadDto expectedResult;
+    private RideResponse expectedResult;
     private Long id;
 
     @BeforeEach
@@ -59,7 +76,7 @@ class RideServiceImplTest {
     void givenId_findById_returnUser() {
         when(rideRepository.findById(id))
                 .thenReturn(Optional.of(ride));
-        when(rideMapper.toRideReadDto(ride))
+        when(rideMapper.toRideResponse(ride))
                 .thenReturn(expectedResult);
 
         var actual = reviewService.findById(id);
@@ -67,7 +84,7 @@ class RideServiceImplTest {
         assertThat(actual)
                 .isEqualTo(expectedResult);
 
-        verify(rideMapper).toRideReadDto(ride);
+        verify(rideMapper).toRideResponse(ride);
         verify(rideRepository).findById(id);
     }
 
@@ -91,8 +108,10 @@ class RideServiceImplTest {
                 .thenReturn(ride);
         when(rideMapper.toRide(rideCreateDto))
                 .thenReturn(ride);
-        when(rideMapper.toRideReadDto(ride))
+        when(rideMapper.toRideResponse(ride))
                 .thenReturn(expectedResult);
+        when(checkPassengerExistClient.findPassengerById(any()))
+                .thenReturn(ResponseEntity.ok(new UserResponse("a", "a", "a")));
 
         var actual = reviewService.create(rideCreateDto);
 
@@ -101,7 +120,8 @@ class RideServiceImplTest {
 
         verify(rideRepository).save(ride);
         verify(rideMapper).toRide(rideCreateDto);
-        verify(rideMapper).toRideReadDto(ride);
+        verify(rideMapper).toRideResponse(ride);
+        verify(checkPassengerExistClient).findPassengerById(any());
     }
 
     @Test
@@ -111,10 +131,16 @@ class RideServiceImplTest {
                 .thenReturn(Optional.of(ride));
         when(rideRepository.save(ride))
                 .thenReturn(updateRide);
-        when(rideMapper.toRideReadDto(updateRide))
+        when(rideMapper.toRideResponse(updateRide))
                 .thenReturn(expectedResultInUpdate);
         when(rideMapper.updateRide(ride, rideForUpdateDto))
                 .thenReturn(updateRide);
+        when(checkPassengerExistClient.findPassengerById(any()))
+                .thenReturn(ResponseEntity.ok(new UserResponse("a", "a", "a")));
+        when(checkDriverExistClient.findDriverById(any()))
+                .thenReturn(ResponseEntity.ok(new UserResponse("a", "a", "a")));
+        when(checkReviewExistClient.findReviewById(anyLong()))
+                .thenReturn(ResponseEntity.ok(new ReviewResponse((short) 4, Receiver.PASSENGER, "a")));
 
         var ridDto = reviewService.update(id, rideForUpdateDto);
 
@@ -123,8 +149,11 @@ class RideServiceImplTest {
 
         verify(rideRepository).findById(id);
         verify(rideRepository).save(ride);
-        verify(rideMapper).toRideReadDto(updateRide);
+        verify(rideMapper).toRideResponse(updateRide);
         verify(rideMapper).updateRide(ride, rideForUpdateDto);
+        verify(checkPassengerExistClient).findPassengerById(any());
+        verify(checkDriverExistClient).findDriverById(any());
+        verify(checkReviewExistClient, times(2)).findReviewById(anyLong());
     }
 
     @Test
