@@ -1,10 +1,10 @@
 package com.java.akdev.reviewservice.util;
 
 import com.java.akdev.reviewservice.dto.ReviewCreateDto;
-import com.java.akdev.reviewservice.dto.ReviewReadDto;
+import com.java.akdev.commonmodels.dto.ReviewResponse;
 import com.java.akdev.reviewservice.entity.Review;
 import com.java.akdev.reviewservice.enumeration.Order;
-import com.java.akdev.reviewservice.enumeration.Receiver;
+import com.java.akdev.commonmodels.enumeration.Receiver;
 import com.java.akdev.reviewservice.enumeration.SortField;
 import lombok.experimental.UtilityClass;
 
@@ -55,11 +55,11 @@ public class TestSetUps {
                 .build();
     }
 
-    public static ReviewReadDto getUpdateDto() {
-        return new ReviewReadDto(REVIEW, Receiver.PASSENGER, NEW_COMMENT);
+    public static ReviewResponse getUpdateDto() {
+        return new ReviewResponse(REVIEW, Receiver.PASSENGER, NEW_COMMENT);
     }
 
-    public static ReviewReadDto getReadDto() {
-        return new ReviewReadDto(REVIEW, Receiver.PASSENGER, COMMENT);
+    public static ReviewResponse getReadDto() {
+        return new ReviewResponse(REVIEW, Receiver.PASSENGER, COMMENT);
     }
 }
