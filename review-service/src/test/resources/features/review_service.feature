@@ -39,7 +39,7 @@ Feature: review Service e2e Tests
     """
     When I send PUT request to URL "/api/v1/reviews/1"
     Then status code should be 200
-    And body must contain key "review" and value "1"
+    And body must contain key "review" and value 1
 
   Scenario: delete review by id
     Given review with id "1"

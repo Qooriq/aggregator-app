@@ -11,5 +11,6 @@ import org.junit.runner.RunWith
     features = ["src/test/resources/features"],
     plugin = ["pretty", "html:build/cucumber-reports.html"]
 )
-class PassengerE2eRunnerTest {
+class PassengerE2eRunnerTest{
+
 }

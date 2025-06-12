@@ -19,7 +19,7 @@ Feature: Ride Service e2e Tests
     Given I have a ride update payload
     When I send PUT request to URL "/api/v1/rides/1"
     Then status code should be ok
-    And body must contain key "cardNumber" and value "2344352"
+    And body must contain key "startLocation" and value "minsk"
 
   Scenario: delete ride by id
     Given ride with id "1"

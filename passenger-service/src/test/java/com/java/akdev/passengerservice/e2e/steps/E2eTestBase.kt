@@ -1,5 +1,6 @@
-package com.java.akdev.passengerservice
+package com.java.akdev.passengerservice.e2e.steps
 
+import io.cucumber.spring.CucumberContextConfiguration
 import jakarta.transaction.Transactional
 import liquibase.Contexts
 import liquibase.LabelExpression
@@ -11,9 +12,9 @@ import lombok.extern.slf4j.Slf4j
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.annotation.Rollback
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
-import org.springframework.test.context.TestPropertySource
 import org.testcontainers.containers.JdbcDatabaseContainer
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
@@ -21,14 +22,17 @@ import org.testcontainers.junit.jupiter.Testcontainers
 import java.nio.file.Path
 import java.sql.DriverManager
 
-
-@SpringBootTest
+@CucumberContextConfiguration
+@SpringBootTest(
+    webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
+)
 @AutoConfigureMockMvc
 @Transactional
 @Rollback
 @Slf4j
+@ActiveProfiles("test")
 @Testcontainers
-open class IntegrationTestBase {
+open class E2eTestBase {
 
     companion object {
         @Container
