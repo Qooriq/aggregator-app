@@ -7,5 +7,9 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+feign:
+  name:
+    passenger: PASSENGER-SERVICE
+    driver: DRIVER-SERVICE
 server:
-  port: 8084
+  port: 8086
