@@ -1,19 +1,13 @@
 package com.java.akdev.walletservice.e2e.steps;
 
-import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.http.ContentTypeHeader;
-import io.cucumber.java.BeforeAll;
 import io.cucumber.java.BeforeStep;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import wiremock.org.apache.hc.client5.http.entity.mime.Header;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
@@ -36,23 +30,23 @@ public class WalletSteps extends E2eTestBase {
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBody("""
-                        {
-                            "firstName": "2344352",
-                            "lastName": 10000000,
-                            "username": "1826829b-d77a-4908-b1b4-94cf5346a038"
-                        }
-                        """)));
+                                {
+                                    "firstName": "2344352",
+                                    "lastName": 10000000,
+                                    "username": "1826829b-d77a-4908-b1b4-94cf5346a038"
+                                }
+                                """)));
 
         stubFor(get(urlEqualTo("/api/v1/drivers/1826829b-d77a-4908-b1b4-94cf5346a038"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBody("""
-                        {
-                            "firstName": "2344352",
-                            "lastName": 10000000,
-                            "username": "1826829b-d77a-4908-b1b4-94cf5346a038"
-                        }
-                        """)));
+                                {
+                                    "firstName": "2344352",
+                                    "lastName": 10000000,
+                                    "username": "1826829b-d77a-4908-b1b4-94cf5346a038"
+                                }
+                                """)));
     }
 
     @Given("I have a wallet payload")

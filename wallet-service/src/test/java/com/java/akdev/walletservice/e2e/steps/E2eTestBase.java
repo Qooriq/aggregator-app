@@ -1,7 +1,5 @@
 package com.java.akdev.walletservice.e2e.steps;
 
-import com.java.akdev.walletservice.WalletServiceApplication;
-import com.java.akdev.walletservice.config.FeignConfiguration;
 import io.cucumber.spring.CucumberContextConfiguration;
 import liquibase.Contexts;
 import liquibase.LabelExpression;
@@ -19,7 +17,6 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
