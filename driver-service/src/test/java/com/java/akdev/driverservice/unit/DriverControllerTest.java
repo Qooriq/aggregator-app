@@ -2,7 +2,7 @@ package com.java.akdev.driverservice.unit;
 
 import com.java.akdev.driverservice.controller.DriverController;
 import com.java.akdev.driverservice.dto.DriverCreateDto;
-import com.java.akdev.driverservice.dto.DriverReadDto;
+import com.java.akdev.commonmodels.dto.UserResponse;
 import com.java.akdev.driverservice.service.DriverService;
 import com.java.akdev.driverservice.util.TestSetUps;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +27,7 @@ public class DriverControllerTest {
 
     private UUID id;
     private DriverCreateDto driverCreateDto;
-    private DriverReadDto driverReadDto;
+    private UserResponse driverReadDto;
 
     @BeforeEach
     void setUp() {

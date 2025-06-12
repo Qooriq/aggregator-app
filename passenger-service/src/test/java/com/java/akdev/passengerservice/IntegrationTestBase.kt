@@ -1,5 +1,6 @@
 package com.java.akdev.passengerservice
 
+import jakarta.transaction.Transactional
 import liquibase.Contexts
 import liquibase.LabelExpression
 import liquibase.Liquibase
@@ -7,8 +8,12 @@ import liquibase.database.DatabaseFactory
 import liquibase.database.jvm.JdbcConnection
 import liquibase.resource.DirectoryResourceAccessor
 import lombok.extern.slf4j.Slf4j
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
+import org.springframework.test.context.TestPropertySource
 import org.testcontainers.containers.JdbcDatabaseContainer
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
@@ -17,7 +22,15 @@ import java.nio.file.Path
 import java.sql.DriverManager
 
 
+@SpringBootTest
+@AutoConfigureMockMvc
+@Transactional
+@Rollback
 @Slf4j
+@TestPropertySource(
+    properties = ["eureka.client.enabled=false", "spring.cloud.discovery.enabled=false"
+    ]
+)
 @Testcontainers
 open class IntegrationTestBase {
 

@@ -1,7 +1,7 @@
 package com.java.akdev.driverservice.unit;
 
+import com.java.akdev.commonmodels.dto.UserResponse;
 import com.java.akdev.driverservice.dto.DriverCreateDto;
-import com.java.akdev.driverservice.dto.DriverReadDto;
 import com.java.akdev.driverservice.entity.Driver;
 import com.java.akdev.driverservice.exception.DriverNotFoundException;
 import com.java.akdev.driverservice.mapper.DriverMapper;
@@ -37,8 +37,8 @@ class DriverServiceImplTest {
     private Driver driver;
     private Driver updateDriver;
     private DriverCreateDto driverCreateDto;
-    private DriverReadDto driverUpdateDto;
-    private DriverReadDto driverReadDto;
+    private UserResponse driverUpdateDto;
+    private UserResponse driverReadDto;
     private UUID id;
 
     @BeforeEach
@@ -57,7 +57,7 @@ class DriverServiceImplTest {
 
         when(driverRepository.findById(id))
                 .thenReturn(Optional.of(driver));
-        when(driverMapper.toDriverReadDto(driver))
+        when(driverMapper.toUserResponse(driver))
                 .thenReturn(driverReadDto);
 
         var driv = driverService.findDriverById(id);
@@ -65,7 +65,7 @@ class DriverServiceImplTest {
         assertThat(driv)
                 .isEqualTo(driverReadDto);
 
-        verify(driverMapper).toDriverReadDto(driver);
+        verify(driverMapper).toUserResponse(driver);
         verify(driverRepository).findById(id);
     }
 
@@ -90,7 +90,7 @@ class DriverServiceImplTest {
                 .thenReturn(driver);
         when(driverMapper.toDriver(driverCreateDto))
                 .thenReturn(driver);
-        when(driverMapper.toDriverReadDto(driver))
+        when(driverMapper.toUserResponse(driver))
                 .thenReturn(driverReadDto);
 
         var driv = driverService.createDriver(driverCreateDto);
@@ -100,7 +100,7 @@ class DriverServiceImplTest {
 
         verify(driverRepository).save(driver);
         verify(driverMapper).toDriver(driverCreateDto);
-        verify(driverMapper).toDriverReadDto(driver);
+        verify(driverMapper).toUserResponse(driver);
     }
 
     @Test
@@ -110,7 +110,7 @@ class DriverServiceImplTest {
                 .thenReturn(Optional.of(driver));
         when(driverRepository.save(driver))
                 .thenReturn(updateDriver);
-        when(driverMapper.toDriverReadDto(updateDriver))
+        when(driverMapper.toUserResponse(updateDriver))
                 .thenReturn(driverUpdateDto);
 
         var drivDto = driverService.update(id, driverCreateDto);
@@ -120,7 +120,7 @@ class DriverServiceImplTest {
 
         verify(driverRepository).findById(id);
         verify(driverRepository).save(driver);
-        verify(driverMapper).toDriverReadDto(updateDriver);
+        verify(driverMapper).toUserResponse(updateDriver);
     }
 
     @Test
