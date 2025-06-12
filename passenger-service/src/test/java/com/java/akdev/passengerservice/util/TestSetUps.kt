@@ -13,6 +13,7 @@ object TestSetUps {
 
 
     val id: UUID = UUID.fromString("4ebba608-6315-447e-9bf5-4e20da6fb0b0")
+    val uri: String = "http://localhost:8082"
     const val DEFAULT_PAGE_SIZE: Int = 10
     const val DEFAULT_PAGE: Int = 1
     val SORT_FIELD: SortField = SortField.ID

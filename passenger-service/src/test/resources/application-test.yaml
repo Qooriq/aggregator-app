@@ -9,6 +9,9 @@ spring:
       group-id: passenger-group
     properties:
       security.protocol: PLAINTEXT
+  cloud:
+    discovery:
+      enabled: false
 passenger-service:
   topic-name-passenger: passenger-review-update
   kafka:
@@ -16,3 +19,6 @@ passenger-service:
     replicas: 1
 server:
   port: 8082
+eureka:
+  client:
+    enabled: false

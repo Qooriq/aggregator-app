@@ -1,7 +1,5 @@
 package com.java.akdev.walletservice;
 
-
-import io.cucumber.spring.CucumberContextConfiguration;
 import liquibase.Contexts;
 import liquibase.LabelExpression;
 import liquibase.Liquibase;
@@ -13,7 +11,6 @@ import liquibase.resource.DirectoryResourceAccessor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -22,25 +19,16 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-
-
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
 @Rollback
-@TestPropertySource(
-        properties = {
-                "eureka.client.enabled=false",
-                "spring.cloud.discovery.enabled=false"
-        }
-)
 @Slf4j
 @Testcontainers
 public class IntegrationTestBase {

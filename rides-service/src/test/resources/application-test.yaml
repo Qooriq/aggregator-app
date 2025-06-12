@@ -3,5 +3,28 @@ spring:
     name: rides-service
   liquibase:
     enabled: false
+  cloud:
+    discovery:
+      enabled: false
+    openfeign:
+      client:
+        config:
+          PASSENGER-SERVICE:
+            url: http://localhost:8080
+          DRIVER-SERVICE:
+            url: http://localhost:8080
+          REVIEW-SERVICE:
+            url: http://localhost:8080
+          WALLET-SERVICE:
+            url: http://localhost:8080
+feign:
+  name:
+    passenger: PASSENGER-SERVICE
+    driver: DRIVER-SERVICE
+    review: REVIEW-SERVICE
+    wallet: WALLET-SERVICE
 server:
   port: 8085
+eureka:
+  client:
+    enabled: false

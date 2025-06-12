@@ -7,5 +7,11 @@ spring:
     username: postgres
   liquibase:
     enabled: false
+  cloud:
+    discovery:
+      enabled: false
 server:
-  port: 8084
+  port: 8083
+eureka:
+  client:
+    enabled: false
