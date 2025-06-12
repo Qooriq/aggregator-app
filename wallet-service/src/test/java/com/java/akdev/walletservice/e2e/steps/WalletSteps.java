@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.notNullValue;
 public class WalletSteps {
 
     Response response;
-    private final String uri = "http://localhost:8085";
+    private final String uri = "http://localhost:8086";
     private String requestPayload;
     private String updatePayload;
 
@@ -25,7 +25,8 @@ public class WalletSteps {
                 {
                     "cardNumber": "2344352",
                     "amount": 10000000,
-                    "userId": "1826829b-d77a-4908-b1b4-94cf5346a038"
+                    "userId": "1826829b-d77a-4908-b1b4-94cf5346a038",
+                    "walletOwner": "PASSENGER"
                 }
                 """;
     }
@@ -36,7 +37,8 @@ public class WalletSteps {
                 {
                     "cardNumber": "2344352",
                     "amount": 10000000,
-                    "userId": "1826829b-d77a-4908-b1b4-94cf5346a038"
+                    "userId": "1826829b-d77a-4908-b1b4-94cf5346a038",
+                    "walletOwner": "PASSENGER"
                 }
                 """;
     }
@@ -56,7 +58,7 @@ public class WalletSteps {
     }
 
     @When("I send a POST request to URL {string}")
-    public void i_send_a_post_request_to_ur(String endpoint) throws Exception {
+    public void i_send_a_post_request_to_url(String endpoint) throws Exception {
         response = given()
                 .baseUri(uri)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
