@@ -13,7 +13,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
 
-public class DriverSteps extends E2eTestBase {
+public class DriverSteps {
 
     Response response;
     private final String uri = "http://localhost:8083";

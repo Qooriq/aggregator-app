@@ -1,6 +1,5 @@
 package com.java.akdev.ridesservice.e2e.steps;
 
-import io.cucumber.java.BeforeStep;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -9,60 +8,16 @@ import io.restassured.response.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
-public class RideSteps extends E2eTestBase {
+public class RideSteps {
 
     private Response response;
     private final String uri = "http://localhost:8085";
     private String requestPayload;
     private String updatePayload;
-
-    @BeforeStep
-    public void before_all() {
-        stubFor(get(urlEqualTo("/api/v1/passengers/1826829b-d77a-4908-b1b4-94cf5346a038"))
-                .willReturn(aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withBody("""
-                        {
-                            "firstName": "2344352",
-                            "lastName": 10000000,
-                            "username": "1826829b-d77a-4908-b1b4-94cf5346a038"
-                        }
-                        """)));
-
-        stubFor(get(urlEqualTo("/api/v1/drivers/4ebba608-6315-447e-9bf5-4e20da6fb0b0"))
-                .willReturn(aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withBody("""
-                        {
-                            "firstName": "2344352",
-                            "lastName": 10000000,
-                            "username": "1826829b-d77a-4908-b1b4-94cf5346a038"
-                        }
-                        """)));
-        stubFor(put(urlEqualTo("/api/v1/wallets/payment/1826829b-d77a-4908-b1b4-94cf5346a038"))
-                .willReturn(aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withBody("""
-                                {
-                                    "operationResult": "SUCCESSFUL"
-                                }
-                                """)));
-        stubFor(get(urlEqualTo("/api/v1/reviews/1"))
-                .willReturn(aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withBody("""
-                        {
-                            "review": "4",
-                            "receiver": "PASSENGER",
-                            "comment": "hello"
-                        }
-                        """)));
-    }
 
     @Given("I have a ride payload")
     public void i_have_a_ride_payload() {

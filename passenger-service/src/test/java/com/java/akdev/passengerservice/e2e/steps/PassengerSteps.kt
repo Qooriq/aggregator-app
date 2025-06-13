@@ -12,7 +12,7 @@ import org.hamcrest.Matchers.notNullValue
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 
-open class PassengerSteps: E2eTestBase() {
+open class PassengerSteps {
 
     private lateinit var response: Response
     private lateinit var requestPayload: String
