@@ -1,6 +1,5 @@
 package com.java.akdev.walletservice.e2e.steps;
 
-import io.cucumber.java.BeforeStep;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -9,45 +8,16 @@ import io.restassured.response.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
-public class WalletSteps extends E2eTestBase {
+public class WalletSteps {
 
     Response response;
     private final String uri = "http://localhost:8086";
     private String requestPayload;
     private String updatePayload;
-
-    @BeforeStep
-    public void before_all() {
-        stubFor(get(urlEqualTo("/api/v1/passengers/1826829b-d77a-4908-b1b4-94cf5346a038"))
-                .willReturn(aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withBody("""
-                                {
-                                    "firstName": "2344352",
-                                    "lastName": 10000000,
-                                    "username": "1826829b-d77a-4908-b1b4-94cf5346a038"
-                                }
-                                """)));
-
-        stubFor(get(urlEqualTo("/api/v1/drivers/1826829b-d77a-4908-b1b4-94cf5346a038"))
-                .willReturn(aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withBody("""
-                                {
-                                    "firstName": "2344352",
-                                    "lastName": 10000000,
-                                    "username": "1826829b-d77a-4908-b1b4-94cf5346a038"
-                                }
-                                """)));
-    }
 
     @Given("I have a wallet payload")
     public void i_have_a_wallet_payload() {
