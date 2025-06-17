@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,7 @@ public class PassengerController {
     private final PassengerService passengerService;
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<UserResponse>> findAll(@RequestParam Integer page,
                                                       @RequestParam Integer size,
                                                       @RequestParam SortField sortField,
@@ -32,6 +34,7 @@ public class PassengerController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> findById(@PathVariable UUID id) {
         log.info("Find passenger by id: {}", id);
         return ResponseEntity.ok()
@@ -39,6 +42,7 @@ public class PassengerController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> create(@Validated
                                                @RequestBody PassengerCreateDto dto) {
         return ResponseEntity.status(201)
@@ -46,6 +50,7 @@ public class PassengerController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PASSENGER')")
     public ResponseEntity<UserResponse> update(@PathVariable UUID id,
                                                @Validated @RequestBody PassengerCreateDto dto) {
         return ResponseEntity.ok()
@@ -53,6 +58,7 @@ public class PassengerController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PASSENGER')")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         passengerService.deletePassenger(id);
         return ResponseEntity.noContent().build();

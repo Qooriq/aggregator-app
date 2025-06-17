@@ -1,6 +1,6 @@
-package com.java.akdev.passengerservice.config;
+package com.java.akdev.ridesservice.config;
 
-import com.java.akdev.passengerservice.config.keycloak.KeycloakJwtAuthenticationConverter;
+import com.java.akdev.ridesservice.config.keycloak.KeycloakJwtAuthenticationConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
