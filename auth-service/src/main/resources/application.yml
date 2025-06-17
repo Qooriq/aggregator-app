@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: auth-service
+  eureka:
+    client:
+      service-url:
+        defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+keycloak:
+  auth-server-url: http://localhost:8180
+  realm: agregator-app
+  client-id: backend
+  client-secret: VCvbgWVouac0TomlMIeQxo2rafxmX74j
+  admin-username: admin
+  admin-password: admin
+server:
+  port: 8087
