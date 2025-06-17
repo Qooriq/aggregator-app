@@ -21,6 +21,8 @@ public class GateWayConfiguration {
                         .uri("lb://WALLET-SERVICE"))
                 .route("review-service", r -> r.path("/api/v1/reviews/**")
                         .uri("lb://REVIEW-SERVICE"))
+                .route("authentication", r -> r.path("/api/v1/auth/**")
+                        .uri("lb://AUTH-SERVICE"))
                 .build();
     }
 }
