@@ -12,6 +12,10 @@ spring:
     user: ${ARTEMIS_USERNAME:admin}
     password: ${ARTEMIS_PASSWORD:admin}
     mode: native
+  kafka:
+    bootstrap-servers: ${KAFKA_URL:localhost:9092}
+    consumer:
+      client-id: 1
   data:
     jdbc:
       dialect: postgresql
