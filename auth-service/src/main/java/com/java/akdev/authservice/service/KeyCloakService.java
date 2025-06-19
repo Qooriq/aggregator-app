@@ -4,6 +4,8 @@ import com.java.akdev.authservice.dto.TokenResponse;
 import com.java.akdev.authservice.dto.UserLogin;
 import com.java.akdev.authservice.dto.UserRegistration;
 import com.java.akdev.authservice.enumeration.Role;
+import com.java.akdev.authservice.kafka.ReviewKafkaSender;
+import com.java.akdev.commonmodels.dto.UserRegistrationCreateDto;
 import com.java.akdev.commonmodels.dto.UserResponse;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
@@ -17,12 +19,10 @@ import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +36,8 @@ public class KeyCloakService {
     @Value("${keycloak.client-secret}")
     private String clientSecret;
     private final Keycloak keycloak;
+    private final PasswordEncoder passwordEncoder;
+    private final ReviewKafkaSender sender;
 
     public UserResponse registration(UserRegistration registration, Role userRole) {
         RealmResource realmResource = keycloak.realm(realm);
@@ -71,6 +73,9 @@ public class KeyCloakService {
         RoleRepresentation role = realmResource.roles().get(String.valueOf(userRole)).toRepresentation();
         userResource.roles().realmLevel().add(Collections.singletonList(role));
 
+        sender.sendPassengerCreate(new UserRegistrationCreateDto(UUID.fromString(userId), registration.firstName(),
+                registration.lastName(), registration.username(), passwordEncoder.encode(registration.password()),
+                registration.phoneNumber()), userRole);
         return new UserResponse(registration.firstName(), registration.lastName(), registration.username());
     }
 
