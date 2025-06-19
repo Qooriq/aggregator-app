@@ -76,6 +76,7 @@ public class KeyCloakService {
         sender.sendPassengerCreate(new UserRegistrationCreateDto(UUID.fromString(userId), registration.firstName(),
                 registration.lastName(), registration.username(), passwordEncoder.encode(registration.password()),
                 registration.phoneNumber()), userRole);
+        response.close();
         return new UserResponse(registration.firstName(), registration.lastName(), registration.username());
     }
 

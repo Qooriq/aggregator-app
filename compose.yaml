@@ -341,6 +341,7 @@ services:
         source: ./keycloak/realm-export.json
         target: /opt/keycloak/data/import/realm-export.json
         read_only: true
+      - ./keycloak/providers:/opt/keycloak/providers
     command:
       - start-dev
       - --import-realm
