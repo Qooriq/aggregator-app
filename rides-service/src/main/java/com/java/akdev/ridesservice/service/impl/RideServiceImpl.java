@@ -57,10 +57,10 @@ public class RideServiceImpl implements RideService {
     }
 
     @Transactional
-    public RideResponse create(RideCreateDto dto) {
+    public RideResponse create(RideCreateDto dto, String couponCode) {
         passengerClient.findPassengerById(dto.passengerId());
         var ride = rideMapper.toRide(dto);
-        ride.setRidePrice(10.0);
+        var price = calculatePrice();
         return rideMapper.toRideResponse(
                 rideRepository.save(ride));
     }
