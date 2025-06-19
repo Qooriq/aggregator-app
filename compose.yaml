@@ -336,8 +336,14 @@ services:
       KC_DB_PASSWORD: root
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    volumes:
+      - type: bind
+        source: ./keycloak/realm-export.json
+        target: /opt/keycloak/data/import/realm-export.json
+        read_only: true
     command:
       - start-dev
+      - --import-realm
     networks:
       application:
 

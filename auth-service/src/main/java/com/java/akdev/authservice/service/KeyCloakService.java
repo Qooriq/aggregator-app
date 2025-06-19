@@ -64,7 +64,7 @@ public class KeyCloakService {
         Response response = usersResource.create(user);
 
         if (response.getStatus() != 201) {
-            throw new RuntimeException("Failed to create user");
+            throw new RuntimeException("error.UserCreation");
         }
 
         String userId = response.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");

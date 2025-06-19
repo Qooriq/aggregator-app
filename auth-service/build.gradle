@@ -23,6 +23,11 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation 'org.springframework.kafka:spring-kafka'
+    implementation "org.keycloak:keycloak-core:${versions.keycloak}"
+    implementation "org.keycloak:keycloak-common:${versions.keycloak}"
+    implementation "org.keycloak:keycloak-server-spi:${versions.keycloak}"
+    implementation "org.keycloak:keycloak-server-spi-private:${versions.keycloak}"
+
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'
