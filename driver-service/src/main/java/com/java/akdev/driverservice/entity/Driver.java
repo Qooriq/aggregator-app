@@ -21,7 +21,6 @@ public class Driver {
 
     @Id
     @EqualsAndHashCode.Include
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @ToString.Include
