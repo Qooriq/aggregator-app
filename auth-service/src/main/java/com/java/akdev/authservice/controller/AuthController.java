@@ -26,7 +26,7 @@ public class AuthController {
     @PostMapping("/passenger")
     public ResponseEntity<UserResponse>  passenger(@RequestBody UserRegistration registration) {
         return ResponseEntity.status(201)
-                .body(keyCloakService.registration(registration, Role.DRIVER));
+                .body(keyCloakService.registration(registration, Role.PASSENGER));
     }
 
     @GetMapping("/login")
