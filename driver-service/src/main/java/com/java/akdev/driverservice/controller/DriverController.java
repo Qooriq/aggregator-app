@@ -33,7 +33,6 @@ public class DriverController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> findById(@PathVariable UUID id) {
         return ResponseEntity.ok()
                 .body(driverService.findDriverById(id));

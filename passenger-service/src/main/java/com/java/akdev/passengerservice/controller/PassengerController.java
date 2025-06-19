@@ -34,7 +34,6 @@ public class PassengerController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> findById(@PathVariable UUID id) {
         log.info("Find passenger by id: {}", id);
         return ResponseEntity.ok()

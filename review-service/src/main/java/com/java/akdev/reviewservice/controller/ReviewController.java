@@ -35,7 +35,6 @@ public class ReviewController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ReviewResponse> findById(@PathVariable @Min(1) Long id) {
         return ResponseEntity.status(200)
                 .body(reviewService.findById(id));
