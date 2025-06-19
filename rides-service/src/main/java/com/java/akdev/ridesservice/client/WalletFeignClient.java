@@ -18,5 +18,6 @@ public interface WalletFeignClient {
     @PutMapping("/api/v1/wallets/payment/{id}")
     @CircuitBreaker(name = "walletClient")
     @Retry(name = "walletClientRetry")
-    ResponseEntity<WalletResponse> updateWallet(@PathVariable("id") UUID passengerId, @RequestParam Double price);
+    ResponseEntity<WalletResponse> updateWallet(@PathVariable("id") UUID passengerId,
+                                                @RequestParam Double price);
 }
