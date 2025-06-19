@@ -29,9 +29,15 @@ public class AuthController {
                 .body(keyCloakService.registration(registration, Role.PASSENGER));
     }
 
-    @GetMapping("/login")
-    public ResponseEntity<TokenResponse>  login(@RequestBody UserLogin login) {
+    @GetMapping("/driver/login")
+    public ResponseEntity<TokenResponse>  driverLogin(@RequestBody UserLogin login) {
         return ResponseEntity.status(200)
-                .body(keyCloakService.login(login));
+                .body(keyCloakService.login(login, Role.DRIVER));
+    }
+
+    @GetMapping("/passenger/login")
+    public ResponseEntity<TokenResponse>  passengerLogin(@RequestBody UserLogin login) {
+        return ResponseEntity.status(200)
+                .body(keyCloakService.login(login, Role.PASSENGER));
     }
 }

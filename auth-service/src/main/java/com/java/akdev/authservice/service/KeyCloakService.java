@@ -29,18 +29,29 @@ import java.util.*;
 public class KeyCloakService {
     @Value("${keycloak.auth-server-url}")
     private String serverUrl;
-    @Value("${keycloak.realm}")
-    private String realm;
-    @Value("${keycloak.client-id}")
-    private String clientId;
-    @Value("${keycloak.client-secret}")
-    private String clientSecret;
+    @Value("${keycloak.passenger-realm}")
+    private String passengerRealm;
+    @Value("${keycloak.driver-realm}")
+    private String driverRealm;
+    @Value("${keycloak.passenger-client-id}")
+    private String passengerClientId;
+    @Value("${keycloak.driver-client-id}")
+    private String driverClientId;
+    @Value("${keycloak.passenger-client-secret}")
+    private String passengerClientSecret;
+    @Value("${keycloak.driver-client-secret}")
+    private String driverClientSecret;
     private final Keycloak keycloak;
     private final PasswordEncoder passwordEncoder;
     private final ReviewKafkaSender sender;
 
     public UserResponse registration(UserRegistration registration, Role userRole) {
-        RealmResource realmResource = keycloak.realm(realm);
+        RealmResource realmResource;
+        if (userRole.equals(Role.DRIVER)){
+            realmResource = keycloak.realm(driverRealm);
+        } else {
+            realmResource = keycloak.realm(passengerRealm);
+        }
         UsersResource usersResource = realmResource.users();
         var creds = new CredentialRepresentation();
         creds.setType(CredentialRepresentation.PASSWORD);
@@ -80,18 +91,33 @@ public class KeyCloakService {
         return new UserResponse(registration.firstName(), registration.lastName(), registration.username());
     }
 
-    public TokenResponse login(UserLogin loginDto) {
-        Keycloak keycloak = KeycloakBuilder.builder()
-                .serverUrl(serverUrl)
-                .realm(realm)
-                .clientId(clientId)
-                .clientSecret(clientSecret)
-                .username(loginDto.username())
-                .password(loginDto.password())
-                .grantType("password")
-                .build();
+    public TokenResponse login(UserLogin loginDto, Role role) {
+        if (role.equals(Role.DRIVER)) {
+            Keycloak keycloak = KeycloakBuilder.builder()
+                    .serverUrl(serverUrl)
+                    .realm(driverRealm)
+                    .clientId(driverClientId)
+                    .clientSecret(driverClientSecret)
+                    .username(loginDto.username())
+                    .password(loginDto.password())
+                    .grantType("password")
+                    .build();
 
-        AccessTokenResponse response = keycloak.tokenManager().getAccessToken();
-        return new TokenResponse(response.getToken());
+            AccessTokenResponse response = keycloak.tokenManager().getAccessToken();
+            return new TokenResponse(response.getToken());
+        } else {
+            Keycloak keycloak = KeycloakBuilder.builder()
+                    .serverUrl(serverUrl)
+                    .realm(passengerRealm)
+                    .clientId(passengerClientId)
+                    .clientSecret(passengerClientSecret)
+                    .username(loginDto.username())
+                    .password(loginDto.password())
+                    .grantType("password")
+                    .build();
+
+            AccessTokenResponse response = keycloak.tokenManager().getAccessToken();
+            return new TokenResponse(response.getToken());
+        }
     }
 }
