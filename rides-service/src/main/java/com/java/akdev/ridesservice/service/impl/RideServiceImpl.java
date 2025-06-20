@@ -97,6 +97,7 @@ public class RideServiceImpl implements RideService {
     public RideResponse endRide(Long id) {
         var ride = rideRepository.findById(id)
                 .orElseThrow(() -> new RideNotFoundException(EXCEPTION));
+        passengerClient.findPassengerById(ride.getPassengerId());
         var passengerId = ride.getPassengerId();
         if (ride.getPaymentMethod() == PaymentMethod.CARD) {
             var response = walletClient.updateWallet(passengerId, ride.getRidePrice());
