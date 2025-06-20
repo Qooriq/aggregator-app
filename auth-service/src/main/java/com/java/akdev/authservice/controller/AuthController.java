@@ -24,20 +24,14 @@ public class AuthController {
     }
 
     @PostMapping("/passenger")
-    public ResponseEntity<UserResponse>  passenger(@RequestBody UserRegistration registration) {
+    public ResponseEntity<UserResponse> passenger(@RequestBody UserRegistration registration) {
         return ResponseEntity.status(201)
                 .body(keyCloakService.registration(registration, Role.PASSENGER));
     }
 
-    @GetMapping("/driver/login")
-    public ResponseEntity<TokenResponse>  driverLogin(@RequestBody UserLogin login) {
+    @GetMapping("/login")
+    public ResponseEntity<TokenResponse> login(@RequestBody UserLogin login) {
         return ResponseEntity.status(200)
-                .body(keyCloakService.login(login, Role.DRIVER));
-    }
-
-    @GetMapping("/passenger/login")
-    public ResponseEntity<TokenResponse>  passengerLogin(@RequestBody UserLogin login) {
-        return ResponseEntity.status(200)
-                .body(keyCloakService.login(login, Role.PASSENGER));
+                .body(keyCloakService.login(login));
     }
 }

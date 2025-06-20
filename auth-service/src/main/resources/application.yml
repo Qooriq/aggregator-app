@@ -13,12 +13,9 @@ spring:
     driver-create-topic: "driver-create-topic"
 keycloak:
   auth-server-url: http://localhost:8180
-  passenger-realm: agregator-app
-  driver-realm: driver-realm
-  passenger-client-id: backend
-  driver-client-id: driver-client
-  passenger-client-secret: VCvbgWVouac0TomlMIeQxo2rafxmX74j
-  driver-client-secret: ayMgwzH3nWwTld4t2thkSgtJTW3EqdfL
+  realm: agregator-app
+  client-id: backend
+  client-secret: VCvbgWVouac0TomlMIeQxo2rafxmX74j
   admin-username: admin
   admin-password: admin
 server:
