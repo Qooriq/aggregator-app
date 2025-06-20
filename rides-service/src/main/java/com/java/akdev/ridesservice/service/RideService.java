@@ -14,7 +14,7 @@ public interface RideService {
 
     RideResponse findById(Long id);
 
-    RideResponse create(RideCreateDto dto);
+    RideResponse create(RideCreateDto dto, String couponCode);
 
     RideResponse update(Long id, RideUpdateDto dto);
 

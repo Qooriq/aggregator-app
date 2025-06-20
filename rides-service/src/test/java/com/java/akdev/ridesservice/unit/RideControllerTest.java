@@ -54,18 +54,19 @@ public class RideControllerTest {
         verify(rideService).findById(id);
     }
 
+    //TODO: remake with coupon
     @Test
     @DisplayName("create ride with payload")
     void givenRidePayload_create_returnCreatedUser() {
-        when(rideService.create(rideCreateDto))
+        when(rideService.create(rideCreateDto, " "))
                 .thenReturn(expectedResult);
 
-        var actual = rideController.create(rideCreateDto);
+        var actual = rideController.create(rideCreateDto, " ");
 
         assertThat(actual.getBody())
                 .isEqualTo(expectedResult);
 
-        verify(rideService).create(rideCreateDto);
+        verify(rideService).create(rideCreateDto, " ");
     }
 
     @Test

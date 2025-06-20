@@ -10,6 +10,8 @@ import lombok.*;
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString
+@Builder
 public class Coupon {
 
     @Id

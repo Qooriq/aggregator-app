@@ -10,7 +10,7 @@ import com.java.akdev.ridesservice.dto.RideCreateDto;
 import com.java.akdev.commonmodels.dto.RideResponse;
 import com.java.akdev.ridesservice.dto.RideUpdateDto;
 import com.java.akdev.ridesservice.entity.Ride;
-import com.java.akdev.ridesservice.exception.RideNotFoundException;
+import com.java.akdev.ridesservice.exception.EntityNotFound;
 import com.java.akdev.ridesservice.mapper.RideMapper;
 import com.java.akdev.ridesservice.repository.RideRepository;
 import com.java.akdev.ridesservice.service.impl.RideServiceImpl;
@@ -96,11 +96,12 @@ class RideServiceImplTest {
 
         assertThatThrownBy(() ->
                 reviewService.findById(id)
-        ).isInstanceOf(RideNotFoundException.class);
+        ).isInstanceOf(EntityNotFound.class);
 
         verify(rideRepository).findById(id);
     }
 
+    //TODO: remake create with coupon
     @Test
     @DisplayName("create ride")
     void givenRidePayload_create_returnCreatedUser() {
@@ -113,7 +114,7 @@ class RideServiceImplTest {
         when(checkPassengerExistClient.findPassengerById(any()))
                 .thenReturn(ResponseEntity.ok(new UserResponse("a", "a", "a")));
 
-        var actual = reviewService.create(rideCreateDto);
+        var actual = reviewService.create(rideCreateDto, " ");
 
         assertThat(actual)
                 .isEqualTo(expectedResult);

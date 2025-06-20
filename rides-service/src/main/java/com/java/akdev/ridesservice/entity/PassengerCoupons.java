@@ -13,6 +13,7 @@ import java.util.UUID;
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
+@Builder
 public class PassengerCoupons {
 
     @Id

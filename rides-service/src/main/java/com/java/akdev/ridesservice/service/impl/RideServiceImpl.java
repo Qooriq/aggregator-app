@@ -8,13 +8,12 @@ import com.java.akdev.ridesservice.client.CheckReviewExistClient;
 import com.java.akdev.ridesservice.client.WalletFeignClient;
 import com.java.akdev.ridesservice.dto.RideCreateDto;
 import com.java.akdev.ridesservice.dto.RideUpdateDto;
-import com.java.akdev.ridesservice.enumeration.Order;
-import com.java.akdev.ridesservice.enumeration.PaymentMethod;
-import com.java.akdev.ridesservice.enumeration.RideStatus;
-import com.java.akdev.ridesservice.enumeration.SortField;
+import com.java.akdev.ridesservice.enumeration.*;
 import com.java.akdev.ridesservice.exception.NotEnoughMoneyException;
-import com.java.akdev.ridesservice.exception.RideNotFoundException;
+import com.java.akdev.ridesservice.exception.EntityNotFound;
 import com.java.akdev.ridesservice.mapper.RideMapper;
+import com.java.akdev.ridesservice.repository.CouponRepository;
+import com.java.akdev.ridesservice.repository.PassengerCouponRepository;
 import com.java.akdev.ridesservice.repository.RideRepository;
 import com.java.akdev.ridesservice.service.RideService;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +30,8 @@ import java.time.Instant;
 public class RideServiceImpl implements RideService {
 
     private final RideRepository rideRepository;
+    private final PassengerCouponRepository passengerCouponRepository;
+    private final CouponRepository couponRepository;
     private final RideMapper rideMapper;
     private final CheckPassengerExistClient passengerClient;
     private final CheckDriverExistClient driverClient;
@@ -53,16 +54,36 @@ public class RideServiceImpl implements RideService {
     public RideResponse findById(Long id) {
         return rideRepository.findById(id)
                 .map(rideMapper::toRideResponse)
-                .orElseThrow(() -> new RideNotFoundException(EXCEPTION));
+                .orElseThrow(() -> new EntityNotFound(EXCEPTION));
     }
 
     @Transactional
     public RideResponse create(RideCreateDto dto, String couponCode) {
         passengerClient.findPassengerById(dto.passengerId());
-        var ride = rideMapper.toRide(dto);
-        var price = calculatePrice();
-        return rideMapper.toRideResponse(
-                rideRepository.save(ride));
+        if (couponRepository.existsByCoupon(couponCode)) {
+            var ride = rideMapper.toRide(dto);
+            var hasDiscount = passengerCouponRepository
+                    .existsByCouponNameAndPassengerId(couponCode, dto.passengerId());
+
+            var discount = hasDiscount ? couponRepository
+                    .findByCoupon(couponCode)
+                            .getDiscount() : 1.0;
+            var rideType = ride.getRideType();
+            var distance = 1.0;
+            var price = calculatePrice(rideType, distance, discount);
+            ride.setRidePrice(price);
+            return rideMapper.toRideResponse(
+                    rideRepository.save(ride));
+        } else {
+            var ride = rideMapper.toRide(dto);
+            var rideType = ride.getRideType();
+            var distance = 1.0;
+            var price = calculatePrice(rideType, distance, 1.0);
+            ride.setRidePrice(price);
+            return rideMapper.toRideResponse(
+                    rideRepository.save(ride));
+        }
+
     }
 
     @Transactional
@@ -75,7 +96,7 @@ public class RideServiceImpl implements RideService {
                 .map(ride -> rideMapper.updateRide(ride, dto))
                 .map(rideRepository::save)
                 .map(rideMapper::toRideResponse)
-                .orElseThrow(() -> new RideNotFoundException(EXCEPTION));
+                .orElseThrow(() -> new EntityNotFound(EXCEPTION));
     }
 
     @Transactional
@@ -86,7 +107,7 @@ public class RideServiceImpl implements RideService {
     @Override
     public RideResponse startRide(Long id) {
         var ride = rideRepository.findById(id)
-                .orElseThrow(() -> new RideNotFoundException(EXCEPTION));
+                .orElseThrow(() -> new EntityNotFound(EXCEPTION));
         ride.setStatus(RideStatus.IN_PROGRESS);
         ride.setStartTime(Instant.now());
         rideRepository.save(ride);
@@ -96,8 +117,7 @@ public class RideServiceImpl implements RideService {
     @Override
     public RideResponse endRide(Long id) {
         var ride = rideRepository.findById(id)
-                .orElseThrow(() -> new RideNotFoundException(EXCEPTION));
-        passengerClient.findPassengerById(ride.getPassengerId());
+                .orElseThrow(() -> new EntityNotFound(EXCEPTION));
         var passengerId = ride.getPassengerId();
         if (ride.getPaymentMethod() == PaymentMethod.CARD) {
             var response = walletClient.updateWallet(passengerId, ride.getRidePrice());
@@ -116,7 +136,11 @@ public class RideServiceImpl implements RideService {
         var req = PageRequest.of(0, 10);
         var rides = rideRepository.findAllByStatus(RideStatus.PENDING, req);
         return rideMapper.toRideResponse(rides.stream().findFirst()
-                .orElseThrow(() -> new RideNotFoundException(EXCEPTION)));
+                .orElseThrow(() -> new EntityNotFound(EXCEPTION)));
+    }
+
+    private Double calculatePrice(RideType rideType, double distance, double discount) {
+        return rideType.getCoefficient() * distance * discount;
     }
 
     private Sort.Direction getDirection(Order order) {

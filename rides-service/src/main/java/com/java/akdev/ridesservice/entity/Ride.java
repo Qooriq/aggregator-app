@@ -2,6 +2,7 @@ package com.java.akdev.ridesservice.entity;
 
 import com.java.akdev.ridesservice.enumeration.PaymentMethod;
 import com.java.akdev.ridesservice.enumeration.RideStatus;
+import com.java.akdev.ridesservice.enumeration.RideType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -57,5 +58,8 @@ public class Ride {
 
     @Column(name = "payment_method", nullable = false)
     @Enumerated(EnumType.STRING)
-    PaymentMethod paymentMethod;
+    private PaymentMethod paymentMethod;
+
+    @Column(name = "ride_type", nullable = false)
+    private RideType rideType;
 }
