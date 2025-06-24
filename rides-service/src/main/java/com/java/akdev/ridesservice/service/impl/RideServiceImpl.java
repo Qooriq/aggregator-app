@@ -8,6 +8,7 @@ import com.java.akdev.ridesservice.client.CheckReviewExistClient;
 import com.java.akdev.ridesservice.client.WalletFeignClient;
 import com.java.akdev.ridesservice.dto.RideCreateDto;
 import com.java.akdev.ridesservice.dto.RideUpdateDto;
+import com.java.akdev.ridesservice.entity.PassengerCoupons;
 import com.java.akdev.ridesservice.enumeration.*;
 import com.java.akdev.ridesservice.exception.NotEnoughMoneyException;
 import com.java.akdev.ridesservice.exception.EntityNotFound;
@@ -60,30 +61,29 @@ public class RideServiceImpl implements RideService {
     @Transactional
     public RideResponse create(RideCreateDto dto, String couponCode) {
         passengerClient.findPassengerById(dto.passengerId());
+        var ride = rideMapper.toRide(dto);
+        var distance = getDistanceFromLatLonInKm(dto.startLocation().lat(), dto.startLocation().lon(),
+                dto.endLocation().lat(), dto.endLocation().lon());
         if (couponRepository.existsByCoupon(couponCode)) {
-            var ride = rideMapper.toRide(dto);
+            var coupon = couponRepository.findByCoupon(couponCode);
             var hasDiscount = passengerCouponRepository
-                    .existsByCouponNameAndPassengerId(couponCode, dto.passengerId());
-
-            var discount = hasDiscount ? couponRepository
-                    .findByCoupon(couponCode)
-                            .getDiscount() : 1.0;
+                    .existsByCouponAndPassengerId(couponCode, dto.passengerId());
+            var discount = !hasDiscount ?
+                            coupon.getDiscount() : 1.0;
             var rideType = ride.getRideType();
-            var distance = 1.0;
             var price = calculatePrice(rideType, distance, discount);
-            ride.setRidePrice(price);
-            return rideMapper.toRideResponse(
-                    rideRepository.save(ride));
+            String formatted = String.format("%.2f", price);
+            ride.setRidePrice(Double.valueOf(formatted));
+            passengerCouponRepository.save(PassengerCoupons.builder()
+                    .coupon(coupon)
+                    .passengerId(dto.passengerId()).build());
         } else {
-            var ride = rideMapper.toRide(dto);
             var rideType = ride.getRideType();
-            var distance = 1.0;
             var price = calculatePrice(rideType, distance, 1.0);
             ride.setRidePrice(price);
-            return rideMapper.toRideResponse(
-                    rideRepository.save(ride));
         }
-
+        return rideMapper.toRideResponse(
+                rideRepository.save(ride));
     }
 
     @Transactional
@@ -145,6 +145,27 @@ public class RideServiceImpl implements RideService {
 
     private Sort.Direction getDirection(Order order) {
         return order == Order.ASC ? Sort.Direction.ASC : Sort.Direction.DESC;
+    }
+
+    private double getDistanceFromLatLonInKm(double lat1,
+                                            double lon1,
+                                            double lat2,
+                                            double lon2)
+    {
+        var R = 6371d;
+        var dLat = Deg2Rad(lat2 - lat1);
+        var dLon = Deg2Rad(lon2 - lon1);
+        var a =
+                Math.sin(dLat / 2d) * Math.sin(dLat / 2d) +
+                Math.cos(Deg2Rad(lat1)) * Math.cos(Deg2Rad(lat2)) *
+                Math.sin(dLon / 2d) * Math.sin(dLon / 2d);
+        var c = 2d * Math.atan2(Math.sqrt(a), Math.sqrt(1d - a));
+        return R * c;
+    }
+
+    private double Deg2Rad(double deg)
+    {
+        return deg * (Math.PI / 180d);
     }
 
 }

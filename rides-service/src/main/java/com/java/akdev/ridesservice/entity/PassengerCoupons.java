@@ -21,10 +21,10 @@ public class PassengerCoupons {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "coupon_name")
-    private String couponName;
-
     @Column(nullable = false, name = "passenger_id")
     private UUID passengerId;
+
+    @ManyToOne
+    @JoinColumn(name = "coupon_name", referencedColumnName = "coupon")
+    private Coupon coupon;
 }

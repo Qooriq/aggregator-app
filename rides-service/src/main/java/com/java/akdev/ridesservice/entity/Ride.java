@@ -61,5 +61,6 @@ public class Ride {
     private PaymentMethod paymentMethod;
 
     @Column(name = "ride_type", nullable = false)
+    @Enumerated(EnumType.STRING)
     private RideType rideType;
 }
