@@ -2,7 +2,6 @@
     <include resource="org/springframework/boot/logging/logback/base.xml" />
     <springProperty scope="context" name="application_name" source="spring.application.name"/>
     <springProperty scope="context" name="application_port" source="server.port"/>
-    <springProperty scope="context" name="application_name" source="spring.application.name"/>
 
     <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - [TraceID: %X{traceId}, SpanId: %X{spanId}] %msg%n"/>
     <property name="LOGSTASH_HOST" value="localhost"/>
@@ -24,7 +23,6 @@
                 ${LOG_PATTERN}
             </pattern>
         </encoder>
-        <destination>localhost:5050</destination>
     </appender>
 
     <root level="INFO">
