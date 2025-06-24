@@ -222,5 +222,104 @@ services:
     networks:
       - application
 
+  gateway-service:
+    container_name: gateway-service
+    ports:
+      - "8080:8080"
+    build:
+      context: ./gateway-service
+      dockerfile: Dockerfile
+    depends_on:
+      eureka-server:
+        condition: service_started
+    env_file:
+      - ./gateway-service/.env
+    networks:
+      - application
+
+  eureka-server:
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    build:
+      context: ./eureka-server
+      dockerfile: Dockerfile
+    networks:
+      - application
+
+  prometheus:
+    image: prom/prometheus:v3.4.1
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml
+    networks:
+      - application
+      - monitoring
+
+  grafana:
+    image: grafana/grafana:12.0.1
+    depends_on:
+      prometheus:
+        condition: service_started
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./monitoring/grafana:/var/lib/grafana
+    networks:
+      - application
+      - monitoring
+
+  zipkin:
+    image: openzipkin/zipkin:3
+    ports:
+      - "9411:9411"
+    networks:
+      - application
+      - monitoring
+
+  elasticsearch:
+    image: elasticsearch:8.12.0
+    ports:
+      - 9200:9200
+    depends_on:
+      logstash:
+        condition: service_started
+    environment:
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "discovery.type=single-node"
+      - xpack.security.enabled=false
+    networks:
+      - monitoring
+      - application
+
+  logstash:
+    image: logstash:8.12.0
+    volumes:
+      - ./monitoring/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+    ports:
+      - 5050:5050
+    environment:
+      - 'LS_JAVA_OPTS=-Xmx256m -Xms256m'
+    networks:
+      - monitoring
+      - application
+
+  kibana:
+    image: kibana:8.12.0
+    depends_on:
+      elasticsearch:
+        condition: service_started
+    ports:
+      - 5601:5601
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    networks:
+      - monitoring
+      - application
+
+
 networks:
   application:
+  monitoring:

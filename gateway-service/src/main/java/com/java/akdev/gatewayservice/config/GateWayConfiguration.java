@@ -11,16 +11,16 @@ public class GateWayConfiguration {
     @Bean
     public RouteLocator routeLocator(RouteLocatorBuilder builder) {
         return builder.routes()
-                .route("driver-service", r -> r.path("/api/v1/driver-service/**")
-                        .uri("lb://driver-service"))
-                .route("passenger-service", r -> r.path("/api/v1/passenger-service/**")
-                        .uri("lb://passenger-service"))
-                .route("rides-service", r -> r.path("/api/v1/rides-service/**")
-                        .uri("lb://rides-service"))
+                .route("driver-service", r -> r.path("/api/v1/drivers/**")
+                        .uri("lb://DRIVER-SERVICE"))
+                .route("passenger-service", r -> r.path("/api/v1/passengers/**")
+                        .uri("lb://PASSENGER-SERVICE"))
+                .route("rides-service", r -> r.path("/api/v1/rides/**")
+                        .uri("lb://RIDES-SERVICE"))
                 .route("wallet-service", r -> r.path("/api/v1/wallets/**")
-                        .uri("lb://wallet-service"))
+                        .uri("lb://WALLET-SERVICE"))
                 .route("review-service", r -> r.path("/api/v1/reviews/**")
-                        .uri("lb://review-service"))
+                        .uri("lb://REVIEW-SERVICE"))
                 .build();
     }
 }

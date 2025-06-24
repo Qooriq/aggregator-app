@@ -6,6 +6,7 @@ import com.java.akdev.passengerservice.enumeration.Order;
 import com.java.akdev.passengerservice.enumeration.SortField;
 import com.java.akdev.passengerservice.service.PassengerService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -16,6 +17,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("api/v1/passengers")
 @RequiredArgsConstructor
+@Slf4j
 public class PassengerController {
 
     private final PassengerService passengerService;
@@ -31,6 +33,7 @@ public class PassengerController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> findById(@PathVariable UUID id) {
+        log.info("Find passenger by id: {}", id);
         return ResponseEntity.ok()
                 .body(passengerService.findPassengerById(id));
     }
