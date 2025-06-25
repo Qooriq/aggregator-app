@@ -2,7 +2,7 @@ package com.java.akdev.reviewservice.unit;
 
 import com.java.akdev.reviewservice.controller.ReviewController;
 import com.java.akdev.reviewservice.dto.ReviewCreateDto;
-import com.java.akdev.reviewservice.dto.ReviewReadDto;
+import com.java.akdev.commonmodels.dto.ReviewResponse;
 import com.java.akdev.reviewservice.service.ReviewService;
 import com.java.akdev.reviewservice.util.TestSetUps;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +26,7 @@ public class ReviewControllerTest {
 
     private Long id;
     private ReviewCreateDto reviewCreateDto;
-    private ReviewReadDto reviewReadDto;
+    private ReviewResponse reviewReadDto;
 
     @BeforeEach
     void setUp() {

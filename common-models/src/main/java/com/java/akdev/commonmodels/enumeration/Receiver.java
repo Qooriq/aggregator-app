@@ -1,4 +1,4 @@
-package com.java.akdev.reviewservice.enumeration;
+package com.java.akdev.commonmodels.enumeration;
 
 public enum Receiver {
     PASSENGER,

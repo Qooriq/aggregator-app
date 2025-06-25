@@ -9,8 +9,14 @@ import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.DirectoryResourceAccessor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jms.connection.JmsTransactionManager;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -21,11 +27,17 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+@SpringBootTest
+@AutoConfigureMockMvc
+@Transactional
+@Rollback
 @Testcontainers
 @Slf4j
 public class IntegrationTestBase {
 
     public static PostgreSQLContainer<?> POSTGRES;
+    @MockitoBean
+    public JmsTransactionManager jmsTransactionManager;
 
     static {
         POSTGRES = new PostgreSQLContainer<>("postgres:16")

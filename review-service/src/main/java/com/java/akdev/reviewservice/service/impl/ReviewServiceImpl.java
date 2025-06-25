@@ -2,19 +2,20 @@ package com.java.akdev.reviewservice.service.impl;
 
 import com.java.akdev.commonmodels.dto.ReviewMessage;
 import com.java.akdev.commonmodels.dto.ReviewResponse;
+import com.java.akdev.commonmodels.enumeration.Receiver;
 import com.java.akdev.reviewservice.artemis.ReviewArtemisProducer;
 import com.java.akdev.reviewservice.config.AppConfiguration;
 import com.java.akdev.reviewservice.dto.ReviewCreateDto;
 import com.java.akdev.reviewservice.dto.ReviewResponseAmount;
 import com.java.akdev.reviewservice.entity.Review;
 import com.java.akdev.reviewservice.enumeration.Order;
-import com.java.akdev.reviewservice.enumeration.Receiver;
 import com.java.akdev.reviewservice.enumeration.SortField;
 import com.java.akdev.reviewservice.exception.ReviewNotFoundException;
 import com.java.akdev.reviewservice.kafka.ReviewKafkaSender;
 import com.java.akdev.reviewservice.mapper.ReviewMapper;
 import com.java.akdev.reviewservice.repository.ReviewRepository;
 import com.java.akdev.reviewservice.service.ReviewService;
+import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,8 +35,9 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewKafkaSender kafkaProducer;
     private final ReviewArtemisProducer artemisProducer;
     private final AppConfiguration appConfiguration;
+    private final EntityManagerFactory entityManagerFactory;
 
-    private final static String ERROR_MESSAGE = "ReviewController.review.notFound";
+    private final static String ERROR_MESSAGE = "ReviewController.entity.notFound";
 
     public Page<ReviewResponse> findAll(Integer page, Integer size, SortField field, Order order) {
         Sort.Direction dir = getDirection(order);
@@ -53,6 +55,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .orElseThrow(() -> new ReviewNotFoundException(ERROR_MESSAGE));
     }
 
+    @Transactional
     public ReviewResponse createReview(ReviewCreateDto dto) {
         var entity = reviewMapper.toEntity(dto);
         var res = reviewRepository.save(entity);

@@ -7,5 +7,15 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  cloud:
+    discovery:
+      enabled: false
+feign:
+  name:
+    passenger: PASSENGER-SERVICE
+    driver: DRIVER-SERVICE
 server:
-  port: 8084
+  port: 8086
+eureka:
+  client:
+    enabled: false

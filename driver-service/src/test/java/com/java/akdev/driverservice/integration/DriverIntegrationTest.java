@@ -1,8 +1,9 @@
 package com.java.akdev.driverservice.integration;
 
 import com.java.akdev.driverservice.IntegrationTestBase;
+import com.java.akdev.driverservice.artemis.ReviewListener;
 import com.java.akdev.driverservice.dto.DriverCreateDto;
-import com.java.akdev.driverservice.dto.DriverReadDto;
+import com.java.akdev.commonmodels.dto.UserResponse;
 import com.java.akdev.driverservice.enumeration.Order;
 import com.java.akdev.driverservice.enumeration.SortField;
 import com.java.akdev.driverservice.util.TestSetUps;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -21,14 +23,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 public class DriverIntegrationTest extends IntegrationTestBase {
 
+    @MockitoBean
+    private ReviewListener reviewListener;
+
     private UUID id;
     private Integer page;
     private Integer size;
     private SortField sortField;
     private Order order;
     private DriverCreateDto driverCreateDto;
-    private DriverReadDto driverReadDto;
-    private DriverReadDto driverUpdateReadDto;
+    private UserResponse driverReadDto;
+    private UserResponse driverUpdateReadDto;
 
     @BeforeEach
     public void setUp() {

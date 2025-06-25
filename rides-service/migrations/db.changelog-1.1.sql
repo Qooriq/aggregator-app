@@ -2,7 +2,7 @@
 
 --changeset Anton Kazlouski:1
 ALTER TABLE rides
-    ALTER COLUMN driver_id DROP NOT NULL DEFAULT 'CARD';
+    ALTER COLUMN driver_id DROP NOT NULL;
 
 --changeset Anton Kazlouski:2
 ALTER TABLE rides

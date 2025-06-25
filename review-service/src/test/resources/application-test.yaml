@@ -17,9 +17,17 @@ spring:
     user: admin
     password: admin
     mode: native
+  cloud:
+    discovery:
+      enabled: false
 passenger-rating:
   limit: 50
   page-number: 0
+feign:
+  name:
+    passenger: PASSENGER-SERVICE
+    driver: DRIVER-SERVICE
+    ride: RIDES-SERVICE
 app:
   kafka-config-info:
     topic-name-passenger: passenger-review-update
@@ -29,4 +37,10 @@ app:
   page: 1
   size: 10
 server:
-  port: 8083
+  port: 8084
+eureka:
+  client:
+    enabled: false
+stubrunner:
+  jms:
+    enabled: false

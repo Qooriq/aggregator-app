@@ -5,6 +5,7 @@ import com.java.akdev.ridesservice.dto.RideCreateDto;
 import com.java.akdev.ridesservice.dto.RideUpdateDto;
 import com.java.akdev.ridesservice.entity.Ride;
 import com.java.akdev.ridesservice.enumeration.Order;
+import com.java.akdev.ridesservice.enumeration.PaymentMethod;
 import com.java.akdev.ridesservice.enumeration.SortField;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -25,7 +26,7 @@ public final class TestSetUps {
     public static final UUID DRIVER_ID = UUID.fromString("1826829b-d77a-4908-b1b4-94cf5346a038");
     public static final Long PASSENGER_REVIEW_DRIVER = 5L;
     public static final Long DRIVER_REVIEW_PASSENGER = 5L;
-    public static final Double RIDE_PRICE = 12.0;
+    public static final Double RIDE_PRICE = 10.0;
     public static final String START_LOCATION = "minsk";
     public static final String END_LOCATION = "Lida";
     public static final String NEW_END_LOCATION = "Lida2.0";
@@ -47,7 +48,7 @@ public final class TestSetUps {
 
     public static RideCreateDto getCreateDto() {
         return new RideCreateDto(
-                PASSENGER_ID, START_LOCATION, END_LOCATION, Instant.now()
+                PASSENGER_ID, START_LOCATION, END_LOCATION, PaymentMethod.CARD
         );
     }
 
@@ -59,6 +60,7 @@ public final class TestSetUps {
                 .passengerReviewDriver(PASSENGER_REVIEW_DRIVER)
                 .driverReviewPassenger(DRIVER_REVIEW_PASSENGER)
                 .ridePrice(RIDE_PRICE)
+                .startTime(Instant.now())
                 .endLocation(NEW_END_LOCATION)
                 .build();
     }
@@ -73,8 +75,8 @@ public final class TestSetUps {
 
     public static RideUpdateDto getRideUpdateDto() {
         return new RideUpdateDto(PASSENGER_ID, DRIVER_ID,
-                null, null,
-                START_LOCATION, NEW_END_LOCATION, null, null,
+                3L, 2L,
+                START_LOCATION, NEW_END_LOCATION, Instant.now(), null,
                 RIDE_PRICE, null);
     }
 }

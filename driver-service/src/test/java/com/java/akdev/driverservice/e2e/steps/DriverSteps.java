@@ -16,7 +16,7 @@ import static org.hamcrest.Matchers.notNullValue;
 public class DriverSteps {
 
     Response response;
-    private final String uri = "http://localhost:8084";
+    private final String uri = "http://localhost:8083";
     private String requestPayload;
     private String updatePayload;
 

@@ -1,7 +1,7 @@
 package com.java.akdev.reviewservice.unit;
 
+import com.java.akdev.commonmodels.dto.ReviewResponse;
 import com.java.akdev.reviewservice.dto.ReviewCreateDto;
-import com.java.akdev.reviewservice.dto.ReviewReadDto;
 import com.java.akdev.reviewservice.entity.Review;
 import com.java.akdev.reviewservice.exception.ReviewNotFoundException;
 import com.java.akdev.reviewservice.mapper.ReviewMapper;
@@ -35,8 +35,8 @@ class ReviewServiceImplTest {
     private Review review;
     private Review updateReview;
     private ReviewCreateDto reviewCreateDto;
-    private ReviewReadDto reviewUpdateDto;
-    private ReviewReadDto reviewReadDto;
+    private ReviewResponse reviewUpdateDto;
+    private ReviewResponse reviewReadDto;
     private Long id;
 
     @BeforeEach

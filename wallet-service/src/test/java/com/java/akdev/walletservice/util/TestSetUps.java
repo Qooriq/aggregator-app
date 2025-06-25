@@ -3,6 +3,7 @@ package com.java.akdev.walletservice.util;
 import com.java.akdev.walletservice.dto.WalletCreateDto;
 import com.java.akdev.walletservice.dto.WalletReadDto;
 import com.java.akdev.walletservice.entity.Wallet;
+import com.java.akdev.walletservice.enumeration.WalletOwner;
 import lombok.experimental.UtilityClass;
 
 import java.util.UUID;
@@ -29,7 +30,7 @@ public class TestSetUps {
 
     public static WalletCreateDto getCreateDto() {
         return new WalletCreateDto(
-                CARD_NUMBER, AMOUNT, PASSENGER_ID
+                CARD_NUMBER, AMOUNT, PASSENGER_ID, WalletOwner.PASSENGER
         );
     }
 
@@ -51,6 +52,6 @@ public class TestSetUps {
     }
 
     public static WalletCreateDto getUpdateCreateDto() {
-        return new WalletCreateDto(CARD_NUMBER, NEW_AMOUNT, PASSENGER_ID);
+        return new WalletCreateDto(CARD_NUMBER, NEW_AMOUNT, PASSENGER_ID, WalletOwner.PASSENGER);
     }
 }

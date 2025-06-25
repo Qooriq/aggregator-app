@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.notNullValue;
 public class RideSteps {
 
     private Response response;
-    private final String uri = "http://localhost:8086";
+    private final String uri = "http://localhost:8085";
     private String requestPayload;
     private String updatePayload;
 
@@ -39,6 +39,8 @@ public class RideSteps {
                     "driverId": "4ebba608-6315-447e-9bf5-4e20da6fb0b0",
                     "startLocation": "minsk",
                     "endLocation": "Lida",
+                    "passengerReviewDriver": "1",
+                    "driverReviewPassenger": "1",
                     "paymentMethod": "CARD",
                     "ridePrice": "12.0"
                 }

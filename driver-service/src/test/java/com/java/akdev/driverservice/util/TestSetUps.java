@@ -1,7 +1,7 @@
 package com.java.akdev.driverservice.util;
 
 import com.java.akdev.driverservice.dto.DriverCreateDto;
-import com.java.akdev.driverservice.dto.DriverReadDto;
+import com.java.akdev.commonmodels.dto.UserResponse;
 import com.java.akdev.driverservice.entity.Driver;
 import com.java.akdev.driverservice.enumeration.Order;
 import com.java.akdev.driverservice.enumeration.SortField;
@@ -51,11 +51,11 @@ public class TestSetUps {
                 .build();
     }
 
-    public static DriverReadDto getUpdateDto() {
-        return new DriverReadDto(NAME, LAST_NAME, NEW_EMAIL);
+    public static UserResponse getUpdateDto() {
+        return new UserResponse(NAME, LAST_NAME, NEW_EMAIL);
     }
 
-    public static DriverReadDto getReadDto() {
-        return new DriverReadDto(NAME, LAST_NAME, EMAIL);
+    public static UserResponse getReadDto() {
+        return new UserResponse(NAME, LAST_NAME, EMAIL);
     }
 }

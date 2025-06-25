@@ -13,10 +13,10 @@ import static org.hamcrest.Matchers.equalTo;
 public class ReviewSteps {
 
     private Response response;
-    private final String uri = "http://localhost:8083";
+    private final String uri = "http://localhost:8084";
     private String payload;
 
-    @Given("I have a review payload:}")
+    @Given("I have a review payload:")
     public void i_have_a_review_payload(String payload) {
         this.payload = payload;
     }
@@ -68,8 +68,8 @@ public class ReviewSteps {
                 .statusCode(statusCode);
     }
 
-    @And("body must contain key {string} and value {string}")
-    public void body_must_contain_key_and_value(String key, String value) {
+    @And("body must contain key {string} and value {int}")
+    public void body_must_contain_key_and_value(String key, int value) {
         response
                 .then()
                 .body(key, equalTo(value));

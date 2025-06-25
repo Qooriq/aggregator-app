@@ -1,6 +1,6 @@
 package com.java.akdev.reviewservice.entity;
 
-import com.java.akdev.reviewservice.enumeration.Receiver;
+import com.java.akdev.commonmodels.enumeration.Receiver;
 import jakarta.persistence.*;
 import lombok.*;
 
