@@ -10,8 +10,8 @@ import com.java.akdev.ridesservice.dto.RideCreateDto;
 import com.java.akdev.ridesservice.dto.RideUpdateDto;
 import com.java.akdev.ridesservice.entity.PassengerCoupons;
 import com.java.akdev.ridesservice.enumeration.*;
-import com.java.akdev.ridesservice.exception.NotEnoughMoneyException;
 import com.java.akdev.ridesservice.exception.EntityNotFound;
+import com.java.akdev.ridesservice.exception.NotEnoughMoneyException;
 import com.java.akdev.ridesservice.mapper.RideMapper;
 import com.java.akdev.ridesservice.repository.CouponRepository;
 import com.java.akdev.ridesservice.repository.PassengerCouponRepository;
@@ -69,7 +69,7 @@ public class RideServiceImpl implements RideService {
             var hasDiscount = passengerCouponRepository
                     .existsByCouponAndPassengerId(couponCode, dto.passengerId());
             var discount = !hasDiscount ?
-                            coupon.getDiscount() : 1.0;
+                    1 - coupon.getDiscount() : 1.0;
             var rideType = ride.getRideType();
             var price = calculatePrice(rideType, distance, discount);
             String formatted = String.format("%.2f", price);
@@ -85,6 +85,7 @@ public class RideServiceImpl implements RideService {
         return rideMapper.toRideResponse(
                 rideRepository.save(ride));
     }
+
 
     @Transactional
     public RideResponse update(Long id, RideUpdateDto dto) {
@@ -118,6 +119,7 @@ public class RideServiceImpl implements RideService {
     public RideResponse endRide(Long id) {
         var ride = rideRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFound(EXCEPTION));
+        passengerClient.findPassengerById(ride.getPassengerId());
         var passengerId = ride.getPassengerId();
         if (ride.getPaymentMethod() == PaymentMethod.CARD) {
             var response = walletClient.updateWallet(passengerId, ride.getRidePrice());
@@ -148,10 +150,9 @@ public class RideServiceImpl implements RideService {
     }
 
     private double getDistanceFromLatLonInKm(double lat1,
-                                            double lon1,
-                                            double lat2,
-                                            double lon2)
-    {
+                                             double lon1,
+                                             double lat2,
+                                             double lon2) {
         var R = 6371d;
         var dLat = Deg2Rad(lat2 - lat1);
         var dLon = Deg2Rad(lon2 - lon1);
@@ -163,8 +164,7 @@ public class RideServiceImpl implements RideService {
         return R * c;
     }
 
-    private double Deg2Rad(double deg)
-    {
+    private double Deg2Rad(double deg) {
         return deg * (Math.PI / 180d);
     }
 
