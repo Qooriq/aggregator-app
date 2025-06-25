@@ -20,15 +20,6 @@ spring:
   cloud:
     discovery:
       enabled: false
-    openfeign:
-      client:
-        config:
-          PASSENGER-SERVICE:
-            url: http://localhost:8080
-          DRIVER-SERVICE:
-            url: http://localhost:8080
-          RIDES-SERVICE:
-            url: http://localhost:8080
 passenger-rating:
   limit: 50
   page-number: 0

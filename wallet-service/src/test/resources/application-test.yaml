@@ -10,13 +10,6 @@ spring:
   cloud:
     discovery:
       enabled: false
-    openfeign:
-      client:
-        config:
-          PASSENGER-SERVICE:
-            url: http://localhost:8080
-          DRIVER-SERVICE:
-            url: http://localhost:8080
 feign:
   name:
     passenger: PASSENGER-SERVICE
