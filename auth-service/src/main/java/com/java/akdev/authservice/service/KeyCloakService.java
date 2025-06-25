@@ -93,6 +93,7 @@ public class KeyCloakService {
                 .build();
 
         AccessTokenResponse response = keycloak.tokenManager().getAccessToken();
+        keycloak.close();
         return new TokenResponse(response.getToken());
     }
 }

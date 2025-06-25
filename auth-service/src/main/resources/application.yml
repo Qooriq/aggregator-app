@@ -15,8 +15,8 @@ keycloak:
   auth-server-url: http://localhost:8180
   realm: agregator-app
   client-id: backend
-  client-secret: VCvbgWVouac0TomlMIeQxo2rafxmX74j
-  admin-username: admin
-  admin-password: admin
+  client-secret: ${CLIENT_SECRET}
+  admin-username: ${ADMIN_USERNAME}
+  admin-password: ${ADMIN_PASSWORD}
 server:
   port: 8087

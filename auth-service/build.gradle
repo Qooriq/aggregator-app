@@ -27,6 +27,7 @@ dependencies {
     implementation "org.keycloak:keycloak-common:${versions.keycloak}"
     implementation "org.keycloak:keycloak-server-spi:${versions.keycloak}"
     implementation "org.keycloak:keycloak-server-spi-private:${versions.keycloak}"
+    implementation "me.paulschwarz:spring-dotenv:${versions.dot_env}"
 
 
     compileOnly 'org.projectlombok:lombok'
