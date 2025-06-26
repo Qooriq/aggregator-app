@@ -8,13 +8,13 @@ import com.java.akdev.ridesservice.client.CheckReviewExistClient;
 import com.java.akdev.ridesservice.client.WalletFeignClient;
 import com.java.akdev.ridesservice.dto.RideCreateDto;
 import com.java.akdev.ridesservice.dto.RideUpdateDto;
-import com.java.akdev.ridesservice.enumeration.Order;
-import com.java.akdev.ridesservice.enumeration.PaymentMethod;
-import com.java.akdev.ridesservice.enumeration.RideStatus;
-import com.java.akdev.ridesservice.enumeration.SortField;
+import com.java.akdev.ridesservice.entity.PassengerCoupons;
+import com.java.akdev.ridesservice.enumeration.*;
+import com.java.akdev.ridesservice.exception.EntityNotFound;
 import com.java.akdev.ridesservice.exception.NotEnoughMoneyException;
-import com.java.akdev.ridesservice.exception.RideNotFoundException;
 import com.java.akdev.ridesservice.mapper.RideMapper;
+import com.java.akdev.ridesservice.repository.CouponRepository;
+import com.java.akdev.ridesservice.repository.PassengerCouponRepository;
 import com.java.akdev.ridesservice.repository.RideRepository;
 import com.java.akdev.ridesservice.service.RideService;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +31,8 @@ import java.time.Instant;
 public class RideServiceImpl implements RideService {
 
     private final RideRepository rideRepository;
+    private final PassengerCouponRepository passengerCouponRepository;
+    private final CouponRepository couponRepository;
     private final RideMapper rideMapper;
     private final CheckPassengerExistClient passengerClient;
     private final CheckDriverExistClient driverClient;
@@ -53,17 +55,37 @@ public class RideServiceImpl implements RideService {
     public RideResponse findById(Long id) {
         return rideRepository.findById(id)
                 .map(rideMapper::toRideResponse)
-                .orElseThrow(() -> new RideNotFoundException(EXCEPTION));
+                .orElseThrow(() -> new EntityNotFound(EXCEPTION));
     }
 
     @Transactional
-    public RideResponse create(RideCreateDto dto) {
+    public RideResponse create(RideCreateDto dto, String couponCode) {
         passengerClient.findPassengerById(dto.passengerId());
         var ride = rideMapper.toRide(dto);
-        ride.setRidePrice(10.0);
+        var distance = getDistanceFromLatLonInKm(dto.startLocation().lat(), dto.startLocation().lon(),
+                dto.endLocation().lat(), dto.endLocation().lon());
+        if (couponRepository.existsByCoupon(couponCode)) {
+            var coupon = couponRepository.findByCoupon(couponCode);
+            var hasDiscount = passengerCouponRepository
+                    .existsByCouponAndPassengerId(couponCode, dto.passengerId());
+            var discount = !hasDiscount ?
+                    1 - coupon.getDiscount() : 1.0;
+            var rideType = ride.getRideType();
+            var price = calculatePrice(rideType, distance, discount);
+            String formatted = String.format("%.2f", price);
+            ride.setRidePrice(Double.valueOf(formatted));
+            passengerCouponRepository.save(PassengerCoupons.builder()
+                    .coupon(coupon)
+                    .passengerId(dto.passengerId()).build());
+        } else {
+            var rideType = ride.getRideType();
+            var price = calculatePrice(rideType, distance, 1.0);
+            ride.setRidePrice(price);
+        }
         return rideMapper.toRideResponse(
                 rideRepository.save(ride));
     }
+
 
     @Transactional
     public RideResponse update(Long id, RideUpdateDto dto) {
@@ -75,7 +97,7 @@ public class RideServiceImpl implements RideService {
                 .map(ride -> rideMapper.updateRide(ride, dto))
                 .map(rideRepository::save)
                 .map(rideMapper::toRideResponse)
-                .orElseThrow(() -> new RideNotFoundException(EXCEPTION));
+                .orElseThrow(() -> new EntityNotFound(EXCEPTION));
     }
 
     @Transactional
@@ -86,7 +108,7 @@ public class RideServiceImpl implements RideService {
     @Override
     public RideResponse startRide(Long id) {
         var ride = rideRepository.findById(id)
-                .orElseThrow(() -> new RideNotFoundException(EXCEPTION));
+                .orElseThrow(() -> new EntityNotFound(EXCEPTION));
         ride.setStatus(RideStatus.IN_PROGRESS);
         ride.setStartTime(Instant.now());
         rideRepository.save(ride);
@@ -96,7 +118,7 @@ public class RideServiceImpl implements RideService {
     @Override
     public RideResponse endRide(Long id) {
         var ride = rideRepository.findById(id)
-                .orElseThrow(() -> new RideNotFoundException(EXCEPTION));
+                .orElseThrow(() -> new EntityNotFound(EXCEPTION));
         passengerClient.findPassengerById(ride.getPassengerId());
         var passengerId = ride.getPassengerId();
         if (ride.getPaymentMethod() == PaymentMethod.CARD) {
@@ -116,11 +138,34 @@ public class RideServiceImpl implements RideService {
         var req = PageRequest.of(0, 10);
         var rides = rideRepository.findAllByStatus(RideStatus.PENDING, req);
         return rideMapper.toRideResponse(rides.stream().findFirst()
-                .orElseThrow(() -> new RideNotFoundException(EXCEPTION)));
+                .orElseThrow(() -> new EntityNotFound(EXCEPTION)));
+    }
+
+    private Double calculatePrice(RideType rideType, double distance, double discount) {
+        return rideType.getCoefficient() * distance * discount;
     }
 
     private Sort.Direction getDirection(Order order) {
         return order == Order.ASC ? Sort.Direction.ASC : Sort.Direction.DESC;
+    }
+
+    private double getDistanceFromLatLonInKm(double lat1,
+                                             double lon1,
+                                             double lat2,
+                                             double lon2) {
+        var R = 6371d;
+        var dLat = Deg2Rad(lat2 - lat1);
+        var dLon = Deg2Rad(lon2 - lon1);
+        var a =
+                Math.sin(dLat / 2d) * Math.sin(dLat / 2d) +
+                Math.cos(Deg2Rad(lat1)) * Math.cos(Deg2Rad(lat2)) *
+                Math.sin(dLon / 2d) * Math.sin(dLon / 2d);
+        var c = 2d * Math.atan2(Math.sqrt(a), Math.sqrt(1d - a));
+        return R * c;
+    }
+
+    private double Deg2Rad(double deg) {
+        return deg * (Math.PI / 180d);
     }
 
 }

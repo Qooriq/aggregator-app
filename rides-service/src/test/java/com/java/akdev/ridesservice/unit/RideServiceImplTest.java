@@ -1,17 +1,19 @@
 package com.java.akdev.ridesservice.unit;
 
 import com.java.akdev.commonmodels.dto.ReviewResponse;
+import com.java.akdev.commonmodels.dto.RideResponse;
 import com.java.akdev.commonmodels.dto.UserResponse;
 import com.java.akdev.commonmodels.enumeration.Receiver;
 import com.java.akdev.ridesservice.client.CheckDriverExistClient;
 import com.java.akdev.ridesservice.client.CheckPassengerExistClient;
 import com.java.akdev.ridesservice.client.CheckReviewExistClient;
 import com.java.akdev.ridesservice.dto.RideCreateDto;
-import com.java.akdev.commonmodels.dto.RideResponse;
 import com.java.akdev.ridesservice.dto.RideUpdateDto;
 import com.java.akdev.ridesservice.entity.Ride;
-import com.java.akdev.ridesservice.exception.RideNotFoundException;
+import com.java.akdev.ridesservice.exception.EntityNotFound;
 import com.java.akdev.ridesservice.mapper.RideMapper;
+import com.java.akdev.ridesservice.repository.CouponRepository;
+import com.java.akdev.ridesservice.repository.PassengerCouponRepository;
 import com.java.akdev.ridesservice.repository.RideRepository;
 import com.java.akdev.ridesservice.service.impl.RideServiceImpl;
 import com.java.akdev.ridesservice.util.TestSetUps;
@@ -22,7 +24,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.verification.VerificationMode;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Optional;
@@ -31,10 +32,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class RideServiceImplTest {
@@ -49,6 +51,10 @@ class RideServiceImplTest {
     private CheckDriverExistClient checkDriverExistClient;
     @Mock
     private CheckReviewExistClient checkReviewExistClient;
+    @Mock
+    private CouponRepository couponRepository;
+    @Mock
+    private PassengerCouponRepository passengerCouponRepository;
     @InjectMocks
     private RideServiceImpl reviewService;
 
@@ -96,7 +102,7 @@ class RideServiceImplTest {
 
         assertThatThrownBy(() ->
                 reviewService.findById(id)
-        ).isInstanceOf(RideNotFoundException.class);
+        ).isInstanceOf(EntityNotFound.class);
 
         verify(rideRepository).findById(id);
     }
@@ -112,8 +118,10 @@ class RideServiceImplTest {
                 .thenReturn(expectedResult);
         when(checkPassengerExistClient.findPassengerById(any()))
                 .thenReturn(ResponseEntity.ok(new UserResponse("a", "a", "a")));
+        when(couponRepository.existsByCoupon(anyString()))
+                .thenReturn(false);
 
-        var actual = reviewService.create(rideCreateDto);
+        var actual = reviewService.create(rideCreateDto, " ");
 
         assertThat(actual)
                 .isEqualTo(expectedResult);
@@ -122,6 +130,7 @@ class RideServiceImplTest {
         verify(rideMapper).toRide(rideCreateDto);
         verify(rideMapper).toRideResponse(ride);
         verify(checkPassengerExistClient).findPassengerById(any());
+        verify(couponRepository).existsByCoupon(anyString());
     }
 
     @Test

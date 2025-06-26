@@ -1,11 +1,13 @@
 package com.java.akdev.ridesservice.util;
 
 import com.java.akdev.commonmodels.dto.RideResponse;
+import com.java.akdev.ridesservice.dto.PointDto;
 import com.java.akdev.ridesservice.dto.RideCreateDto;
 import com.java.akdev.ridesservice.dto.RideUpdateDto;
 import com.java.akdev.ridesservice.entity.Ride;
 import com.java.akdev.ridesservice.enumeration.Order;
 import com.java.akdev.ridesservice.enumeration.PaymentMethod;
+import com.java.akdev.ridesservice.enumeration.RideType;
 import com.java.akdev.ridesservice.enumeration.SortField;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -27,9 +29,9 @@ public final class TestSetUps {
     public static final Long PASSENGER_REVIEW_DRIVER = 5L;
     public static final Long DRIVER_REVIEW_PASSENGER = 5L;
     public static final Double RIDE_PRICE = 10.0;
-    public static final String START_LOCATION = "minsk";
-    public static final String END_LOCATION = "Lida";
-    public static final String NEW_END_LOCATION = "Lida2.0";
+    public static final PointDto START_LOCATION = new PointDto(5.4, 5.3);
+    public static final PointDto END_LOCATION = new PointDto(5.0, 5.9);
+    public static final PointDto NEW_END_LOCATION = new PointDto(5.8, 4.3);
     public static final String DRIVER = null;
     public static final String RIDE_BASE_URL = "/api/v1/rides";
     public static final String RIDE_BASE_URL_WITH_ID = "/api/v1/rides/{id}";
@@ -42,13 +44,14 @@ public final class TestSetUps {
                 .passengerReviewDriver(PASSENGER_REVIEW_DRIVER)
                 .driverReviewPassenger(DRIVER_REVIEW_PASSENGER)
                 .ridePrice(RIDE_PRICE)
-                .endLocation(END_LOCATION)
+                .endLocation(END_LOCATION.toString())
+                .rideType(RideType.ECONOMY)
                 .build();
     }
 
     public static RideCreateDto getCreateDto() {
         return new RideCreateDto(
-                PASSENGER_ID, START_LOCATION, END_LOCATION, PaymentMethod.CARD
+                PASSENGER_ID, START_LOCATION, END_LOCATION, PaymentMethod.CARD, RideType.ECONOMY
         );
     }
 
@@ -61,22 +64,23 @@ public final class TestSetUps {
                 .driverReviewPassenger(DRIVER_REVIEW_PASSENGER)
                 .ridePrice(RIDE_PRICE)
                 .startTime(Instant.now())
-                .endLocation(NEW_END_LOCATION)
+                .endLocation(NEW_END_LOCATION.toString())
+                .rideType(RideType.ECONOMY)
                 .build();
     }
 
     public static RideResponse getUpdateDto() {
-        return new RideResponse(START_LOCATION, NEW_END_LOCATION, RIDE_PRICE, DRIVER);
+        return new RideResponse(START_LOCATION.toString(), NEW_END_LOCATION.toString(), RIDE_PRICE, DRIVER);
     }
 
     public static RideResponse getReadDto() {
-        return new RideResponse(START_LOCATION, END_LOCATION, RIDE_PRICE, DRIVER);
+        return new RideResponse(START_LOCATION.toString(), END_LOCATION.toString(), RIDE_PRICE, DRIVER);
     }
 
     public static RideUpdateDto getRideUpdateDto() {
         return new RideUpdateDto(PASSENGER_ID, DRIVER_ID,
                 3L, 2L,
-                START_LOCATION, NEW_END_LOCATION, Instant.now(), null,
+                START_LOCATION.toString(), NEW_END_LOCATION.toString(), Instant.now(), null,
                 RIDE_PRICE, null);
     }
 }
