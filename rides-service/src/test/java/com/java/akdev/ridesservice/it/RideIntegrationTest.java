@@ -105,6 +105,7 @@ public class RideIntegrationTest extends IntegrationTestBase {
                 .thenReturn(ResponseEntity.ok(new UserResponse("a", "a", "a")));
         mockMvc.perform(MockMvcRequestBuilders.post(rideBaseUrl)
                         .contentType(MediaType.APPLICATION_JSON)
+                        .param("coupon", "Victor2025")
                         .content(objectMapper.writeValueAsString(rideCreateDto)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(jsonPath("$.startLocation").value(rideReadDto.startLocation()))
