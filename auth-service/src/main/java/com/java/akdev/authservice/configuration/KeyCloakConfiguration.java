@@ -15,12 +15,14 @@ public class KeyCloakConfiguration {
     private String adminUsername;
     @Value("${keycloak.admin-password}")
     private String adminPassword;
+    @Value("${keycloak.master-realm}")
+    private String masterRealm;
 
     @Bean
     public Keycloak getAdminKeycloak() {
         return KeycloakBuilder.builder()
                 .serverUrl(serverUrl)
-                .realm("master")
+                .realm(masterRealm)
                 .clientId("admin-cli")
                 .username(adminUsername)
                 .password(adminPassword)
