@@ -4,6 +4,8 @@ import com.java.akdev.authservice.dto.TokenResponse;
 import com.java.akdev.authservice.dto.UserLogin;
 import com.java.akdev.authservice.dto.UserRegistration;
 import com.java.akdev.authservice.enumeration.Role;
+import com.java.akdev.authservice.exception.EmailAlreadyInUseException;
+import com.java.akdev.authservice.exception.PhoneAlreadyInUseException;
 import com.java.akdev.authservice.kafka.ReviewKafkaSender;
 import com.java.akdev.commonmodels.dto.UserRegistrationCreateDto;
 import com.java.akdev.commonmodels.dto.UserResponse;
@@ -48,6 +50,21 @@ public class KeyCloakService {
         creds.setValue(registration.password());
         creds.setTemporary(false);
 
+        Response response = userCreation(registration, creds, usersResource);
+
+        if (response.getStatus() == 409) {
+            throw new EmailAlreadyInUseException("error.emailAlreadyInUse");
+        } else if (response.getStatus() == 400) {
+            throw new PhoneAlreadyInUseException("error.phoneAlreadyInUse");
+        } else if (response.getStatus() != 201) {
+            throw new RuntimeException("error.userAlreadyInUse");
+        }
+
+        sendUserRegistrationToKafka(registration, userRole, response, usersResource, realmResource);
+        return new UserResponse(registration.firstName(), registration.lastName(), registration.username());
+    }
+
+    private static Response userCreation(UserRegistration registration, CredentialRepresentation creds, UsersResource usersResource) {
         UserRepresentation user = new UserRepresentation();
         Map<String, List<String>> attributes = new HashMap<>();
         attributes.put("firstName", List.of(registration.firstName()));
@@ -62,12 +79,10 @@ public class KeyCloakService {
                 creds
         ));
 
-        Response response = usersResource.create(user);
+        return usersResource.create(user);
+    }
 
-        if (response.getStatus() != 201) {
-            throw new RuntimeException("error.UserCreation");
-        }
-
+    private void sendUserRegistrationToKafka(UserRegistration registration, Role userRole, Response response, UsersResource usersResource, RealmResource realmResource) {
         String userId = response.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
         UserResource userResource = usersResource.get(userId);
 
@@ -78,7 +93,6 @@ public class KeyCloakService {
                 registration.lastName(), registration.username(), passwordEncoder.encode(registration.password()),
                 registration.phoneNumber()), userRole);
         response.close();
-        return new UserResponse(registration.firstName(), registration.lastName(), registration.username());
     }
 
     public TokenResponse login(UserLogin loginDto) {
@@ -94,6 +108,6 @@ public class KeyCloakService {
 
         AccessTokenResponse response = keycloak.tokenManager().getAccessToken();
         keycloak.close();
-        return new TokenResponse(response.getToken());
+        return new TokenResponse(response.getToken(), response.getRefreshToken());
     }
 }
