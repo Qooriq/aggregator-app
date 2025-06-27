@@ -54,6 +54,7 @@ public class DriverServiceImpl implements DriverService {
             throw new PhoneAlreadyExistsException(ExceptionMessages.ALREADY_EXISTS.getName());
         }
         var driver = driverMapper.toDriver(dto);
+        driver.setId(UUID.randomUUID());
         var res = driverRepository.save(driver);
         return driverMapper.toUserResponse(res);
     }

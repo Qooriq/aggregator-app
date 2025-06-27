@@ -1,0 +1,6 @@
+ext {
+    versions = [
+            'keycloak': '24.0.2',
+            'dot_env': '4.0.0'
+    ]
+}

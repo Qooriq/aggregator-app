@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -24,6 +25,7 @@ public class WalletController {
     private final WalletService walletService;
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<WalletReadDto>> findAll(@RequestParam @Min(1) Integer page,
                                                        @RequestParam @Min(1) Integer size,
                                                        @RequestParam SortField sortField,
@@ -33,6 +35,7 @@ public class WalletController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<WalletReadDto> findById(@PathVariable @Min(1) Long id) {
         return ResponseEntity.status(200)
                 .body(walletService.findById(id));

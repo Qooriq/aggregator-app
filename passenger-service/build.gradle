@@ -21,7 +21,6 @@ dependencies {
 	implementation project(':common-models')
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${versions.springdoc}"
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.kafka:spring-kafka'
@@ -33,6 +32,8 @@ dependencies {
 	implementation 'io.micrometer:micrometer-tracing-bridge-brave'
 	implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
 	implementation "net.logstash.logback:logstash-logback-encoder:${versions.logstash}"
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
@@ -46,6 +47,7 @@ dependencies {
 
 	testImplementation 'org.liquibase:liquibase-core'
 	testImplementation "io.rest-assured:rest-assured:${versions.rest_assured}"
+	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation "io.cucumber:cucumber-java:${versions.cucumber}"
 	testImplementation "io.cucumber:cucumber-junit:${versions.cucumber}"
 	testImplementation "io.cucumber:cucumber-junit-platform-engine:${versions.cucumber}"

@@ -16,13 +16,12 @@
     </appender>
 
     <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-        <remoteHost>${LOGSTASH_HOST}</remoteHost>
-        <port>${LOGSTASH_PORT}</port>
         <encoder class="net.logstash.logback.encoder.LogstashEncoder">
             <pattern>
                 ${LOG_PATTERN}
             </pattern>
         </encoder>
+        <destination>${LOGSTASH_HOST}:${LOGSTASH_PORT}</destination>
     </appender>
 
     <root level="INFO">

@@ -11,6 +11,7 @@ import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,7 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<ReviewResponse>> findAll(@RequestParam @Min(1) Integer page,
                                                        @RequestParam @Min(1) Integer size,
                                                        @RequestParam SortField sortField,
@@ -45,6 +47,7 @@ public class ReviewController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ReviewResponse> update(@PathVariable @Min(1) Long id,
                                                 @RequestBody @Validated ReviewCreateDto dto) {
         return ResponseEntity.status(200)
@@ -52,12 +55,14 @@ public class ReviewController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         reviewService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/user-review/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ReviewResponseAmount> getUserReview(@PathVariable UUID id, Receiver receiver) {
         return ResponseEntity.status(200)
                 .body(reviewService.findAverageRating(id, receiver));

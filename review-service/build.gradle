@@ -35,6 +35,8 @@ dependencies {
     implementation 'io.github.openfeign:feign-micrometer'
     implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
     implementation "net.logstash.logback:logstash-logback-encoder:${versions.logstash}"
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'
@@ -44,6 +46,7 @@ dependencies {
 
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.liquibase:liquibase-core'
     testImplementation "io.rest-assured:rest-assured:${versions.rest_assured}"
     testImplementation "io.cucumber:cucumber-java:${versions.cucumber}"

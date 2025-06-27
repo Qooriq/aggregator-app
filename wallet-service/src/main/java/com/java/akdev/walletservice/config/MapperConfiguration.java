@@ -1,4 +1,4 @@
-package com.java.akdev.walletservice.configuration;
+package com.java.akdev.walletservice.config;
 
 import org.mapstruct.*;
 

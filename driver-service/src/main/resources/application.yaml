@@ -12,9 +12,19 @@ spring:
     user: ${ARTEMIS_USERNAME:admin}
     password: ${ARTEMIS_PASSWORD:admin}
     mode: native
+  kafka:
+    bootstrap-servers: ${KAFKA_URL:localhost:9092}
+    consumer:
+      client-id: 1
   data:
     jdbc:
       dialect: postgresql
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/realms/agregator-app
+          jwk-set-uri: http://localhost:8180/realms/agregator-app/protocol/openid-connect/certs
 server:
   port: ${PORT:8083}
 eureka:
