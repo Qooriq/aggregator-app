@@ -21,7 +21,6 @@ public class SecurityConfiguration {
                 .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
                 .authorizeExchange(auth -> auth
                         .pathMatchers("/api/v1/auth/**").permitAll()
-                        .pathMatchers("/api/v1/auth/login").permitAll()
                         .anyExchange().authenticated()
                 )
                 .cors(corsSpec -> corsSpec.configurationSource(exchange -> new CorsConfiguration().applyPermitDefaultValues()))

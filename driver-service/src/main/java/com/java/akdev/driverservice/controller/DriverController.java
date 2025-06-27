@@ -46,7 +46,7 @@ public class DriverController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('DRIVER')")
+    @PreAuthorize("hasRole('ADMIN') or (hasRole('DRIVER') and #id.toString() == authentication.principal.claims['sub'])")
     public ResponseEntity<UserResponse> update(@PathVariable UUID id,
                                                 @Valid @RequestBody DriverCreateDto dto) {
         return ResponseEntity.ok()
@@ -54,7 +54,7 @@ public class DriverController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('DRIVER')")
+    @PreAuthorize("hasRole('ADMIN') or (hasRole('DRIVER') and #id.toString() == authentication.principal.claims['sub'])")
     public ResponseEntity<UserResponse> delete(@PathVariable UUID id) {
         driverService.deleteDriver(id);
         return ResponseEntity.noContent().build();

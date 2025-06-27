@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +36,7 @@ public class PassengerController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> findById(@PathVariable UUID id) {
         log.info("Find passenger by id: {}", id);
         return ResponseEntity.ok()
@@ -49,7 +52,7 @@ public class PassengerController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('PASSENGER')")
+    @PreAuthorize("hasRole('ADMIN') or (hasRole('PASSENGER') and #id.toString() == authentication.principal.claims['sub'])")
     public ResponseEntity<UserResponse> update(@PathVariable UUID id,
                                                @Validated @RequestBody PassengerCreateDto dto) {
         return ResponseEntity.ok()
@@ -57,7 +60,7 @@ public class PassengerController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('PASSENGER')")
+    @PreAuthorize("hasRole('ADMIN') or (hasRole('PASSENGER') and #id.toString() == authentication.principal.claims['sub'])")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         passengerService.deletePassenger(id);
         return ResponseEntity.noContent().build();
