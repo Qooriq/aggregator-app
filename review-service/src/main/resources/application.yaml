@@ -16,6 +16,12 @@ spring:
     user: ${ARTEMIS_USERNAME:admin}
     password: ${ARTEMIS_PASSWORD:admin}
     mode: native
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/realms/agregator-app
+          jwk-set-uri: http://localhost:8180/realms/agregator-app/protocol/openid-connect/certs
 passenger-rating:
   limit: 50
   page-number: 0

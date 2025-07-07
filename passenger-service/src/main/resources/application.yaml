@@ -13,6 +13,12 @@ spring:
       group-id: passenger-group
     properties:
       security.protocol: PLAINTEXT
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/realms/agregator-app
+          jwk-set-uri: http://localhost:8180/realms/agregator-app/protocol/openid-connect/certs
 passenger-service:
   topic-name-passenger: passenger-review-update
   kafka:

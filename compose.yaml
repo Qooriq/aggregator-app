@@ -225,7 +225,7 @@ services:
   gateway-service:
     container_name: gateway-service
     ports:
-      - "8080:8080"
+      - "8081:8081"
     build:
       context: ./gateway-service
       dockerfile: Dockerfile
@@ -281,7 +281,7 @@ services:
   elasticsearch:
     image: elasticsearch:8.12.0
     ports:
-      - 9200:9200
+      - "9200:9200"
     depends_on:
       logstash:
         condition: service_started
@@ -299,7 +299,7 @@ services:
     volumes:
       - ./monitoring/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
     ports:
-      - 5050:5050
+      - "5050:5050"
     environment:
       - 'LS_JAVA_OPTS=-Xmx256m -Xms256m'
     networks:
@@ -312,13 +312,41 @@ services:
       elasticsearch:
         condition: service_started
     ports:
-      - 5601:5601
+      - "5601:5601"
     environment:
       - ELASTICSEARCH_URL=http://elasticsearch:9200
     networks:
       - monitoring
       - application
 
+  keycloak:
+    image: keycloak/keycloak:26.2
+    ports:
+      - "8180:8080"
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgresql
+      DB_DATABASE: keycloak_db
+      DB_SCHEMA: public
+      DB_USER: postgres
+      DB_PASSWORD: root
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgresql:5432/keycloak_db
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: root
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    volumes:
+      - type: bind
+        source: ./keycloak/realm-export.json
+        target: /opt/keycloak/data/import/realm-export.json
+        read_only: true
+      - ./keycloak/providers:/opt/keycloak/providers
+    command:
+      - start-dev
+      - --import-realm
+    networks:
+      application:
 
 networks:
   application:
