@@ -7,6 +7,12 @@ spring:
     password: ${DB_PASSWORD:root}
   liquibase:
     enabled: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/realms/agregator-app
+          jwk-set-uri: http://localhost:8180/realms/agregator-app/protocol/openid-connect/certs
 server:
   port: ${PORT:8085}
 eureka:

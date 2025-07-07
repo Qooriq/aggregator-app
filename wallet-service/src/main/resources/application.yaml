@@ -11,6 +11,12 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/realms/agregator-app
+          jwk-set-uri: http://localhost:8180/realms/agregator-app/protocol/openid-connect/certs
 server:
   port: ${PORT:8086}
 eureka:

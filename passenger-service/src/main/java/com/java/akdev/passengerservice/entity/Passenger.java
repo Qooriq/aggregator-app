@@ -24,7 +24,6 @@ import java.util.UUID;
 public class Passenger {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @EqualsAndHashCode.Include
     private UUID id;
 

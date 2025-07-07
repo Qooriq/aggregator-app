@@ -74,8 +74,10 @@ public class PassengerServiceImpl implements PassengerService {
             passengerRepository.existsByPhoneNumber(dto.phoneNumber())) {
             throw new PhoneNumberAlreadyExistsException(ALREADY_EXIST);
         }
+        var passenger = passengerMapper.toPassenger(dto);
+        passenger.setId(UUID.randomUUID());
         return passengerMapper.toReadDto(passengerRepository
-                .save(passengerMapper.toPassenger(dto)));
+                .save(passenger));
     }
 
     @Transactional
