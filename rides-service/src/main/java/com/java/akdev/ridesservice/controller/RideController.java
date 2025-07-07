@@ -39,9 +39,10 @@ public class RideController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN') or hasRole('PASSENGER')")
-    public ResponseEntity<RideResponse> create(@RequestBody RideCreateDto dto) {
+    public ResponseEntity<RideResponse> create(@RequestBody RideCreateDto dto,
+                                               @RequestParam String coupon) {
         return ResponseEntity.status(201)
-                .body(rideService.create(dto));
+                .body(rideService.create(dto, coupon));
     }
 
     @PutMapping("/end-ride/{id}")
