@@ -1,9 +1,9 @@
 package com.java.akdev.driverservice.integration;
 
+import com.java.akdev.commonmodels.dto.UserResponse;
 import com.java.akdev.driverservice.IntegrationTestBase;
 import com.java.akdev.driverservice.artemis.ReviewListener;
 import com.java.akdev.driverservice.dto.DriverCreateDto;
-import com.java.akdev.commonmodels.dto.UserResponse;
 import com.java.akdev.driverservice.enumeration.Order;
 import com.java.akdev.driverservice.enumeration.SortField;
 import com.java.akdev.driverservice.util.TestSetUps;
