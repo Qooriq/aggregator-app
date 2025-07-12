@@ -5,6 +5,12 @@ jobs:
   build:
     name: Build and test
     runs-on: ubuntu-22.04
+    services:
+      docker:
+        image: docker:dind
+        env:
+          DOCKER_TLS_CERTDIR: ""
+          options: --privileged
     permissions:
       contents: read
       security-events: write
