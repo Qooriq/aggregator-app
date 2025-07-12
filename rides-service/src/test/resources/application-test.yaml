@@ -6,6 +6,9 @@ spring:
   cloud:
     discovery:
       enabled: false
+  data:
+    jdbc:
+      dialect: postgresql
 feign:
   name:
     passenger: PASSENGER-SERVICE
