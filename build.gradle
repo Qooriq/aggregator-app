@@ -12,8 +12,10 @@ subprojects {
 	group = 'com.java.AKdev'
 	version = '0.0.1-SNAPSHOT'
 
-	test {
-		exclude '**/e2e/**'
+	plugins.withId('java'){
+		test {
+			exclude '**/e2e/**'
+		}
 	}
 
 	java {
