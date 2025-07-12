@@ -48,7 +48,7 @@ public class DriverController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN') or (hasRole('DRIVER') and #id.toString() == authentication.principal.claims['sub'])")
     public ResponseEntity<UserResponse> update(@PathVariable UUID id,
-                                                @Valid @RequestBody DriverCreateDto dto) {
+                                               @Valid @RequestBody DriverCreateDto dto) {
         return ResponseEntity.ok()
                 .body(driverService.update(id, dto));
     }
