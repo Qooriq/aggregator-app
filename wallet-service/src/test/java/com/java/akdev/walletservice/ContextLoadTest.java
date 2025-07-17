@@ -1,4 +1,4 @@
-package com.java.akdev.ridesservice;
+package com.java.akdev.walletservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -6,10 +6,8 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class RidesServiceApplicationTests {
+public class ContextLoadTest extends IntegrationTestBase {
 
     @Test
-    void contextLoads() {
-    }
-
+    void contextLoads() {}
 }

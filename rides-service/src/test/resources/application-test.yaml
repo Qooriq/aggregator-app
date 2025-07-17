@@ -6,6 +6,13 @@ spring:
   cloud:
     discovery:
       enabled: false
+  data:
+    jdbc:
+      dialect: postgresql
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 feign:
   name:
     passenger: PASSENGER-SERVICE

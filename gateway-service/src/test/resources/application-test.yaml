@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: gateway-service
+  liquibase:
+    enabled: false
+  cloud:
+    discovery:
+      enabled: false
+server:
+  port: 8081
+eureka:
+  client:
+    enabled: false

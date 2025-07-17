@@ -28,7 +28,7 @@ public final class TestSetUps {
     public static final UUID DRIVER_ID = UUID.fromString("1826829b-d77a-4908-b1b4-94cf5346a038");
     public static final Long PASSENGER_REVIEW_DRIVER = 5L;
     public static final Long DRIVER_REVIEW_PASSENGER = 5L;
-    public static final Double RIDE_PRICE = 10.0;
+    public static final Double RIDE_PRICE = 79.95536530359746;
     public static final PointDto START_LOCATION = new PointDto(5.4, 5.3);
     public static final PointDto END_LOCATION = new PointDto(5.0, 5.9);
     public static final PointDto NEW_END_LOCATION = new PointDto(5.8, 4.3);
