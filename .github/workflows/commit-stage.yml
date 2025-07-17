@@ -4,7 +4,7 @@ on: push
 jobs:
   build:
     name: Build and test
-    runs-on: macos-14
+    runs-on: ubuntu-22.04
     services:
       docker:
         image: docker:dind
