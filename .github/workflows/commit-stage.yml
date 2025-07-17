@@ -39,4 +39,4 @@ jobs:
       - name: Build, unit tests and integration tests
         run: |
           chmod +x gradlew
-          ./gradlew build -x :driver-service:test
+          ./gradlew build -x :driver-service:test :wallet-service:test
